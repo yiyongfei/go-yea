@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context" 
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc"  
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:jee="http://www.springframework.org/schema/jee" 
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+		http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-4.0.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+		http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-4.0.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd"
+	default-lazy-init="true">
+
+	<description>Spring公共配置 </description>
+	
+	<context:property-placeholder location="classpath:/config/config.properties" ignore-unresolvable="true"/>
+    
+    <!-- Netty客户端的配置 Start -->
+	<bean id="nettyMessageDecoder" class="com.yea.remote.netty.codec.NettyMessageDecoder"></bean>
+	<bean id="nettyMessageEncoder" class="com.yea.remote.netty.codec.NettyMessageEncoder"></bean>
+	<bean id="exceptionHandler" class="com.yea.remote.netty.handle.ExceptionHandler"></bean>
+	
+	<bean id="heartBeatClientHandler" class="com.yea.remote.netty.client.handle.HeartBeatClientHandler">
+		<constructor-arg index="0" type="int" value="60"/>
+		<constructor-arg index="1" type="int" value="60"/>
+	</bean>
+	
+	<bean id="serviceClientHandler" class="com.yea.remote.netty.client.handle.ServiceClientHandler"></bean>
+	
+    <bean id="serviceServerHandler" class="com.yea.remote.netty.server.handle.ServiceServerHandler"></bean>
+    
+	<!-- 调度中心的配置 -->
+	<bean id="zkDispatcher" class="com.yea.dispatcher.zookeeper.ZookeeperDispatcher" init-method="init">
+		<property name="host" value="${zookeeper.host}" />
+		<property name="port" value="${zookeeper.port}" />
+	</bean>
+	
+    <bean id="nettyClient" class="com.yea.remote.netty.client.NettyClient" init-method="connect" destroy-method="disconnect">
+		<property name="registerName" value="${netty.server.register}" /><!-- 服务注册名 -->
+		<property name="dispatcher" ref="zkDispatcher" />
+		<property name="host" value="${netty.client.host}" /><!-- 该主机未设置时，系统将会读取本机IP自动设入 -->
+		<property name="port" value="${netty.client.port}" /><!-- 该端口在执行start.sh脚本时，允许外部输入并替换 -->
+	    <property name="listHandler">
+            <list>
+                <map>
+	                <entry key="MessageDecoder">
+	                    <ref bean="nettyMessageDecoder"/>
+	                </entry>
+	            </map>
+	            <map>
+	                <entry key="MessageEncoder">
+	                    <ref bean="nettyMessageEncoder"/>
+	                </entry>
+	            </map>
+	            <map>
+	                <entry key="HeartBeatHandler">
+	                    <ref bean="heartBeatClientHandler"/>
+	                </entry>
+	            </map>
+	            <map>
+	                <entry key="ServiceClientHandler">
+	                    <ref bean="serviceClientHandler"/>
+	                </entry>
+	            </map>
+	            <map>
+	                <entry key="ServiceServerHandler">
+	                    <ref bean="serviceServerHandler"/>
+	                </entry>
+	            </map>
+	            <map>
+	                <entry key="ExceptionHandler">
+	                    <ref bean="exceptionHandler"/>
+	                </entry>
+	            </map>
+            </list>
+        </property>
+	</bean>
+    <!-- Netty客户端的配置 End -->
+	
+	<bean id="sessionIdGenerator" class="org.apache.shiro.session.mgt.eis.JavaUuidSessionIdGenerator"/>  
+	<bean id="sessionDAO" class="org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO">  
+	    <property name="activeSessionsCacheName" value="shiro-activeSessionCache"/>  
+	    <property name="sessionIdGenerator" ref="sessionIdGenerator"/>  
+	</bean>
+	
+    <!-- 会话Cookie模板 -->  
+	<bean id="sessionIdCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
+	    <constructor-arg value="JEA_SESSIONID"/>
+	    <property name="httpOnly" value="true"/>
+	    <property name="maxAge" value="-1"/>    <!-- maxAge=-1，表示浏览器关闭时失效此Cookie -->
+	</bean>
+	
+	<!-- 会话管理器 -->  
+	<bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">  
+	    <property name="globalSessionTimeout" value="1800000"/>
+	    <property name="deleteInvalidSessions" value="true"/>
+	    <property name="sessionValidationSchedulerEnabled" value="true"/>
+	    <property name="sessionDAO" ref="sessionDAO"/>
+	    <property name="sessionIdCookieEnabled" value="true"/>
+	    <property name="sessionIdCookie" ref="sessionIdCookie"/>
+	</bean>
+	
+	<!-- rememberMe的Cookie模板 -->
+	<bean id="rememberMeCookie" class="org.apache.shiro.web.servlet.SimpleCookie">  
+	    <constructor-arg value="rememberMe"/>  
+	    <property name="httpOnly" value="true"/>  
+	    <property name="maxAge" value="604800"/><!-- 记住我的Cookie，保存时长7天 -->
+	</bean>
+	<!-- rememberMe管理器 -->
+	<bean id="rememberMeManager" class="org.apache.shiro.web.mgt.CookieRememberMeManager">
+	     <property name="cipherKey" value="#{T(org.apache.shiro.codec.Base64).decode('9AVvhnFLuS3KTV8KprsdAg==')}" />
+         <property name="cookie" ref="rememberMeCookie"/>
+	</bean>
+	
+    <bean id="securityManager" class="com.yea.shiro.web.mgt.WebSecurityManager">
+        <property name="endpoint" ref="nettyClient"/>
+        <property name="sessionManager" ref="sessionManager"/>
+        <property name="rememberMeManager" ref="rememberMeManager"/>
+    </bean>
+    
+    <!-- 相当于调用SecurityUtils.setSecurityManager(securityManager) -->
+	<bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+		<property name="staticMethod" value="org.apache.shiro.SecurityUtils.setSecurityManager"/>
+	    <property name="arguments" ref="securityManager"/>
+	</bean>
+	
+	<!-- Shiro的Web过滤器 -->
+	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean" >
+	    <property name="securityManager" ref="securityManager"/>
+	    <property name="loginUrl" value="/login.html"/>
+	    <property name="successUrl" value="/index.html"/>
+	    <property name="unauthorizedUrl" value="/unauthorized.html"/>
+    </bean>
+    <!-- 对ShiroWeb过滤器进行包装，以初始化过滤器链（不允许延迟加载） -->
+    <bean id="shiroFilterWrapper" class="com.yea.shiro.web.wrapper.ShiroFilterWrapper" init-method="init" lazy-init="false" >
+	    <property name="endpoint" ref="nettyClient"/>
+	    <property name="shiroFilter" ref="shiroFilter"/>
+	    <property name="authenticedUrl" value="/authenticed.html"/>
+	    <property name="logoutUrl" value="/logout.html"/>
+    </bean>
+
+    <!-- Shiro生命周期处理器-->
+    <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
+</beans>

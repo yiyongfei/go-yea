@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.team.goyea.common.dao.CommonDao" >
+  
+  <insert id="personInfo_insert" parameterType="com.team.goyea.authorization.model.entity.PersonInfoEntity" >
+    INSERT INTO t_person_info 
+       (
+          party_id,
+          person_name,
+          sex_type_code,
+          birth_date,
+          marital_type_code,
+          person_memo
+        ) VALUES (
+    	  #{pk.partyId, jdbcType=BIGINT},
+    	  #{personName, jdbcType=VARCHAR},
+    	  #{sexTypeCode, jdbcType=VARCHAR},
+    	  #{birthDate, jdbcType=DATE},
+    	  #{maritalTypeCode, jdbcType=VARCHAR},
+    	  #{personMemo, jdbcType=VARCHAR}
+        )
+  </insert>
+  
+  <insert id="personInfo_insertSelective" parameterType="com.team.goyea.authorization.model.entity.PersonInfoEntity" >
+    INSERT INTO t_person_info
+      <trim prefix="(" suffix=")" suffixOverrides="," >
+    	<if test="pk != null and pk.partyId != null" >
+          party_id,
+      	</if>
+    	<if test="personName != null" >
+          person_name,
+      	</if>
+    	<if test="sexTypeCode != null" >
+          sex_type_code,
+      	</if>
+    	<if test="birthDate != null" >
+          birth_date,
+      	</if>
+    	<if test="maritalTypeCode != null" >
+          marital_type_code,
+      	</if>
+    	<if test="personMemo != null" >
+          person_memo,
+      	</if>
+      </trim>
+    VALUES
+      <trim prefix="(" suffix=")" suffixOverrides="," >
+    	<if test="pk != null and pk.partyId != null" >
+          #{pk.partyId, jdbcType=BIGINT},
+      	</if>
+    	<if test="personName != null" >
+          #{personName, jdbcType=VARCHAR},
+      	</if>
+    	<if test="sexTypeCode != null" >
+          #{sexTypeCode, jdbcType=VARCHAR},
+      	</if>
+    	<if test="birthDate != null" >
+          #{birthDate, jdbcType=DATE},
+      	</if>
+    	<if test="maritalTypeCode != null" >
+          #{maritalTypeCode, jdbcType=VARCHAR},
+      	</if>
+    	<if test="personMemo != null" >
+          #{personMemo, jdbcType=VARCHAR},
+      	</if>
+      </trim>
+  </insert>
+  
+  <update id="personInfo_update" parameterType="com.team.goyea.authorization.model.entity.PersonInfoEntity" >
+    UPDATE t_person_info SET 
+          person_name = #{personName, jdbcType=VARCHAR},
+          sex_type_code = #{sexTypeCode, jdbcType=VARCHAR},
+          birth_date = #{birthDate, jdbcType=DATE},
+          marital_type_code = #{maritalTypeCode, jdbcType=VARCHAR},
+          person_memo = #{personMemo, jdbcType=VARCHAR}
+     WHERE 1 = 1
+       AND party_id = #{pk.partyId, jdbcType=BIGINT}
+  </update>
+  
+  <update id="personInfo_updateSelective" parameterType="com.team.goyea.authorization.model.entity.PersonInfoEntity" >
+    UPDATE t_person_info
+      <trim prefix="SET" suffixOverrides="," >
+    	<if test="personName != null" >
+          person_name = #{personName, jdbcType=VARCHAR},
+      	</if>
+    	<if test="sexTypeCode != null" >
+          sex_type_code = #{sexTypeCode, jdbcType=VARCHAR},
+      	</if>
+    	<if test="birthDate != null" >
+          birth_date = #{birthDate, jdbcType=DATE},
+      	</if>
+    	<if test="maritalTypeCode != null" >
+          marital_type_code = #{maritalTypeCode, jdbcType=VARCHAR},
+      	</if>
+    	<if test="personMemo != null" >
+          person_memo = #{personMemo, jdbcType=VARCHAR},
+      	</if>
+      </trim>
+     WHERE 1 = 1
+       AND party_id = #{pk.partyId, jdbcType=BIGINT}
+  </update>
+  
+  <delete id="personInfo_delete" parameterType="com.team.goyea.authorization.model.pk.PersonInfoPK" >
+    DELETE FROM t_person_info
+     WHERE 1 = 1
+       AND party_id = #{partyId, jdbcType=BIGINT}
+  </delete>
+  
+  <delete id="personInfo_deleteBySelective" parameterType="com.team.goyea.authorization.model.entity.PersonInfoEntity" >
+    DELETE FROM t_person_info
+     <trim prefix="WHERE" prefixOverrides="AND" >
+        <if test="pk != null and pk.partyId != null" >
+          AND party_id = #{pk.partyId, jdbcType=BIGINT}
+        </if>
+        <if test="personName != null and personName != ''" >
+          AND person_name = #{personName, jdbcType=VARCHAR}
+        </if>
+        <if test="sexTypeCode != null and sexTypeCode != ''" >
+          AND sex_type_code = #{sexTypeCode, jdbcType=VARCHAR}
+        </if>
+        <if test="birthDate != null" >
+          AND birth_date = #{birthDate, jdbcType=DATE}
+        </if>
+        <if test="maritalTypeCode != null and maritalTypeCode != ''" >
+          AND marital_type_code = #{maritalTypeCode, jdbcType=VARCHAR}
+        </if>
+        <if test="personMemo != null and personMemo != ''" >
+          AND person_memo = #{personMemo, jdbcType=VARCHAR}
+        </if>
+     </trim>
+  </delete>
+  
+  <resultMap id="personInfoResultMap" type="com.team.goyea.authorization.model.PersonInfo" >
+    <constructor>
+       <idArg column="party_id" javaType="Long" jdbcType="BIGINT"/>
+    </constructor>
+    <association property="personInfoEntity" javaType="com.team.goyea.authorization.model.entity.PersonInfoEntity" resultMap="personInfoEntityMap"/>
+  </resultMap>
+  <resultMap id="personInfoEntityMap" type="com.team.goyea.authorization.model.entity.PersonInfoEntity" >
+    <result column="person_name" property="personName" jdbcType="VARCHAR" />
+    <result column="sex_type_code" property="sexTypeCode" jdbcType="VARCHAR" />
+    <result column="birth_date" property="birthDate" jdbcType="DATE" />
+    <result column="marital_type_code" property="maritalTypeCode" jdbcType="VARCHAR" />
+    <result column="person_memo" property="personMemo" jdbcType="VARCHAR" />
+    <association property="pk" javaType="com.team.goyea.authorization.model.pk.PersonInfoPK" resultMap="personInfoPKMap"/>
+  </resultMap>
+  <resultMap id="personInfoPKMap" type="com.team.goyea.authorization.model.pk.PersonInfoPK" >
+	<constructor>
+       <idArg column="party_id" javaType="Long" jdbcType="BIGINT"/>
+	</constructor>
+  </resultMap>
+  
+  <sql id="t_person_info_Column_List" >
+    a.party_id,
+    a.person_name,
+    a.sex_type_code,
+    a.birth_date,
+    a.marital_type_code,
+    a.person_memo
+  </sql>
+  
+  <select id="personInfo_load" parameterType="com.team.goyea.authorization.model.pk.PersonInfoPK" resultMap="personInfoResultMap">
+    SELECT 
+    <include refid="t_person_info_Column_List" />
+      FROM t_person_info a
+     WHERE 1 = 1
+       AND a.party_id = #{partyId, jdbcType=BIGINT}
+  </select>
+  
+  <select id="personInfo_selectBySelective" parameterType="com.team.goyea.authorization.model.PersonInfo" resultMap="personInfoResultMap">
+    SELECT 
+    <include refid="t_person_info_Column_List" />
+      FROM t_person_info a
+      <trim prefix="WHERE" prefixOverrides="AND" >
+        <if test="personInfoPK != null and personInfoPK.partyId != null" >
+          AND a.party_id = #{personInfoPK.partyId, jdbcType=BIGINT}
+        </if>
+        <if test="personInfoEntity != null and personInfoEntity.personName != null and personInfoEntity.personName != ''" >
+          AND a.person_name = #{personInfoEntity.personName, jdbcType=VARCHAR}
+        </if>
+        <if test="personInfoEntity != null and personInfoEntity.sexTypeCode != null and personInfoEntity.sexTypeCode != ''" >
+          AND a.sex_type_code = #{personInfoEntity.sexTypeCode, jdbcType=VARCHAR}
+        </if>
+        <if test="personInfoEntity != null and personInfoEntity.birthDate != null" >
+          AND a.birth_date = #{personInfoEntity.birthDate, jdbcType=DATE}
+        </if>
+        <if test="personInfoEntity != null and personInfoEntity.maritalTypeCode != null and personInfoEntity.maritalTypeCode != ''" >
+          AND a.marital_type_code = #{personInfoEntity.maritalTypeCode, jdbcType=VARCHAR}
+        </if>
+        <if test="personInfoEntity != null and personInfoEntity.personMemo != null and personInfoEntity.personMemo != ''" >
+          AND a.person_memo = #{personInfoEntity.personMemo, jdbcType=VARCHAR}
+        </if>
+      </trim>
+  </select>
+  <select id="personInfo_selectBySelectiveCount" parameterType="com.team.goyea.authorization.model.PersonInfo" resultType="int">
+    SELECT count(1) FROM t_person_info a
+      <trim prefix="WHERE" prefixOverrides="AND" >
+        <if test="personInfoPK != null and personInfoPK.partyId != null" >
+          AND a.party_id = #{personInfoPK.partyId, jdbcType=BIGINT}
+        </if>
+        <if test="personInfoEntity != null and personInfoEntity.personName != null and personInfoEntity.personName != ''" >
+          AND a.person_name = #{personInfoEntity.personName, jdbcType=VARCHAR}
+        </if>
+        <if test="personInfoEntity != null and personInfoEntity.sexTypeCode != null and personInfoEntity.sexTypeCode != ''" >
+          AND a.sex_type_code = #{personInfoEntity.sexTypeCode, jdbcType=VARCHAR}
+        </if>
+        <if test="personInfoEntity != null and personInfoEntity.birthDate != null" >
+          AND a.birth_date = #{personInfoEntity.birthDate, jdbcType=DATE}
+        </if>
+        <if test="personInfoEntity != null and personInfoEntity.maritalTypeCode != null and personInfoEntity.maritalTypeCode != ''" >
+          AND a.marital_type_code = #{personInfoEntity.maritalTypeCode, jdbcType=VARCHAR}
+        </if>
+        <if test="personInfoEntity != null and personInfoEntity.personMemo != null and personInfoEntity.personMemo != ''" >
+          AND a.person_memo = #{personInfoEntity.personMemo, jdbcType=VARCHAR}
+        </if>
+      </trim>
+  </select>
+</mapper>

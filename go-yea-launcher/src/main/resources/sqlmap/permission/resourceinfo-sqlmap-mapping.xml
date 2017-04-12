@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.team.goyea.common.dao.CommonDao" >
+  
+  <insert id="resourceInfo_insert" parameterType="com.team.goyea.permission.model.entity.ResourceInfoEntity" >
+    INSERT INTO t_resource_info 
+       (
+          resource_id,
+          parent_resource_id,
+          resource_name,
+          resource_content,
+          resource_desc
+        ) VALUES (
+    	  #{pk.resourceId, jdbcType=BIGINT},
+    	  #{parentResourceId, jdbcType=BIGINT},
+    	  #{resourceName, jdbcType=VARCHAR},
+    	  #{resourceContent, jdbcType=VARCHAR},
+    	  #{resourceDesc, jdbcType=VARCHAR}
+        )
+  </insert>
+  
+  <insert id="resourceInfo_insertSelective" parameterType="com.team.goyea.permission.model.entity.ResourceInfoEntity" >
+    INSERT INTO t_resource_info
+      <trim prefix="(" suffix=")" suffixOverrides="," >
+    	<if test="pk != null and pk.resourceId != null" >
+          resource_id,
+      	</if>
+    	<if test="parentResourceId != null" >
+          parent_resource_id,
+      	</if>
+    	<if test="resourceName != null" >
+          resource_name,
+      	</if>
+    	<if test="resourceContent != null" >
+          resource_content,
+      	</if>
+    	<if test="resourceDesc != null" >
+          resource_desc,
+      	</if>
+      </trim>
+    VALUES
+      <trim prefix="(" suffix=")" suffixOverrides="," >
+    	<if test="pk != null and pk.resourceId != null" >
+          #{pk.resourceId, jdbcType=BIGINT},
+      	</if>
+    	<if test="parentResourceId != null" >
+          #{parentResourceId, jdbcType=BIGINT},
+      	</if>
+    	<if test="resourceName != null" >
+          #{resourceName, jdbcType=VARCHAR},
+      	</if>
+    	<if test="resourceContent != null" >
+          #{resourceContent, jdbcType=VARCHAR},
+      	</if>
+    	<if test="resourceDesc != null" >
+          #{resourceDesc, jdbcType=VARCHAR},
+      	</if>
+      </trim>
+  </insert>
+  
+  <update id="resourceInfo_update" parameterType="com.team.goyea.permission.model.entity.ResourceInfoEntity" >
+    UPDATE t_resource_info SET 
+          parent_resource_id = #{parentResourceId, jdbcType=BIGINT},
+          resource_name = #{resourceName, jdbcType=VARCHAR},
+          resource_content = #{resourceContent, jdbcType=VARCHAR},
+          resource_desc = #{resourceDesc, jdbcType=VARCHAR}
+     WHERE 1 = 1
+       AND resource_id = #{pk.resourceId, jdbcType=BIGINT}
+  </update>
+  
+  <update id="resourceInfo_updateSelective" parameterType="com.team.goyea.permission.model.entity.ResourceInfoEntity" >
+    UPDATE t_resource_info
+      <trim prefix="SET" suffixOverrides="," >
+    	<if test="parentResourceId != null" >
+          parent_resource_id = #{parentResourceId, jdbcType=BIGINT},
+      	</if>
+    	<if test="resourceName != null" >
+          resource_name = #{resourceName, jdbcType=VARCHAR},
+      	</if>
+    	<if test="resourceContent != null" >
+          resource_content = #{resourceContent, jdbcType=VARCHAR},
+      	</if>
+    	<if test="resourceDesc != null" >
+          resource_desc = #{resourceDesc, jdbcType=VARCHAR},
+      	</if>
+      </trim>
+     WHERE 1 = 1
+       AND resource_id = #{pk.resourceId, jdbcType=BIGINT}
+  </update>
+  
+  <delete id="resourceInfo_delete" parameterType="com.team.goyea.permission.model.pk.ResourceInfoPK" >
+    DELETE FROM t_resource_info
+     WHERE 1 = 1
+       AND resource_id = #{resourceId, jdbcType=BIGINT}
+  </delete>
+  
+  <delete id="resourceInfo_deleteBySelective" parameterType="com.team.goyea.permission.model.entity.ResourceInfoEntity" >
+    DELETE FROM t_resource_info
+     <trim prefix="WHERE" prefixOverrides="AND" >
+        <if test="pk != null and pk.resourceId != null" >
+          AND resource_id = #{pk.resourceId, jdbcType=BIGINT}
+        </if>
+        <if test="parentResourceId != null" >
+          AND parent_resource_id = #{parentResourceId, jdbcType=BIGINT}
+        </if>
+        <if test="resourceName != null and resourceName != ''" >
+          AND resource_name = #{resourceName, jdbcType=VARCHAR}
+        </if>
+        <if test="resourceContent != null and resourceContent != ''" >
+          AND resource_content = #{resourceContent, jdbcType=VARCHAR}
+        </if>
+        <if test="resourceDesc != null and resourceDesc != ''" >
+          AND resource_desc = #{resourceDesc, jdbcType=VARCHAR}
+        </if>
+     </trim>
+  </delete>
+  
+  <resultMap id="resourceInfoResultMap" type="com.team.goyea.permission.model.ResourceInfo" >
+    <constructor>
+       <idArg column="resource_id" javaType="Long" jdbcType="BIGINT"/>
+    </constructor>
+    <association property="resourceInfoEntity" javaType="com.team.goyea.permission.model.entity.ResourceInfoEntity" resultMap="resourceInfoEntityMap"/>
+  </resultMap>
+  <resultMap id="resourceInfoEntityMap" type="com.team.goyea.permission.model.entity.ResourceInfoEntity" >
+    <result column="parent_resource_id" property="parentResourceId" jdbcType="BIGINT" />
+    <result column="resource_name" property="resourceName" jdbcType="VARCHAR" />
+    <result column="resource_content" property="resourceContent" jdbcType="VARCHAR" />
+    <result column="resource_desc" property="resourceDesc" jdbcType="VARCHAR" />
+    <association property="pk" javaType="com.team.goyea.permission.model.pk.ResourceInfoPK" resultMap="resourceInfoPKMap"/>
+  </resultMap>
+  <resultMap id="resourceInfoPKMap" type="com.team.goyea.permission.model.pk.ResourceInfoPK" >
+	<constructor>
+       <idArg column="resource_id" javaType="Long" jdbcType="BIGINT"/>
+	</constructor>
+  </resultMap>
+  
+  <sql id="t_resource_info_Column_List" >
+    resource_id,
+    parent_resource_id,
+    resource_name,
+    resource_content,
+    resource_desc
+  </sql>
+  
+  <select id="resourceInfo_load" parameterType="com.team.goyea.permission.model.pk.ResourceInfoPK" resultMap="resourceInfoResultMap">
+    SELECT 
+    <include refid="t_resource_info_Column_List" />
+      FROM t_resource_info
+     WHERE 1 = 1
+       AND resource_id = #{resourceId, jdbcType=BIGINT}
+  </select>
+  
+  <select id="resourceInfo_selectBySelective" parameterType="com.team.goyea.permission.model.ResourceInfo" resultMap="resourceInfoResultMap">
+    SELECT 
+    <include refid="t_resource_info_Column_List" />
+      FROM t_resource_info
+      <trim prefix="WHERE" prefixOverrides="AND" >
+        <if test="resourceInfoPK != null and resourceInfoPK.resourceId != null" >
+          AND resource_id = #{resourceInfoPK.resourceId, jdbcType=BIGINT}
+        </if>
+        <if test="resourceInfoEntity != null and resourceInfoEntity.parentResourceId != null" >
+          AND parent_resource_id = #{resourceInfoEntity.parentResourceId, jdbcType=BIGINT}
+        </if>
+        <if test="resourceInfoEntity != null and resourceInfoEntity.resourceName != null and resourceInfoEntity.resourceName != ''" >
+          AND resource_name = #{resourceInfoEntity.resourceName, jdbcType=VARCHAR}
+        </if>
+        <if test="resourceInfoEntity != null and resourceInfoEntity.resourceContent != null and resourceInfoEntity.resourceContent != ''" >
+          AND resource_content = #{resourceInfoEntity.resourceContent, jdbcType=VARCHAR}
+        </if>
+        <if test="resourceInfoEntity != null and resourceInfoEntity.resourceDesc != null and resourceInfoEntity.resourceDesc != ''" >
+          AND resource_desc = #{resourceInfoEntity.resourceDesc, jdbcType=VARCHAR}
+        </if>
+      </trim>
+     ORDER BY resource_content
+  </select>
+  <select id="resourceInfo_selectBySelectiveCount" parameterType="com.team.goyea.permission.model.ResourceInfo" resultType="int">
+    SELECT count(1) FROM t_resource_info
+      <trim prefix="WHERE" prefixOverrides="AND" >
+        <if test="resourceInfoPK != null and resourceInfoPK.resourceId != null" >
+          AND resource_id = #{resourceInfoPK.resourceId, jdbcType=BIGINT}
+        </if>
+        <if test="resourceInfoEntity != null and resourceInfoEntity.parentResourceId != null" >
+          AND parent_resource_id = #{resourceInfoEntity.parentResourceId, jdbcType=BIGINT}
+        </if>
+        <if test="resourceInfoEntity != null and resourceInfoEntity.resourceName != null and resourceInfoEntity.resourceName != ''" >
+          AND resource_name = #{resourceInfoEntity.resourceName, jdbcType=VARCHAR}
+        </if>
+        <if test="resourceInfoEntity != null and resourceInfoEntity.resourceContent != null and resourceInfoEntity.resourceContent != ''" >
+          AND resource_content = #{resourceInfoEntity.resourceContent, jdbcType=VARCHAR}
+        </if>
+        <if test="resourceInfoEntity != null and resourceInfoEntity.resourceDesc != null and resourceInfoEntity.resourceDesc != ''" >
+          AND resource_desc = #{resourceInfoEntity.resourceDesc, jdbcType=VARCHAR}
+        </if>
+      </trim>
+  </select>
+  <select id="resourceInfo_selectByParent" parameterType="com.team.goyea.permission.model.ResourceInfo" resultMap="resourceInfoResultMap">
+    SELECT 
+    <include refid="t_resource_info_Column_List" />
+      FROM t_resource_info a
+      <trim prefix="WHERE" prefixOverrides="AND" >
+        <if test="resourceInfoEntity != null and resourceInfoEntity.parentResourceId != null" >
+          AND a.parent_resource_id = #{resourceInfoEntity.parentResourceId, jdbcType=BIGINT}
+        </if>
+        <if test="resourceInfoEntity == null or resourceInfoEntity.parentResourceId == null" >
+          AND a.parent_resource_id is null
+      	</if>
+      </trim>
+  </select>
+</mapper>

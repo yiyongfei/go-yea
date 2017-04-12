@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.team.goyea.common.dao.CommonDao" >
+  
+  <insert id="partyRoleRela_insert" parameterType="com.team.goyea.authorization.model.entity.PartyRoleRelaEntity" >
+    INSERT INTO t_party_role_rela 
+       (
+          party_role_id,
+          party_id,
+          role_id
+        ) VALUES (
+    	  #{pk.partyRoleId, jdbcType=BIGINT},
+    	  #{partyId, jdbcType=BIGINT},
+    	  #{roleId, jdbcType=BIGINT}
+        )
+  </insert>
+  
+  <insert id="partyRoleRela_insertSelective" parameterType="com.team.goyea.authorization.model.entity.PartyRoleRelaEntity" >
+    INSERT INTO t_party_role_rela
+      <trim prefix="(" suffix=")" suffixOverrides="," >
+    	<if test="pk != null and pk.partyRoleId != null" >
+          party_role_id,
+      	</if>
+    	<if test="partyId != null" >
+          party_id,
+      	</if>
+    	<if test="roleId != null" >
+          role_id,
+      	</if>
+      </trim>
+    VALUES
+      <trim prefix="(" suffix=")" suffixOverrides="," >
+    	<if test="pk != null and pk.partyRoleId != null" >
+          #{pk.partyRoleId, jdbcType=BIGINT},
+      	</if>
+    	<if test="partyId != null" >
+          #{partyId, jdbcType=BIGINT},
+      	</if>
+    	<if test="roleId != null" >
+          #{roleId, jdbcType=BIGINT},
+      	</if>
+      </trim>
+  </insert>
+  
+  <update id="partyRoleRela_update" parameterType="com.team.goyea.authorization.model.entity.PartyRoleRelaEntity" >
+    UPDATE t_party_role_rela SET 
+          party_id = #{partyId, jdbcType=BIGINT},
+          role_id = #{roleId, jdbcType=BIGINT}
+     WHERE 1 = 1
+       AND party_role_id = #{pk.partyRoleId, jdbcType=BIGINT}
+  </update>
+  
+  <update id="partyRoleRela_updateSelective" parameterType="com.team.goyea.authorization.model.entity.PartyRoleRelaEntity" >
+    UPDATE t_party_role_rela
+      <trim prefix="SET" suffixOverrides="," >
+    	<if test="partyId != null" >
+          party_id = #{partyId, jdbcType=BIGINT},
+      	</if>
+    	<if test="roleId != null" >
+          role_id = #{roleId, jdbcType=BIGINT},
+      	</if>
+      </trim>
+     WHERE 1 = 1
+       AND party_role_id = #{pk.partyRoleId, jdbcType=BIGINT}
+  </update>
+  
+  <delete id="partyRoleRela_delete" parameterType="com.team.goyea.authorization.model.pk.PartyRoleRelaPK" >
+    DELETE FROM t_party_role_rela
+     WHERE 1 = 1
+       AND party_role_id = #{partyRoleId, jdbcType=BIGINT}
+  </delete>
+  
+  <delete id="partyRoleRela_deleteBySelective" parameterType="com.team.goyea.authorization.model.entity.PartyRoleRelaEntity" >
+    DELETE FROM t_party_role_rela
+     <trim prefix="WHERE" prefixOverrides="AND" >
+        <if test="pk != null and pk.partyRoleId != null" >
+          AND party_role_id = #{pk.partyRoleId, jdbcType=BIGINT}
+        </if>
+        <if test="partyId != null" >
+          AND party_id = #{partyId, jdbcType=BIGINT}
+        </if>
+        <if test="roleId != null" >
+          AND role_id = #{roleId, jdbcType=BIGINT}
+        </if>
+     </trim>
+  </delete>
+  
+  <resultMap id="partyRoleRelaResultMap" type="com.team.goyea.authorization.model.PartyRoleRela" >
+    <constructor>
+       <idArg column="party_role_id" javaType="Long" jdbcType="BIGINT"/>
+    </constructor>
+    <association property="partyRoleRelaEntity" javaType="com.team.goyea.authorization.model.entity.PartyRoleRelaEntity" resultMap="partyRoleRelaEntityMap"/>
+  </resultMap>
+  <resultMap id="partyRoleRelaEntityMap" type="com.team.goyea.authorization.model.entity.PartyRoleRelaEntity" >
+    <result column="party_id" property="partyId" jdbcType="BIGINT" />
+    <result column="role_id" property="roleId" jdbcType="BIGINT" />
+    <association property="pk" javaType="com.team.goyea.authorization.model.pk.PartyRoleRelaPK" resultMap="partyRoleRelaPKMap"/>
+  </resultMap>
+  <resultMap id="partyRoleRelaPKMap" type="com.team.goyea.authorization.model.pk.PartyRoleRelaPK" >
+	<constructor>
+       <idArg column="party_role_id" javaType="Long" jdbcType="BIGINT"/>
+	</constructor>
+  </resultMap>
+  
+  <sql id="t_party_role_rela_Column_List" >
+    party_role_id,
+    party_id,
+    role_id
+  </sql>
+  
+  <select id="partyRoleRela_load" parameterType="com.team.goyea.authorization.model.pk.PartyRoleRelaPK" resultMap="partyRoleRelaResultMap">
+    SELECT 
+    <include refid="t_party_role_rela_Column_List" />
+      FROM t_party_role_rela
+     WHERE 1 = 1
+       AND party_role_id = #{partyRoleId, jdbcType=BIGINT}
+  </select>
+  
+  <select id="partyRoleRela_selectBySelective" parameterType="com.team.goyea.authorization.model.PartyRoleRela" resultMap="partyRoleRelaResultMap">
+    SELECT 
+    <include refid="t_party_role_rela_Column_List" />
+      FROM t_party_role_rela
+      <trim prefix="WHERE" prefixOverrides="AND" >
+        <if test="partyRoleRelaPK != null and partyRoleRelaPK.partyRoleId != null" >
+          AND party_role_id = #{partyRoleRelaPK.partyRoleId, jdbcType=BIGINT}
+        </if>
+        <if test="partyRoleRelaEntity != null and partyRoleRelaEntity.partyId != null" >
+          AND party_id = #{partyRoleRelaEntity.partyId, jdbcType=BIGINT}
+        </if>
+        <if test="partyRoleRelaEntity != null and partyRoleRelaEntity.roleId != null" >
+          AND role_id = #{partyRoleRelaEntity.roleId, jdbcType=BIGINT}
+        </if>
+      </trim>
+  </select>
+  <select id="partyRoleRela_selectBySelectiveCount" parameterType="com.team.goyea.authorization.model.PartyRoleRela" resultType="int">
+    SELECT count(1) FROM t_party_role_rela
+      <trim prefix="WHERE" prefixOverrides="AND" >
+        <if test="partyRoleRelaPK != null and partyRoleRelaPK.partyRoleId != null" >
+          AND party_role_id = #{partyRoleRelaPK.partyRoleId, jdbcType=BIGINT}
+        </if>
+        <if test="partyRoleRelaEntity != null and partyRoleRelaEntity.partyId != null" >
+          AND party_id = #{partyRoleRelaEntity.partyId, jdbcType=BIGINT}
+        </if>
+        <if test="partyRoleRelaEntity != null and partyRoleRelaEntity.roleId != null" >
+          AND role_id = #{partyRoleRelaEntity.roleId, jdbcType=BIGINT}
+        </if>
+      </trim>
+  </select>
+  
+  <insert id="partyRoleRela_insertBatch" parameterType="com.team.goyea.authorization.model.entity.PartyRoleRelaEntity" >
+    INSERT INTO t_party_role_rela 
+       (
+          party_role_id,
+          party_id,
+          role_id
+        ) VALUES
+        <foreach collection="list" item="item" index="index" separator="," >  
+        (
+          #{item.pk.partyRoleId, jdbcType=BIGINT},
+    	  #{item.partyId, jdbcType=BIGINT},
+    	  #{item.roleId, jdbcType=BIGINT}
+    	)  
+    	</foreach>  
+  </insert>
+</mapper>

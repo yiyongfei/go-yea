@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.team</groupId>
+        <artifactId>go-yea</artifactId>
+        <version>0.0.1</version>
+    </parent>
+    <artifactId>go-yea-springboot</artifactId>
+    
+    <dependencies>
+    	<!-- 单元测试支持 -->
+    	<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		
+		<!-- Spring Boot 支持 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starte-tomcat</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!-- Spring Boot: 使用undertow -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-undertow</artifactId>
+        </dependency>
+        <!-- Spring Boot: 使用freemarker -->
+        <dependency>  
+            <groupId>org.springframework.boot</groupId>  
+            <artifactId>spring-boot-starter-freemarker</artifactId>  
+        </dependency>
+        
+        <!-- devtools，热部署 -->
+        <!-- devtools，会影响反序列化 -->
+        <!-- optional=true,依赖不会传递，该项目依赖devtools；之后依赖myboot项目的项目如果想要使用devtools，需要重新引入 -->
+        <!--dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <optional>true</optional>
+        </dependency-->
+        
+        <!-- Netty，通过客户端与Netty服务端交互 -->
+        <dependency>
+	        <groupId>com.yea</groupId>
+	        <artifactId>yea-dispatcher</artifactId>
+	    </dependency>
+	    
+	    <dependency>
+	        <groupId>com.yea</groupId>
+	        <artifactId>yea-shiro</artifactId>
+	    </dependency>
+	    
+	    <dependency>
+	        <groupId>com.yea</groupId>
+	        <artifactId>yea-web</artifactId>
+	    </dependency>
+	    
+	    <dependency>
+	        <groupId>com.team</groupId>
+	        <artifactId>go-yea-model</artifactId>
+	        <version>0.0.1</version>
+	    </dependency>
+        
+    </dependencies>
+  
+    <!--build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <fork>true</fork>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build-->
+    
+</project>

@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.team.goyea.common.dao.CommonDao" >
+  
+  <insert id="menuInfo_insert" parameterType="com.team.goyea.permission.model.entity.MenuInfoEntity" >
+    INSERT INTO t_menu_info 
+       (
+          menu_id,
+          parent_menu_id,
+          menu_name,
+          identifier_id,
+          menu_sequence,
+          is_valid,
+          is_delete
+        ) VALUES (
+    	  #{pk.menuId, jdbcType=BIGINT},
+    	  #{parentMenuId, jdbcType=BIGINT},
+    	  #{menuName, jdbcType=VARCHAR},
+    	  #{identifierId, jdbcType=BIGINT},
+    	  #{menuSequence, jdbcType=BIGINT},
+    	  #{isValid, jdbcType=VARCHAR},
+    	  #{isDelete, jdbcType=VARCHAR}
+        )
+  </insert>
+  
+  <insert id="menuInfo_insertSelective" parameterType="com.team.goyea.permission.model.entity.MenuInfoEntity" >
+    INSERT INTO t_menu_info
+      <trim prefix="(" suffix=")" suffixOverrides="," >
+    	<if test="pk != null and pk.menuId != null" >
+          menu_id,
+      	</if>
+    	<if test="parentMenuId != null" >
+          parent_menu_id,
+      	</if>
+    	<if test="menuName != null" >
+          menu_name,
+      	</if>
+    	<if test="identifierId != null" >
+          identifier_id,
+      	</if>
+      	<if test="menuSequence != null" >
+          menu_sequence,
+      	</if>
+    	<if test="isValid != null" >
+          is_valid,
+      	</if>
+    	<if test="isDelete != null" >
+          is_delete,
+      	</if>
+      </trim>
+    VALUES
+      <trim prefix="(" suffix=")" suffixOverrides="," >
+    	<if test="pk != null and pk.menuId != null" >
+          #{pk.menuId, jdbcType=BIGINT},
+      	</if>
+    	<if test="parentMenuId != null" >
+          #{parentMenuId, jdbcType=BIGINT},
+      	</if>
+    	<if test="menuName != null" >
+          #{menuName, jdbcType=VARCHAR},
+      	</if>
+    	<if test="identifierId != null" >
+          #{identifierId, jdbcType=BIGINT},
+      	</if>
+      	<if test="menuSequence != null" >
+          #{menuSequence, jdbcType=BIGINT},
+      	</if>
+    	<if test="isValid != null" >
+          #{isValid, jdbcType=VARCHAR},
+      	</if>
+    	<if test="isDelete != null" >
+          #{isDelete, jdbcType=VARCHAR},
+      	</if>
+      </trim>
+  </insert>
+  
+  <update id="menuInfo_update" parameterType="com.team.goyea.permission.model.entity.MenuInfoEntity" >
+    UPDATE t_menu_info SET 
+          parent_menu_id = #{parentMenuId, jdbcType=BIGINT},
+          menu_name = #{menuName, jdbcType=VARCHAR},
+          identifier_id = #{identifierId, jdbcType=BIGINT},
+          menu_sequence = #{menuSequence, jdbcType=BIGINT},
+          is_valid = #{isValid, jdbcType=VARCHAR},
+          is_delete = #{isDelete, jdbcType=VARCHAR}
+     WHERE 1 = 1
+       AND menu_id = #{pk.menuId, jdbcType=BIGINT}
+  </update>
+  
+  <update id="menuInfo_updateSelective" parameterType="com.team.goyea.permission.model.entity.MenuInfoEntity" >
+    UPDATE t_menu_info
+      <trim prefix="SET" suffixOverrides="," >
+    	<if test="parentMenuId != null" >
+          parent_menu_id = #{parentMenuId, jdbcType=BIGINT},
+      	</if>
+    	<if test="menuName != null" >
+          menu_name = #{menuName, jdbcType=VARCHAR},
+      	</if>
+    	<if test="identifierId != null" >
+          identifier_id = #{identifierId, jdbcType=BIGINT},
+      	</if>
+      	<if test="menuSequence != null" >
+          menu_sequence = #{menuSequence, jdbcType=BIGINT},
+      	</if>
+    	<if test="isValid != null" >
+          is_valid = #{isValid, jdbcType=VARCHAR},
+      	</if>
+    	<if test="isDelete != null" >
+          is_delete = #{isDelete, jdbcType=VARCHAR},
+      	</if>
+      </trim>
+     WHERE 1 = 1
+       AND menu_id = #{pk.menuId, jdbcType=BIGINT}
+  </update>
+  
+  <delete id="menuInfo_delete" parameterType="com.team.goyea.permission.model.pk.MenuInfoPK" >
+    DELETE FROM t_menu_info
+     WHERE 1 = 1
+       AND menu_id = #{menuId, jdbcType=BIGINT}
+  </delete>
+  
+  <delete id="menuInfo_deleteBySelective" parameterType="com.team.goyea.permission.model.entity.MenuInfoEntity" >
+    DELETE FROM t_menu_info
+     <trim prefix="WHERE" prefixOverrides="AND" >
+        <if test="pk != null and pk.menuId != null" >
+          AND menu_id = #{pk.menuId, jdbcType=BIGINT}
+        </if>
+        <if test="parentMenuId != null" >
+          AND parent_menu_id = #{parentMenuId, jdbcType=BIGINT}
+        </if>
+        <if test="menuName != null and menuName != ''" >
+          AND menu_name = #{menuName, jdbcType=VARCHAR}
+        </if>
+        <if test="identifierId != null" >
+          AND identifier_id = #{identifierId, jdbcType=BIGINT}
+        </if>
+        <if test="isValid != null and isValid != ''" >
+          AND is_valid = #{isValid, jdbcType=VARCHAR}
+        </if>
+        <if test="isDelete != null and isDelete != ''" >
+          AND is_delete = #{isDelete, jdbcType=VARCHAR}
+        </if>
+     </trim>
+  </delete>
+  
+  <resultMap id="menuInfoResultMap" type="com.team.goyea.permission.model.MenuInfo" >
+    <constructor>
+       <idArg column="menu_id" javaType="Long" jdbcType="BIGINT"/>
+    </constructor>
+    <association property="menuInfoEntity" javaType="com.team.goyea.permission.model.entity.MenuInfoEntity" resultMap="menuInfoEntityMap"/>
+  </resultMap>
+  <resultMap id="menuInfoEntityMap" type="com.team.goyea.permission.model.entity.MenuInfoEntity" >
+    <result column="parent_menu_id" property="parentMenuId" jdbcType="BIGINT" />
+    <result column="menu_name" property="menuName" jdbcType="VARCHAR" />
+    <result column="identifier_id" property="identifierId" jdbcType="BIGINT" />
+    <result column="menu_sequence" property="menuSequence" jdbcType="BIGINT" />
+    <result column="is_valid" property="isValid" jdbcType="VARCHAR" />
+    <result column="is_delete" property="isDelete" jdbcType="VARCHAR" />
+    <association property="pk" javaType="com.team.goyea.permission.model.pk.MenuInfoPK" resultMap="menuInfoPKMap"/>
+  </resultMap>
+  <resultMap id="menuInfoPKMap" type="com.team.goyea.permission.model.pk.MenuInfoPK" >
+	<constructor>
+       <idArg column="menu_id" javaType="Long" jdbcType="BIGINT"/>
+	</constructor>
+  </resultMap>
+  
+  <sql id="t_menu_info_Column_List" >
+    a.menu_id,
+    a.parent_menu_id,
+    a.menu_name,
+    a.identifier_id,
+    a.menu_sequence,
+    a.is_valid,
+    a.is_delete
+  </sql>
+  
+  <select id="menuInfo_load" parameterType="com.team.goyea.permission.model.pk.MenuInfoPK" resultMap="menuInfoResultMap">
+    SELECT 
+    <include refid="t_menu_info_Column_List" />
+      FROM t_menu_info a
+     WHERE 1 = 1
+       AND a.menu_id = #{menuId, jdbcType=BIGINT}
+  </select>
+  
+  <select id="menuInfo_selectBySelective" parameterType="com.team.goyea.permission.model.MenuInfo" resultMap="menuInfoResultMap">
+    SELECT 
+    <include refid="t_menu_info_Column_List" />
+      FROM t_menu_info a
+      <trim prefix="WHERE" prefixOverrides="AND" >
+        <if test="menuInfoPK != null and menuInfoPK.menuId != null" >
+          AND a.menu_id = #{menuInfoPK.menuId, jdbcType=BIGINT}
+        </if>
+        <if test="menuInfoEntity != null and menuInfoEntity.parentMenuId != null" >
+          AND a.parent_menu_id = #{menuInfoEntity.parentMenuId, jdbcType=BIGINT}
+        </if>
+        <if test="menuInfoEntity != null and menuInfoEntity.menuName != null and menuInfoEntity.menuName != ''" >
+          AND a.menu_name = #{menuInfoEntity.menuName, jdbcType=VARCHAR}
+        </if>
+        <if test="menuInfoEntity != null and menuInfoEntity.identifierId != null" >
+          AND a.identifier_id = #{menuInfoEntity.identifierId, jdbcType=BIGINT}
+        </if>
+        <if test="menuInfoEntity != null and menuInfoEntity.isValid != null and menuInfoEntity.isValid != ''" >
+          AND a.is_valid = #{menuInfoEntity.isValid, jdbcType=VARCHAR}
+        </if>
+        <if test="menuInfoEntity != null and menuInfoEntity.isDelete != null and menuInfoEntity.isDelete != ''" >
+          AND a.is_delete = #{menuInfoEntity.isDelete, jdbcType=VARCHAR}
+        </if>
+      </trim>
+  </select>
+  <select id="menuInfo_selectBySelectiveCount" parameterType="com.team.goyea.permission.model.MenuInfo" resultType="int">
+    SELECT count(1) FROM t_menu_info a
+      <trim prefix="WHERE" prefixOverrides="AND" >
+        <if test="menuInfoPK != null and menuInfoPK.menuId != null" >
+          AND a.menu_id = #{menuInfoPK.menuId, jdbcType=BIGINT}
+        </if>
+        <if test="menuInfoEntity != null and menuInfoEntity.parentMenuId != null" >
+          AND a.parent_menu_id = #{menuInfoEntity.parentMenuId, jdbcType=BIGINT}
+        </if>
+        <if test="menuInfoEntity != null and menuInfoEntity.menuName != null and menuInfoEntity.menuName != ''" >
+          AND a.menu_name = #{menuInfoEntity.menuName, jdbcType=VARCHAR}
+        </if>
+        <if test="menuInfoEntity != null and menuInfoEntity.identifierId != null" >
+          AND a.identifier_id = #{menuInfoEntity.identifierId, jdbcType=BIGINT}
+        </if>
+        <if test="menuInfoEntity != null and menuInfoEntity.isValid != null and menuInfoEntity.isValid != ''" >
+          AND a.is_valid = #{menuInfoEntity.isValid, jdbcType=VARCHAR}
+        </if>
+        <if test="menuInfoEntity != null and menuInfoEntity.isDelete != null and menuInfoEntity.isDelete != ''" >
+          AND a.is_delete = #{menuInfoEntity.isDelete, jdbcType=VARCHAR}
+        </if>
+      </trim>
+  </select>
+  
+  <resultMap id="menuFullResultMap" type="com.team.goyea.permission.model.MenuInfo" >
+    <constructor>
+       <idArg column="menu_id" javaType="Long" jdbcType="BIGINT"/>
+    </constructor>
+    <result column="identifier_path" property="urlPath" jdbcType="VARCHAR" />
+    <association property="menuInfoEntity" javaType="com.team.goyea.permission.model.entity.MenuInfoEntity" resultMap="menuInfoEntityMap"/>
+    <association property="parentMenuInfoEntity" column="parent_menu_id" select="menuInfoEntity_load"/>
+  </resultMap>
+  
+  <select id="menuFull_selectBySelective" parameterType="com.team.goyea.permission.model.MenuInfo" resultMap="menuFullResultMap">
+    SELECT b.identifier_path,
+    <include refid="t_menu_info_Column_List" />
+      FROM t_menu_info a 
+      LEFT OUTER JOIN t_resource_identifier b ON a.identifier_id = b.identifier_id
+     WHERE 1 = 1
+        <if test="menuInfoPK != null and menuInfoPK.menuId != null" >
+          AND a.menu_id = #{menuInfoPK.menuId, jdbcType=BIGINT}
+        </if>
+        <if test="menuInfoEntity != null and menuInfoEntity.parentMenuId != null" >
+          AND a.parent_menu_id = #{menuInfoEntity.parentMenuId, jdbcType=BIGINT}
+        </if>
+        <if test="menuInfoEntity != null and menuInfoEntity.menuName != null and menuInfoEntity.menuName != ''" >
+          AND a.menu_name = #{menuInfoEntity.menuName, jdbcType=VARCHAR}
+        </if>
+        <if test="menuInfoEntity != null and menuInfoEntity.identifierId != null" >
+          AND a.identifier_id = #{menuInfoEntity.identifierId, jdbcType=BIGINT}
+        </if>
+        <if test="menuInfoEntity != null and menuInfoEntity.isValid != null and menuInfoEntity.isValid != ''" >
+          AND a.is_valid = #{menuInfoEntity.isValid, jdbcType=VARCHAR}
+        </if>
+        <if test="menuInfoEntity != null and menuInfoEntity.isDelete != null and menuInfoEntity.isDelete != ''" >
+          AND a.is_delete = #{menuInfoEntity.isDelete, jdbcType=VARCHAR}
+        </if>
+  </select>
+  <select id="menuInfoEntity_load" resultMap="menuInfoEntityMap">
+    SELECT 
+    <include refid="t_menu_info_Column_List" />
+      FROM t_menu_info a
+     WHERE 1 = 1
+       AND a.menu_id = #{menuId, jdbcType=BIGINT}
+  </select>
+  
+  <select id="menuInfo_selectByParent" parameterType="com.team.goyea.permission.model.MenuInfo" resultMap="menuInfoResultMap">
+    SELECT 
+    <include refid="t_menu_info_Column_List" />
+      FROM t_menu_info a
+      <trim prefix="WHERE" prefixOverrides="AND" >
+        <if test="menuInfoEntity != null and menuInfoEntity.parentMenuId != null" >
+          AND a.parent_menu_id = #{menuInfoEntity.parentMenuId, jdbcType=BIGINT}
+        </if>
+        <if test="menuInfoEntity == null or menuInfoEntity.parentMenuId == null" >
+          AND a.parent_menu_id is null
+      	</if>
+      </trim>
+  </select>
+</mapper>

@@ -1,0 +1,100 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.team</groupId>
+        <artifactId>go-yea</artifactId>
+        <version>0.0.1</version>
+    </parent>
+    <artifactId>go-yea-web</artifactId>
+    <packaging>war</packaging>
+  	<dependencies>
+	    <dependency>
+		    <groupId>org.freemarker</groupId>
+		    <artifactId>freemarker</artifactId>
+		</dependency>
+		
+        <!-- Netty，通过客户端与Netty服务端交互 -->
+        <dependency>
+	        <groupId>com.yea</groupId>
+	        <artifactId>yea-dispatcher</artifactId>
+	    </dependency>
+	    
+	    <!-- Shiro，权限认证 -->
+	    <dependency>
+	        <groupId>com.yea</groupId>
+	        <artifactId>yea-shiro</artifactId>
+	    </dependency>
+	    
+	    <!-- Web -->
+	    <dependency>
+	        <groupId>com.yea</groupId>
+	        <artifactId>yea-web</artifactId>
+	    </dependency>
+	    
+	    <!-- 域对象 -->
+	    <dependency>
+	        <groupId>com.team</groupId>
+	        <artifactId>go-yea-model</artifactId>
+	        <version>0.0.1</version>
+	    </dependency>
+    </dependencies>
+    <profiles>
+	    <profile>
+	        <!-- 开发环境 -->
+	        <id>develop</id>
+	        <properties>
+	            <profiles.active>develop</profiles.active>
+	            <jetty.port>9999</jetty.port>
+	        </properties>
+			<dependencies>        
+			    <dependency>
+			        <groupId>com.team</groupId>
+			        <artifactId>go-yea-launcher</artifactId>
+			        <version>0.0.1</version>
+			    </dependency>
+		    </dependencies>
+	    </profile>
+	    <profile>
+	        <!-- 测试环境 -->
+	        <id>staging</id>
+	        <properties>
+	            <profiles.active>staging</profiles.active>
+	            <jetty.port>8888</jetty.port>
+	        </properties>
+	        <activation>
+	            <activeByDefault>true</activeByDefault>
+	        </activation>
+	    </profile>
+	</profiles>
+    <build>
+        <finalName>demo-yea-web</finalName>
+        <resources>
+	        <resource>
+	            <directory>src/main/resources</directory>
+	            <filtering>true</filtering>
+	            <!-- 资源根目录排除各环境的配置，使用单独的资源目录来指定 -->
+	            <excludes>  
+	                <exclude>env/**</exclude>
+	            </excludes>
+	        </resource>
+	        <resource>
+	            <directory>src/main/resources/env/${profiles.active}</directory>
+	        </resource>
+	    </resources>
+        <plugins>
+	        <plugin>
+			    <groupId>org.eclipse.jetty</groupId>
+			    <artifactId>jetty-maven-plugin</artifactId>
+			    <version>9.2.21.v20170120</version>
+			    <configuration>
+				    <httpConnector>
+				        <port>${jetty.port}</port>
+				    </httpConnector>
+				    <scanIntervalSeconds>1</scanIntervalSeconds>
+				</configuration>
+			</plugin>
+		</plugins>
+    </build>
+</project>

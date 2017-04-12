@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.team.goyea.common.dao.CommonDao" >
+  
+  <insert id="resourceIdentifier_insert" parameterType="com.team.goyea.permission.model.entity.ResourceIdentifierEntity" >
+    INSERT INTO t_resource_identifier 
+       (
+          identifier_id,
+          permission_id,
+          identifier_name,
+          identifier_path,
+          identifier_type,
+          access_type
+        ) VALUES (
+    	  #{pk.identifierId, jdbcType=BIGINT},
+    	  #{permissionId, jdbcType=BIGINT},
+    	  #{identifierName, jdbcType=VARCHAR},
+    	  #{identifierPath, jdbcType=VARCHAR},
+    	  #{identifierType, jdbcType=VARCHAR},
+    	  #{accessType, jdbcType=VARCHAR}
+        )
+  </insert>
+  
+  <insert id="resourceIdentifier_insertSelective" parameterType="com.team.goyea.permission.model.entity.ResourceIdentifierEntity" >
+    INSERT INTO t_resource_identifier
+      <trim prefix="(" suffix=")" suffixOverrides="," >
+    	<if test="pk != null and pk.identifierId != null" >
+          identifier_id,
+      	</if>
+    	<if test="permissionId != null" >
+          permission_id,
+      	</if>
+    	<if test="identifierName != null" >
+          identifier_name,
+      	</if>
+    	<if test="identifierPath != null" >
+          identifier_path,
+      	</if>
+    	<if test="identifierType != null" >
+          identifier_type,
+      	</if>
+      	<if test="accessType != null" >
+          access_type,
+      	</if>
+      </trim>
+    VALUES
+      <trim prefix="(" suffix=")" suffixOverrides="," >
+    	<if test="pk != null and pk.identifierId != null" >
+          #{pk.identifierId, jdbcType=BIGINT},
+      	</if>
+    	<if test="permissionId != null" >
+          #{permissionId, jdbcType=BIGINT},
+      	</if>
+    	<if test="identifierName != null" >
+          #{identifierName, jdbcType=VARCHAR},
+      	</if>
+    	<if test="identifierPath != null" >
+          #{identifierPath, jdbcType=VARCHAR},
+      	</if>
+    	<if test="identifierType != null" >
+          #{identifierType, jdbcType=VARCHAR},
+      	</if>
+      	<if test="accessType != null" >
+          #{accessType, jdbcType=VARCHAR},
+      	</if>
+      </trim>
+  </insert>
+  
+  <update id="resourceIdentifier_update" parameterType="com.team.goyea.permission.model.entity.ResourceIdentifierEntity" >
+    UPDATE t_resource_identifier SET 
+          permission_id = #{permissionId, jdbcType=BIGINT},
+          identifier_name = #{identifierName, jdbcType=VARCHAR},
+          identifier_path = #{identifierPath, jdbcType=VARCHAR},
+          identifier_type = #{identifierType, jdbcType=VARCHAR},
+          access_type = #{accessType, jdbcType=VARCHAR}
+     WHERE 1 = 1
+       AND identifier_id = #{pk.identifierId, jdbcType=BIGINT}
+  </update>
+  
+  <update id="resourceIdentifier_updateSelective" parameterType="com.team.goyea.permission.model.entity.ResourceIdentifierEntity" >
+    UPDATE t_resource_identifier
+      <trim prefix="SET" suffixOverrides="," >
+    	<if test="permissionId != null" >
+          permission_id = #{permissionId, jdbcType=BIGINT},
+      	</if>
+    	<if test="identifierName != null" >
+          identifier_name = #{identifierName, jdbcType=VARCHAR},
+      	</if>
+    	<if test="identifierPath != null" >
+          identifier_path = #{identifierPath, jdbcType=VARCHAR},
+      	</if>
+    	<if test="identifierType != null" >
+          identifier_type = #{identifierType, jdbcType=VARCHAR},
+      	</if>
+      	<if test="accessType != null" >
+          access_type = #{accessType, jdbcType=VARCHAR},
+      	</if>
+      </trim>
+     WHERE 1 = 1
+       AND identifier_id = #{pk.identifierId, jdbcType=BIGINT}
+  </update>
+  
+  <delete id="resourceIdentifier_delete" parameterType="com.team.goyea.permission.model.pk.ResourceIdentifierPK" >
+    DELETE FROM t_resource_identifier
+     WHERE 1 = 1
+       AND identifier_id = #{identifierId, jdbcType=BIGINT}
+  </delete>
+  
+  <delete id="resourceIdentifier_deleteBySelective" parameterType="com.team.goyea.permission.model.entity.ResourceIdentifierEntity" >
+    DELETE FROM t_resource_identifier
+     <trim prefix="WHERE" prefixOverrides="AND" >
+        <if test="pk != null and pk.identifierId != null" >
+          AND identifier_id = #{pk.identifierId, jdbcType=BIGINT}
+        </if>
+        <if test="permissionId != null" >
+          AND permission_id = #{permissionId, jdbcType=BIGINT}
+        </if>
+        <if test="identifierName != null and identifierName != ''" >
+          AND identifier_name = #{identifierName, jdbcType=VARCHAR}
+        </if>
+        <if test="identifierPath != null and identifierPath != ''" >
+          AND identifier_path = #{identifierPath, jdbcType=VARCHAR}
+        </if>
+        <if test="identifierType != null and identifierType != ''" >
+          AND identifier_type = #{identifierType, jdbcType=VARCHAR}
+        </if>
+        <if test="accessType != null and accessType != ''" >
+          AND access_type = #{accessType, jdbcType=VARCHAR}
+      	</if>
+     </trim>
+  </delete>
+  
+  <resultMap id="resourceIdentifierResultMap" type="com.team.goyea.permission.model.ResourceIdentifier" >
+    <constructor>
+       <idArg column="identifier_id" javaType="Long" jdbcType="BIGINT"/>
+    </constructor>
+    <result column="permission_name" property="permissionName" jdbcType="VARCHAR" />
+    <result column="permission_content" property="permissionContent" jdbcType="VARCHAR" />
+    <association property="resourceIdentifierEntity" javaType="com.team.goyea.permission.model.entity.ResourceIdentifierEntity" resultMap="resourceIdentifierEntityMap"/>
+  </resultMap>
+  <resultMap id="resourceIdentifierEntityMap" type="com.team.goyea.permission.model.entity.ResourceIdentifierEntity" >
+    <result column="permission_id" property="permissionId" jdbcType="BIGINT" />
+    <result column="identifier_name" property="identifierName" jdbcType="VARCHAR" />
+    <result column="identifier_path" property="identifierPath" jdbcType="VARCHAR" />
+    <result column="identifier_type" property="identifierType" jdbcType="VARCHAR" />
+    <result column="access_type" property="accessType" jdbcType="VARCHAR" />
+    <association property="pk" javaType="com.team.goyea.permission.model.pk.ResourceIdentifierPK" resultMap="resourceIdentifierPKMap"/>
+  </resultMap>
+  <resultMap id="resourceIdentifierPKMap" type="com.team.goyea.permission.model.pk.ResourceIdentifierPK" >
+	<constructor>
+       <idArg column="identifier_id" javaType="Long" jdbcType="BIGINT"/>
+	</constructor>
+  </resultMap>
+  
+  <sql id="t_resource_identifier_Column_List" >
+    identifier_id,
+    permission_id,
+    identifier_name,
+    identifier_path,
+    identifier_type,
+    access_type
+  </sql>
+  
+  <select id="resourceIdentifier_load" parameterType="com.team.goyea.permission.model.pk.ResourceIdentifierPK" resultMap="resourceIdentifierResultMap">
+    SELECT 
+    <include refid="t_resource_identifier_Column_List" />
+      FROM t_resource_identifier
+     WHERE 1 = 1
+       AND identifier_id = #{identifierId, jdbcType=BIGINT}
+  </select>
+  
+  <select id="resourceIdentifier_selectBySelective" parameterType="com.team.goyea.permission.model.ResourceIdentifier" resultMap="resourceIdentifierResultMap">
+    SELECT 
+    <include refid="t_resource_identifier_Column_List" />
+      FROM t_resource_identifier
+      <trim prefix="WHERE" prefixOverrides="AND" >
+        <if test="resourceIdentifierPK != null and resourceIdentifierPK.identifierId != null" >
+          AND identifier_id = #{resourceIdentifierPK.identifierId, jdbcType=BIGINT}
+        </if>
+        <if test="resourceIdentifierEntity != null and resourceIdentifierEntity.permissionId != null" >
+          AND permission_id = #{resourceIdentifierEntity.permissionId, jdbcType=BIGINT}
+        </if>
+        <if test="resourceIdentifierEntity != null and resourceIdentifierEntity.identifierName != null and resourceIdentifierEntity.identifierName != ''" >
+          AND identifier_name = #{resourceIdentifierEntity.identifierName, jdbcType=VARCHAR}
+        </if>
+        <if test="resourceIdentifierEntity != null and resourceIdentifierEntity.identifierPath != null and resourceIdentifierEntity.identifierPath != ''" >
+          AND identifier_path = #{resourceIdentifierEntity.identifierPath, jdbcType=VARCHAR}
+        </if>
+        <if test="resourceIdentifierEntity != null and resourceIdentifierEntity.identifierType != null and resourceIdentifierEntity.identifierType != ''" >
+          AND identifier_type = #{resourceIdentifierEntity.identifierType, jdbcType=VARCHAR}
+        </if>
+        <if test="resourceIdentifierEntity != null and resourceIdentifierEntity.accessType != null and resourceIdentifierEntity.accessType != ''" >
+          AND access_type = #{resourceIdentifierEntity.accessType, jdbcType=VARCHAR}
+        </if>
+      </trim>
+  </select>
+  <select id="resourceIdentifier_selectBySelectiveCount" parameterType="com.team.goyea.permission.model.ResourceIdentifier" resultType="int">
+    SELECT count(1) FROM t_resource_identifier
+      <trim prefix="WHERE" prefixOverrides="AND" >
+        <if test="resourceIdentifierPK != null and resourceIdentifierPK.identifierId != null" >
+          AND identifier_id = #{resourceIdentifierPK.identifierId, jdbcType=BIGINT}
+        </if>
+        <if test="resourceIdentifierEntity != null and resourceIdentifierEntity.permissionId != null" >
+          AND permission_id = #{resourceIdentifierEntity.permissionId, jdbcType=BIGINT}
+        </if>
+        <if test="resourceIdentifierEntity != null and resourceIdentifierEntity.identifierName != null and resourceIdentifierEntity.identifierName != ''" >
+          AND identifier_name = #{resourceIdentifierEntity.identifierName, jdbcType=VARCHAR}
+        </if>
+        <if test="resourceIdentifierEntity != null and resourceIdentifierEntity.identifierPath != null and resourceIdentifierEntity.identifierPath != ''" >
+          AND identifier_path = #{resourceIdentifierEntity.identifierPath, jdbcType=VARCHAR}
+        </if>
+        <if test="resourceIdentifierEntity != null and resourceIdentifierEntity.identifierType != null and resourceIdentifierEntity.identifierType != ''" >
+          AND identifier_type = #{resourceIdentifierEntity.identifierType, jdbcType=VARCHAR}
+        </if>
+        <if test="resourceIdentifierEntity != null and resourceIdentifierEntity.accessType != null and resourceIdentifierEntity.accessType != ''" >
+          AND access_type = #{resourceIdentifierEntity.accessType, jdbcType=VARCHAR}
+        </if>
+      </trim>
+  </select>
+  <select id="resourceIdentifier_selectPermissionContent" parameterType="com.team.goyea.permission.model.ResourceIdentifier" resultMap="resourceIdentifierResultMap">
+    SELECT 
+	       a.identifier_id,
+	       a.permission_id,
+	       a.identifier_name,
+	       a.identifier_path,
+	       a.identifier_type,
+	       a.access_type,
+	       b.permission_name,
+	       b.permission_content
+      FROM t_resource_identifier a
+      LEFT OUTER JOIN (SELECT d1.permission_id, d1.permission_name, d2.resource_content || ':' || d3.operation_name as permission_content 
+                         FROM t_permission_info d1, t_resource_info d2, t_operation_info d3 
+                        WHERE d1.resource_id = d2.resource_id and d1.operation_id = d3.operation_id and d1.is_valid = '01' and d1.is_delete = '01') b on a.permission_id = b.permission_id
+      <trim prefix="WHERE" prefixOverrides="AND" >
+        <if test="resourceIdentifierPK != null and resourceIdentifierPK.identifierId != null" >
+          AND a.identifier_id = #{resourceIdentifierPK.identifierId, jdbcType=BIGINT}
+        </if>
+        <if test="resourceIdentifierEntity != null and resourceIdentifierEntity.permissionId != null" >
+          AND a.permission_id = #{resourceIdentifierEntity.permissionId, jdbcType=BIGINT}
+        </if>
+        <if test="resourceIdentifierEntity != null and resourceIdentifierEntity.identifierName != null and resourceIdentifierEntity.identifierName != ''" >
+          AND a.identifier_name = #{resourceIdentifierEntity.identifierName, jdbcType=VARCHAR}
+        </if>
+        <if test="resourceIdentifierEntity != null and resourceIdentifierEntity.identifierPath != null and resourceIdentifierEntity.identifierPath != ''" >
+          AND a.identifier_path = #{resourceIdentifierEntity.identifierPath, jdbcType=VARCHAR}
+        </if>
+        <if test="resourceIdentifierEntity != null and resourceIdentifierEntity.identifierType != null and resourceIdentifierEntity.identifierType != ''" >
+          AND a.identifier_type = #{resourceIdentifierEntity.identifierType, jdbcType=VARCHAR}
+        </if>
+        <if test="resourceIdentifierEntity != null and resourceIdentifierEntity.accessType != null and resourceIdentifierEntity.accessType != ''" >
+          AND a.access_type = #{resourceIdentifierEntity.accessType, jdbcType=VARCHAR}
+        </if>
+      </trim>
+  </select>
+</mapper>
