@@ -101,12 +101,14 @@ public class AuthorizationServiceImpl implements AuthorizationService {
 	@Override
 	public void addUserRole(Long partyId, Long[] roleIds) throws Exception {
 		UserInfo userInfo = new UserInfo(partyId);
-		for(Long roleId : roleIds) {
-			PartyRoleRelaEntity partyRoleRela = new PartyRoleRelaEntity();
-			partyRoleRela.generatePK();
-			partyRoleRela.setPartyId(partyId);
-			partyRoleRela.setRoleId(roleId);
-			userInfo.getListPartyRoleRelaEntity().add(partyRoleRela);
+		if (roleIds != null && roleIds.length > 0) {
+			for(Long roleId : roleIds) {
+				PartyRoleRelaEntity partyRoleRela = new PartyRoleRelaEntity();
+				partyRoleRela.generatePK();
+				partyRoleRela.setPartyId(partyId);
+				partyRoleRela.setRoleId(roleId);
+				userInfo.getListPartyRoleRelaEntity().add(partyRoleRela);
+			}
 		}
 		userInfoRepository.addUserRole(userInfo);
 	}

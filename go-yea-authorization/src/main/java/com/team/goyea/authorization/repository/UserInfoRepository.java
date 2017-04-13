@@ -20,6 +20,7 @@ import com.yea.core.base.model.BaseModel;
 import com.yea.orm.handle.ORMConstants;
 import com.yea.shiro.password.EncrytPassword;
 
+
 @Repository
 public class UserInfoRepository {
 	@Autowired
@@ -87,10 +88,13 @@ public class UserInfoRepository {
 		commonDao.delete(PartyRoleRela.Sqlid.PARTYROLERELA_DELETE_SELECTIVE.value(), entity);
 		entity = null;
 		
-		List<BaseModel> list = new ArrayList<BaseModel>();
-		list.addAll(userInfo.getListPartyRoleRelaEntity());
-		commonDao.executeBatch(ORMConstants.ORM_LEVEL.M_INSERT, PartyRoleRela.Sqlid.PARTYROLERELA_INSERT_BATCH.value(), list);
-		list = null;
+		if(userInfo.getListPartyRoleRelaEntity() != null && userInfo.getListPartyRoleRelaEntity().size() > 0) {
+			List<BaseModel> list = new ArrayList<BaseModel>();
+			list.addAll(userInfo.getListPartyRoleRelaEntity());
+			commonDao.executeBatch(ORMConstants.ORM_LEVEL.M_INSERT, PartyRoleRela.Sqlid.PARTYROLERELA_INSERT_BATCH.value(), list);
+			list = null;
+		}
+		
 	}
 	
 }
