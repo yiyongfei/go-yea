@@ -51,15 +51,17 @@ public class AuthorizationController {
 		// 如果登录失败从request中获取认证异常信息，shiroLoginFailure就是shiro异常类的全限定名
 		// 根据shiro返回的异常类路径判断，抛出指定异常信息
 		String exceptionClassName = (String) request.getAttribute("shiroLoginFailure");
+		String message = "";
 		if (exceptionClassName != null) {
 			if (UnknownAccountException.class.getName().equals(exceptionClassName)) {
-				throw new Throwable("用户名不存在");
+				message = ("用户名不存在");
 			} else if (IncorrectCredentialsException.class.getName().equals(exceptionClassName)) {
-				throw new Throwable("用户名/密码不正确");
+				message = ("用户名/密码不正确");
 			} else {
-				throw new Exception();// 最终在异常处理器生成未知错误
+				message = "登录未知问题，请联系管理员";// 最终在异常处理器生成未知错误
 			}
 		}
+		model.put("login_message", message);
 		// 此方法不处理登陆成功（认证成功），shiro认证成功会自动跳转到上一个请求路径
 		// 登陆失败还到login页面
 		return "/login";

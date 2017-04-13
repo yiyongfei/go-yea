@@ -85,4 +85,8 @@
 
     <!-- Shiro生命周期处理器-->
     <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
+    
+    <!-- MVC统一异常处理-->
+    <bean id="mvcExceptionHandler" class="com.yea.web.exception.WebExceptionHandler"/>
+    
 </beans>

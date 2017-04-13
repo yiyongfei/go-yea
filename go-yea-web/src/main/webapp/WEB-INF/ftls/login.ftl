@@ -17,6 +17,11 @@
             <p>
             </p>
             <form class="m-t" role="form" method="post" action="/authenticed.html">
+                <#if login_message?? >
+                <div class="form-group has-error">
+                    <label class="control-label">${login_message}</label>
+                </div>
+                </#if>
                 <div class="form-group">
                     <input type="text" class="form-control" name="username" placeholder="username" required="">
                 </div>
