@@ -44,8 +44,13 @@ sh start.sh;
 ### 注意
 RPC模式下，启动Web服务时会调用APP服务初始化Shiro权限管理信息，启动顺序先APP后WEB。实际应用中可单独部署一台APP用于提供统一认证授权服务。
 
-# 开发开始
+# 开发
 ## APP服务
+向外部系统提供APP服务接口，服务内部实现具体的业务场景。可参照go-yea的结构建立Maven项目结构：<br>
+- 公共层Common
+- 模型层Model
+- 业务模块层，会有多个业务模块层
+- 启动器层
 ### 1、建立通用Dao类
 ```java
 @Repository
@@ -65,8 +70,16 @@ public class CommonDao<T> extends AbstractBaseDAO<T> {
 - 每个单独部署的APP服务均需要启动器，启动器内将存放Main类、该APP服务所涉及的DB操作以及启动APP服务所需的Spring配置文件
 - 启动器提供Netty服务端配置、DB配置，同时基于APP服务的实际调用情况酌情提供Netty客户端配置
 - 启动器请参看go-yea/go-yea-launcher
-- 配置内容:
+- 运行在单机模式下的Netty配置内容:
 ```xml
+	<!-- JVM内调用 -->
+	<bean id="launcherClient" class="com.yea.core.remote.client.DefaultClient" ></bean>
+```
+- 运行在RPC模式下的Netty配置内容:
+```xml
+	<!-- JVM内调用 -->
+	<bean id="launcherClient" class="com.yea.core.remote.client.DefaultClient" ></bean>
+	
 	<!-- Netty编解码的Handler实现 -->
 	<bean id="nettyMessageDecoder" class="com.yea.remote.netty.codec.NettyMessageDecoder"></bean>
 	<bean id="nettyMessageEncoder" class="com.yea.remote.netty.codec.NettyMessageEncoder"></bean>
@@ -89,7 +102,7 @@ public class CommonDao<T> extends AbstractBaseDAO<T> {
 		<property name="port" value="${zookeeper.port}" />
 	</bean>
 	
-	<!-- Netty服务端配置，Netty服务启动将在Main内调用(外部提供服务绑定端口) -->
+	<!-- Netty服务端配置，Netty服务启动将在Main内调用(外部提供服务绑定端口)，启动服务后向调度中心发送服务注册请求 -->
 	<bean id="nettyServer" class="com.yea.remote.netty.server.NettyServer" destroy-method="shutdown">
 		<property name="registerName" value="${netty.server.register}" /><!-- 服务注册名，将在Zookeeper内注册 -->
 		<property name="dispatcher" ref="zkDispatcher" />
@@ -159,4 +172,207 @@ public class SaveOperationAct extends AbstractTransactionAct {
 		省略
 	}
 }
+```
+## WEB服务
+提供Web服务，主要完成参数封装、页面展示。可参照go-yea的结构建立Maven项目结构：<br>
+- 模型层Model(与APP服务共用)
+- 控制层Controller
+- 页面资源WEB-INFO
+### 1、pom.xml
+- 运行在单机模式下:
+```xml
+<profile>
+	<!-- 单机模式 -->
+	<id>standalone</id>
+	<properties>
+	    <profiles.active>standalone</profiles.active>
+	</properties>
+	<dependencies>        
+		<dependency>
+			<groupId>com.team</groupId>
+			<artifactId>go-yea-launcher</artifactId>
+			<version>0.0.1</version>
+		</dependency>
+    </dependencies>
+</profile>
+```
+- 运行在RPC模式下:
+```xml
+<profile>
+	<!-- RPC模式 -->
+	<id>rpc</id>
+	<properties>
+	    <profiles.active>rpc</profiles.active>
+	</properties>
+	<dependencies>        
+		<dependency>
+			<groupId>com.yea</groupId>
+			<artifactId>yea-dispatcher</artifactId>
+		</dependency>
+    </dependencies>
+</profile>
+```
+### 2、spring-bean.xml
+- 运行在单机模式下:
+```xml
+    <import resource="classpath:/application-launcher.xml" />
+```
+- 运行在RPC模式下:
+```xml
+    <!-- Netty编解码的Handler实现 -->
+	<bean id="nettyMessageDecoder" class="com.yea.remote.netty.codec.NettyMessageDecoder"></bean>
+	<bean id="nettyMessageEncoder" class="com.yea.remote.netty.codec.NettyMessageEncoder"></bean>
+	
+	<!-- Netty异常处理Handler实现，Netty处理时若抛出异常，由该Handler封装异常并返回调用端 -->
+	<bean id="exceptionHandler" class="com.yea.remote.netty.handle.ExceptionHandler"></bean>
+	
+	<!-- Netty心跳检测Handler实现 -->
+	<bean id="heartBeatClientHandler" class="com.yea.remote.netty.client.handle.HeartBeatClientHandler">
+		<constructor-arg index="0" type="int" value="60"/>
+		<constructor-arg index="1" type="int" value="60"/>
+	</bean>
+	
+	<!-- Netty客户端收到服务端响应后的处理Handler实现 -->
+	<bean id="serviceClientHandler" class="com.yea.remote.netty.client.handle.ServiceClientHandler"></bean>
+	
+	<!-- Netty服务处理Handler实现，所有业务操作均由该Handler处理，配置该Handle是为了支持双向调用，由服务端主动发起请求，如果发送的动作均由客户端发起，该Handle可以不配置在客户端内 -->
+    <bean id="serviceServerHandler" class="com.yea.remote.netty.server.handle.ServiceServerHandler"></bean>
+    
+	<!-- 调度中心的配置 -->
+	<bean id="zkDispatcher" class="com.yea.dispatcher.zookeeper.ZookeeperDispatcher" init-method="init">
+		<property name="host" value="${zookeeper.host}" />
+		<property name="port" value="${zookeeper.port}" />
+	</bean>
+	
+	<!-- Netty客户端配置，启动时将会根据服务注册名主动连接服务端 -->
+    <bean id="nettyClient" class="com.yea.remote.netty.client.NettyClient" init-method="connect" destroy-method="disconnect">
+		<property name="registerName" value="${netty.server.register}" /><!-- 服务注册名 -->
+		<property name="dispatcher" ref="zkDispatcher" />
+		<property name="host" value="${netty.client.host}" /><!-- 该主机未设置时，系统将会读取本机IP自动设入 -->
+		<property name="port" value="${netty.client.port}" /><!-- 该端口在执行start.sh脚本时，允许外部输入并替换 -->
+	    <property name="listHandler">
+            <list>
+                <map>
+	                <entry key="MessageDecoder">
+	                    <ref bean="nettyMessageDecoder"/>
+	                </entry>
+	            </map>
+	            <map>
+	                <entry key="MessageEncoder">
+	                    <ref bean="nettyMessageEncoder"/>
+	                </entry>
+	            </map>
+	            <map>
+	                <entry key="HeartBeatHandler">
+	                    <ref bean="heartBeatClientHandler"/>
+	                </entry>
+	            </map>
+	            <map>
+	                <entry key="ServiceClientHandler">
+	                    <ref bean="serviceClientHandler"/>
+	                </entry>
+	            </map>
+	            <map>
+	                <entry key="ServiceServerHandler">
+	                    <ref bean="serviceServerHandler"/>
+	                </entry>
+	            </map>
+	            <map>
+	                <entry key="ExceptionHandler">
+	                    <ref bean="exceptionHandler"/>
+	                </entry>
+	            </map>
+            </list>
+        </property>
+	</bean>
+```
+- Shiro的配置，请注意单机模式与RPC模式endpoint的设置(单机模式设置为DefaultClient，RPC模式设置成NettyClient):
+```xml
+    <bean id="sessionIdGenerator" class="org.apache.shiro.session.mgt.eis.JavaUuidSessionIdGenerator"/>  
+	<bean id="sessionDAO" class="org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO">  
+	    <property name="activeSessionsCacheName" value="shiro-activeSessionCache"/>  
+	    <property name="sessionIdGenerator" ref="sessionIdGenerator"/>  
+	</bean>
+	
+    <!-- 会话Cookie模板 -->  
+	<bean id="sessionIdCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
+	    <constructor-arg value="JEA_SESSIONID"/>
+	    <property name="httpOnly" value="true"/>
+	    <property name="maxAge" value="-1"/>    <!-- maxAge=-1，表示浏览器关闭时失效此Cookie -->
+	</bean>
+	
+	<!-- 会话管理器 -->  
+	<bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">  
+	    <property name="globalSessionTimeout" value="1800000"/>
+	    <property name="deleteInvalidSessions" value="true"/>
+	    <property name="sessionValidationSchedulerEnabled" value="true"/>
+	    <property name="sessionDAO" ref="sessionDAO"/>
+	    <property name="sessionIdCookieEnabled" value="true"/>
+	    <property name="sessionIdCookie" ref="sessionIdCookie"/>
+	</bean>
+	
+	<!-- rememberMe的Cookie模板 -->
+	<bean id="rememberMeCookie" class="org.apache.shiro.web.servlet.SimpleCookie">  
+	    <constructor-arg value="rememberMe"/>  
+	    <property name="httpOnly" value="true"/>  
+	    <property name="maxAge" value="604800"/><!-- 记住我的Cookie，保存时长7天 -->
+	</bean>
+	<!-- rememberMe管理器 -->
+	<bean id="rememberMeManager" class="org.apache.shiro.web.mgt.CookieRememberMeManager">
+	     <property name="cipherKey" value="#{T(org.apache.shiro.codec.Base64).decode('9AVvhnFLuS3KTV8KprsdAg==')}" />
+         <property name="cookie" ref="rememberMeCookie"/>
+	</bean>
+	
+    <bean id="securityManager" class="com.yea.shiro.web.mgt.WebSecurityManager">
+        <property name="endpoint" ref="nettyClient"/>
+        <property name="sessionManager" ref="sessionManager"/>
+        <property name="rememberMeManager" ref="rememberMeManager"/>
+    </bean>
+    
+    <!-- 相当于调用SecurityUtils.setSecurityManager(securityManager) -->
+	<bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+		<property name="staticMethod" value="org.apache.shiro.SecurityUtils.setSecurityManager"/>
+	    <property name="arguments" ref="securityManager"/>
+	</bean>
+	
+	<!-- Shiro的Web过滤器 -->
+	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean" >
+	    <property name="securityManager" ref="securityManager"/>
+	    <property name="loginUrl" value="/login.html"/>
+	    <property name="successUrl" value="/index.html"/>
+	    <property name="unauthorizedUrl" value="/unauthorized.html"/>
+    </bean>
+    <!-- 对ShiroWeb过滤器进行包装，以初始化过滤器链（不允许延迟加载） -->
+    <bean id="shiroFilterWrapper" class="com.yea.shiro.web.wrapper.ShiroFilterWrapper" init-method="init" lazy-init="false" >
+	    <property name="endpoint" ref="nettyClient"/>
+	    <property name="shiroFilter" ref="shiroFilter"/>
+	    <property name="authenticedUrl" value="/authenticed.html"/>
+	    <property name="logoutUrl" value="/logout.html"/>
+    </bean>
+
+    <!-- Shiro生命周期处理器-->
+    <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
+```
+### 3、spring-mvc.xml
+- 配置拦截器，自动设置当前登录用户的用户信息及菜单信息
+```xml
+<mvc:interceptors>
+    <bean class="com.yea.shiro.web.interceptor.ShiroInterceptor"></bean>
+</mvc:interceptors>
+```
+### 4、Controller里的远程调用
+- 注入NettyClient
+```java
+	@Autowired
+	private AbstractEndpoint nettyClient;
+```
+- 发送请求到APP服务
+```java
+	CallAct act = new CallAct();
+	act.setActName("queryOperationAct");
+	Promise<List<OperationInfo>> promise = nettyClient.send(act);
+```
+- 若要接收APP服务返回的对象
+```java
+	List<OperationInfo> listOperation = promise.awaitObject(10000);
 ```
