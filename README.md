@@ -372,7 +372,19 @@ public class SaveOperationAct extends AbstractTransactionAct {
 	act.setActName("queryOperationAct");
 	Promise<List<OperationInfo>> promise = nettyClient.send(act);
 ```
-- 若要接收APP服务返回的对象
+- 如果发送时需要提供参数
+```java
+	CallAct act = new CallAct();
+	act.setActName("saveOperationAct");
+	Promise<List<OperationInfoPK>> promise = nettyClient.send(act, operationDto);
+```
+- 如果发送时需要提供多个参数
+```java
+	CallAct act = new CallAct();
+	act.setActName("saveResourceIdentifierAct");
+	Promise<ResourceIdentifierPK> promise = nettyClient.send(act, identifier, resourceId, operationId);
+```
+- 如果发送后要接收APP服务返回的对象
 ```java
 	List<OperationInfo> listOperation = promise.awaitObject(10000);
 ```
