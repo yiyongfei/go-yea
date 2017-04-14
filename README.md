@@ -384,7 +384,7 @@ public class SaveOperationAct extends AbstractTransactionAct {
 	act.setActName("saveResourceIdentifierAct");
 	Promise<ResourceIdentifierPK> promise = nettyClient.send(act, identifier, resourceId, operationId);
 ```
-- 如果发送后要接收APP服务返回的对象
+- NIO发送，发送后可以执行其它步骤，如果要接收APP服务返回的对象可以在适合的时间点执行Promise.awaitObject方法获得结果
 ```java
 	List<OperationInfo> listOperation = promise.awaitObject(10000);
 ```
