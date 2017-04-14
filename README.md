@@ -67,9 +67,8 @@ public class CommonDao<T> extends AbstractBaseDAO<T> {
 - 启动器请参看go-yea/go-yea-launcher
 - 配置内容:
 ```xml
-
 	<!-- Netty编解码的Handler实现 -->
-  <bean id="nettyMessageDecoder" class="com.yea.remote.netty.codec.NettyMessageDecoder"></bean>
+	<bean id="nettyMessageDecoder" class="com.yea.remote.netty.codec.NettyMessageDecoder"></bean>
 	<bean id="nettyMessageEncoder" class="com.yea.remote.netty.codec.NettyMessageEncoder"></bean>
 	
 	<!-- Netty心跳检测Handler实现 -->
@@ -81,7 +80,7 @@ public class CommonDao<T> extends AbstractBaseDAO<T> {
 	<!-- Netty服务处理Handler实现，所有业务操作均由该Handler处理 -->
 	<bean id="serviceServerHandler" class="com.yea.remote.netty.server.handle.ServiceServerHandler"></bean>
 	
-  <!-- Netty异常处理Handler实现，Netty处理时若抛出异常，由该Handler封装异常并返回调用端 -->
+	<!-- Netty异常处理Handler实现，Netty处理时若抛出异常，由该Handler封装异常并返回调用端 -->
 	<bean id="exceptionHandler" class="com.yea.remote.netty.handle.ExceptionHandler"></bean>
 	
 	<!-- Zookeeper调度中心的配置 -->
@@ -90,7 +89,7 @@ public class CommonDao<T> extends AbstractBaseDAO<T> {
 		<property name="port" value="${zookeeper.port}" />
 	</bean>
 	
-  <!-- Netty服务端配置，Netty服务启动将在Main内调用(外部提供服务绑定端口) -->
+	<!-- Netty服务端配置，Netty服务启动将在Main内调用(外部提供服务绑定端口) -->
 	<bean id="nettyServer" class="com.yea.remote.netty.server.NettyServer" destroy-method="shutdown">
 		<property name="registerName" value="${netty.server.register}" /><!-- 服务注册名，将在Zookeeper内注册 -->
 		<property name="dispatcher" ref="zkDispatcher" />
@@ -131,11 +130,33 @@ public class CommonDao<T> extends AbstractBaseDAO<T> {
 ### 5、生成Mybatis的映射文件及相应的Domain
 
 * Mybatis映射文件内包含单表常规操作
-*	生成的映射文件请复制到启动器内的src/main/resources/sqlmap
-*	样例请参看go-yea/go-yea-launcher/src/main/resources/sqlmap/authorization/personinfo-sqlmap-mapping.xml
-- 模型类主要有：聚合类、实体类、主键类，实体类对应单表，通过实体类完成对表进行增、改操作，而聚合类默认由实体类和主键类组成，完成对表的查操作，类属性的扩充只在聚合类里扩充(请参看go-yea/go-yea-model里的com.team.goyea.authorization.model.PersonInfo，扩充属性的对比:UserInfo)
+	* 生成的映射文件请复制到启动器内的src/main/resources/sqlmap
+	* 样例请参看go-yea/go-yea-launcher/src/main/resources/sqlmap/authorization/personinfo-sqlmap-mapping.xml
+* 模型类主要有：聚合类、实体类、主键类
+	* 生成的模型类请复制到Model层
+	* 实体类对应单表，通过实体类完成对表进行增、改操作，
+	* 聚合类默认由实体类和主键类组成，完成对表的查操作，类属性的扩充只在聚合类里扩充
+	* 样例请参看go-yea/go-yea-model里的com.team.goyea.authorization.model.PersonInfo，扩充属性的对比:UserInfo
 ### 6、Repository以及Service
-### 7、Act
-Netty
-- 无事务控制Act
-
+### 7、Act(重点)
+APP服务对外暴露的接口，客户端请求服务端时需提供Act名，Netty服务端收到请求后根据Act名找到相应的Bean并执行
+- 无事务控制Act，针对查询请求，继承com.yea.core.act.AbstractAct并实现perform方法
+- AbstractAct是一个RecursiveTask，复杂业务允许拆分成多个子任务做Fork Join
+```java
+@Service
+public class QueryOperationAct extends AbstractAct {
+	protected Object perform(Object[] messages) throws Throwable {
+		省略
+	}
+}
+```
+- 事务控制Act，针对增删改请求，继承com.yea.core.act.AbstractTransactionAct并实现perform方法
+- AbstractTransactionAct同样是一个RecursiveTask，复杂业务允许拆分成多个子任务做Fork Join
+```java
+@Service
+public class SaveOperationAct extends AbstractTransactionAct {
+	protected Object perform(Object[] messages) throws Throwable {
+		省略
+	}
+}
+```
