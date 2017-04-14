@@ -130,12 +130,12 @@ public class CommonDao<T> extends AbstractBaseDAO<T> {
 ```
 ### 5、生成Mybatis的映射文件及相应的Domain
 
-* 映射文件内包含单表常规操作
-    * 生成的映射文件请复制到启动器内的src/main/resources/sqlmap
-    * 请参看go-yea/go-yea-launcher/src/main/resources/sqlmap/authorization/personinfo-sqlmap-mapping.xml
-- 生成的类主要有：聚合类、实体类、主键类，实体类对应单表，通过实体类完成对表进行增、改操作，而聚合类默认由实体类和主键类组成，完成对表的查操作，类属性的扩充只在聚合类里扩充(请参看go-yea/go-yea-model里的com.team.goyea.authorization.model.PersonInfo，扩充属性的对比:UserInfo)
+* Mybatis映射文件内包含单表常规操作
+*	生成的映射文件请复制到启动器内的src/main/resources/sqlmap
+*	样例请参看go-yea/go-yea-launcher/src/main/resources/sqlmap/authorization/personinfo-sqlmap-mapping.xml
+- 模型类主要有：聚合类、实体类、主键类，实体类对应单表，通过实体类完成对表进行增、改操作，而聚合类默认由实体类和主键类组成，完成对表的查操作，类属性的扩充只在聚合类里扩充(请参看go-yea/go-yea-model里的com.team.goyea.authorization.model.PersonInfo，扩充属性的对比:UserInfo)
 ### 6、Repository以及Service
 ### 7、Act
-Nett
+Netty
 - 无事务控制Act
 
