@@ -22,7 +22,7 @@ import com.team.goyea.authorization.model.pk.RolePermissionRelaPK;
 import com.team.goyea.authorization.model.pk.UserInfoPK;
 import com.yea.core.remote.AbstractEndpoint;
 import com.yea.core.remote.promise.Promise;
-import com.yea.core.remote.struct.CallFacadeDef;
+import com.yea.core.remote.struct.CallAct;
 
 @Controller
 public class AuthorizationController {
@@ -67,9 +67,9 @@ public class AuthorizationController {
 	
 	@RequestMapping("/authorization/role/query.html")
     public String queryRole(ModelMap model) throws Throwable {
-		CallFacadeDef facade = new CallFacadeDef();
-		facade.setCallFacadeName("queryRoleFacade");
-		Promise<List<RoleInfo>> promise = nettyClient.send(facade);
+		CallAct act = new CallAct();
+		act.setActName("queryRoleAct");
+		Promise<List<RoleInfo>> promise = nettyClient.send(act);
 		List<RoleInfo> listRole = promise.awaitObject(10000);
 		model.put("roles", listRole);
 		
@@ -80,9 +80,9 @@ public class AuthorizationController {
     public String loadRole(ModelMap model, RoleInfoPK roleInfoPk) throws Throwable {
 		RoleInfo roleInfo = null;
 		if(roleInfoPk != null && roleInfoPk.getRoleId() != null) {
-			CallFacadeDef facade = new CallFacadeDef();
-			facade.setCallFacadeName("loadRoleFacade");
-			Promise<RoleInfo> promise = nettyClient.send(facade, roleInfoPk);
+			CallAct act = new CallAct();
+			act.setActName("loadRoleAct");
+			Promise<RoleInfo> promise = nettyClient.send(act, roleInfoPk);
 			roleInfo = promise.awaitObject(10000);
 		} else {
 			roleInfo = new RoleInfo();
@@ -95,9 +95,9 @@ public class AuthorizationController {
 	@RequestMapping("/authorization/role/save.html")
     public String saveRole(ModelMap model, RoleInfo roleInfo) throws Throwable {
 		if (!StringUtils.isEmpty(roleInfo.getRoleInfoEntity().getRoleName())) {
-			CallFacadeDef facade = new CallFacadeDef();
-			facade.setCallFacadeName("saveRoleFacade");
-			Promise<List<Long>> promiseId = nettyClient.send(facade, roleInfo);
+			CallAct act = new CallAct();
+			act.setActName("saveRoleAct");
+			Promise<List<Long>> promiseId = nettyClient.send(act, roleInfo);
 			promiseId.awaitObject(10000);
 		}
 		
@@ -106,9 +106,9 @@ public class AuthorizationController {
 	
 	@RequestMapping("/authorization/role/permission/load.html")
     public String loadRolePermission(ModelMap model, Long roleId) throws Throwable {
-		CallFacadeDef facade = new CallFacadeDef();
-		facade.setCallFacadeName("queryRolePermissionWildcardsFacade");
-		Promise<RoleInfo> permissionPromise = nettyClient.send(facade, new RoleInfoPK(roleId));
+		CallAct act = new CallAct();
+		act.setActName("queryRolePermissionWildcardsAct");
+		Promise<RoleInfo> permissionPromise = nettyClient.send(act, new RoleInfoPK(roleId));
 		RoleInfo roleInfo = permissionPromise.awaitObject(10000);
 		model.put("role", roleInfo);
 		
@@ -117,9 +117,9 @@ public class AuthorizationController {
 	
 	@RequestMapping("/authorization/role/permission/save.html")
     public String saveRolePermission(ModelMap model, Long roleId, Long resourceId, Long operationId) throws Throwable {
-		CallFacadeDef facade = new CallFacadeDef();
-		facade.setCallFacadeName("saveRolePermissionFacade");
-		Promise<?> promise = nettyClient.send(facade, roleId, resourceId, operationId);
+		CallAct act = new CallAct();
+		act.setActName("saveRolePermissionAct");
+		Promise<?> promise = nettyClient.send(act, roleId, resourceId, operationId);
 		promise.awaitObject(10000);
 		
 		return "redirect:/authorization/role/permission/load.html?roleId="+roleId;
@@ -127,9 +127,9 @@ public class AuthorizationController {
 	
 	@RequestMapping("/authorization/role/permission/delete.html")
     public String deleteRolePermission(ModelMap model, Long rolePermissionId, Long roleId) throws Throwable {
-		CallFacadeDef facade = new CallFacadeDef();
-		facade.setCallFacadeName("deleteRolePermissionFacade");
-		Promise<?> promise = nettyClient.send(facade, new RolePermissionRelaPK(rolePermissionId));
+		CallAct act = new CallAct();
+		act.setActName("deleteRolePermissionAct");
+		Promise<?> promise = nettyClient.send(act, new RolePermissionRelaPK(rolePermissionId));
 		promise.awaitObject(10000);
 		
 		return "redirect:/authorization/role/permission/load.html?roleId="+roleId;
@@ -137,9 +137,9 @@ public class AuthorizationController {
 	
 	@RequestMapping("/authorization/user/query.html")
     public String queryUser(ModelMap model) throws Throwable {
-		CallFacadeDef facade = new CallFacadeDef();
-		facade.setCallFacadeName("queryUserFacade");
-		Promise<List<UserInfo>> promise = nettyClient.send(facade);
+		CallAct act = new CallAct();
+		act.setActName("queryUserAct");
+		Promise<List<UserInfo>> promise = nettyClient.send(act);
 		List<UserInfo> listUser = promise.awaitObject(10000);
 		model.put("users", listUser);
 		
@@ -150,9 +150,9 @@ public class AuthorizationController {
     public String loadUser(ModelMap model, UserInfoPK userInfoPk) throws Throwable {
 		UserInfo userInfo = null;
 		if(userInfoPk != null && userInfoPk.getPartyId() != null) {
-			CallFacadeDef facade = new CallFacadeDef();
-			facade.setCallFacadeName("loadUserFacade");
-			Promise<UserInfo> promise = nettyClient.send(facade, userInfoPk);
+			CallAct act = new CallAct();
+			act.setActName("loadUserAct");
+			Promise<UserInfo> promise = nettyClient.send(act, userInfoPk);
 			userInfo = promise.awaitObject(10000);
 		} else {
 			userInfo = new UserInfo();
@@ -165,9 +165,9 @@ public class AuthorizationController {
 	@RequestMapping("/authorization/user/save.html")
     public String saveUser(ModelMap model, UserInfo userInfo) throws Throwable {
 		if (userInfo.getUserInfoPK().getPartyId() != null || (userInfo.getUserInfoPK().getPartyId() == null && !StringUtils.isEmpty(userInfo.getUsername()) && !StringUtils.isEmpty(userInfo.getPassword()))) {
-			CallFacadeDef facade = new CallFacadeDef();
-			facade.setCallFacadeName("saveUserFacade");
-			Promise<List<Long>> promiseId = nettyClient.send(facade, userInfo);
+			CallAct act = new CallAct();
+			act.setActName("saveUserAct");
+			Promise<List<Long>> promiseId = nettyClient.send(act, userInfo);
 			promiseId.awaitObject(10000);
 		}
 		
@@ -176,14 +176,14 @@ public class AuthorizationController {
 	
 	@RequestMapping("/authorization/user/role/load.html")
     public String loadUserRole(ModelMap model, UserInfoPK userInfoPk) throws Throwable {
-		CallFacadeDef facade = new CallFacadeDef();
-		facade.setCallFacadeName("loadUserRoleFacade");
-		Promise<UserInfo> promise = nettyClient.send(facade, userInfoPk);
+		CallAct act = new CallAct();
+		act.setActName("loadUserRoleAct");
+		Promise<UserInfo> promise = nettyClient.send(act, userInfoPk);
 		UserInfo userInfo = promise.awaitObject(10000);
 		
-		facade = new CallFacadeDef();
-		facade.setCallFacadeName("queryRoleFacade");
-		Promise<List<RoleInfo>> promiseRole = nettyClient.send(facade);
+		act = new CallAct();
+		act.setActName("queryRoleAct");
+		Promise<List<RoleInfo>> promiseRole = nettyClient.send(act);
 		List<RoleInfo> listRole = promiseRole.awaitObject(10000);
 		
 		List<Long> userRoleId = new ArrayList<Long>();
@@ -209,9 +209,9 @@ public class AuthorizationController {
 	
 	@RequestMapping("/authorization/user/role/save.html")
     public String saveUserRole(ModelMap model, Long partyId, Long[] roleIds) throws Throwable {
-		CallFacadeDef facade = new CallFacadeDef();
-		facade.setCallFacadeName("saveUserRoleFacade");
-		Promise<?> promise = nettyClient.send(facade, partyId, roleIds);
+		CallAct act = new CallAct();
+		act.setActName("saveUserRoleAct");
+		Promise<?> promise = nettyClient.send(act, partyId, roleIds);
 		promise.awaitObject(10000);
 		
 		return "redirect:/authorization/user/role/load.html?partyId="+partyId;

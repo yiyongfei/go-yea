@@ -14,7 +14,7 @@ import com.team.goyea.permission.model.pk.ResourceInfoPK;
 import com.yea.core.base.model.BaseModel;
 import com.yea.core.remote.AbstractEndpoint;
 import com.yea.core.remote.promise.Promise;
-import com.yea.core.remote.struct.CallFacadeDef;
+import com.yea.core.remote.struct.CallAct;
 
 @Repository
 public class RolePermissionRelaRepository {
@@ -34,11 +34,11 @@ public class RolePermissionRelaRepository {
 	}
 	
 	public List<PermissionInfo> queryPermissionInfo(PermissionInfo permissionInfo) throws Exception {
-		CallFacadeDef facade = new CallFacadeDef();
-		facade.setCallFacadeName("queryPermissionFacade");
+		CallAct act = new CallAct();
+		act.setActName("queryPermissionAct");
 		Promise<List<PermissionInfo>> promise;
 		try {
-			promise = launcherClient.send(facade, permissionInfo);
+			promise = launcherClient.send(act, permissionInfo);
 			return promise.awaitObject(10000);
 		} catch (Throwable e) {
 			throw new Exception(e);
@@ -46,11 +46,11 @@ public class RolePermissionRelaRepository {
 	}
 	
 	public ResourceInfo loadResource(ResourceInfoPK resourcePk) throws Exception {
-		CallFacadeDef facade = new CallFacadeDef();
-		facade.setCallFacadeName("loadResourceFacade");
+		CallAct act = new CallAct();
+		act.setActName("loadResourceAct");
 		Promise<ResourceInfo> promise;
 		try {
-			promise = launcherClient.send(facade, resourcePk);
+			promise = launcherClient.send(act, resourcePk);
 			return promise.awaitObject(10000);
 		} catch (Throwable e) {
 			throw new Exception(e);

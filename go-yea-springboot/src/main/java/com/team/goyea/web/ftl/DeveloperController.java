@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.yea.core.remote.AbstractEndpoint;
 import com.yea.core.remote.promise.Promise;
-import com.yea.core.remote.struct.CallFacadeDef;
+import com.yea.core.remote.struct.CallAct;
 
 @Controller
 public class DeveloperController {
@@ -41,9 +41,9 @@ public class DeveloperController {
 		}
 
 		if (message == null) {
-			CallFacadeDef facade = new CallFacadeDef();
-			facade.setCallFacadeName("generatorFacade");
-			Promise<Set<String>> promise = nettyClient.send(facade, config);
+			CallAct act = new CallAct();
+			act.setActName("generatorAct");
+			Promise<Set<String>> promise = nettyClient.send(act, config);
 			Set<String> tablenames = promise.awaitObject(10000);
 			model.put("tablenames", tablenames);
 			message = "生成成功";

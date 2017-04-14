@@ -1,4 +1,4 @@
-package com.team.goyea.permission.facade;
+package com.team.goyea.permission.act;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,24 +7,19 @@ import org.springframework.stereotype.Service;
 import com.team.goyea.permission.model.OperationInfo;
 import com.team.goyea.permission.model.pk.OperationInfoPK;
 import com.team.goyea.permission.service.PermissionService;
-import com.yea.core.base.facade.AbstractTransactionFacade;
+import com.yea.core.base.act.AbstractTransactionAct;
 
 
 /**
  * 
- * @author lenovo
- * @version $Id: V1.0 2015年9月6日 上午9:18:43 Exp $
+ * @author yiyongfei
  */
 @Service
-public class SaveOperationFacade extends AbstractTransactionFacade<OperationInfoPK> {
+public class SaveOperationAct extends AbstractTransactionAct<OperationInfoPK> {
 	private static final long serialVersionUID = 1L;
 	
 	@Autowired
 	private PermissionService permissionService;
-    /** 
-     * @throws Exception 
-     * @see com.AbstractFacade.remote.facade.AbstractFacade#perform(java.lang.Object[])
-     */
     
 	@Override
 	protected OperationInfoPK perform(Object[] messages) throws Throwable {

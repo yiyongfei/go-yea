@@ -27,7 +27,7 @@ import com.team.goyea.permission.model.pk.ResourceIdentifierPK;
 import com.team.goyea.permission.model.pk.ResourceInfoPK;
 import com.yea.core.remote.AbstractEndpoint;
 import com.yea.core.remote.promise.Promise;
-import com.yea.core.remote.struct.CallFacadeDef;
+import com.yea.core.remote.struct.CallAct;
 import com.yea.shiro.web.wrapper.ShiroFilterWrapper;
 import com.yea.web.jsonbody.JsonBody;
 import com.yea.web.jsonbody.JsonPropFilter;
@@ -39,9 +39,9 @@ public class PermissionController {
 	
 	@RequestMapping("/permission/operation/query.html")
     public String queryOperation(ModelMap model) throws Throwable {
-		CallFacadeDef facade = new CallFacadeDef();
-		facade.setCallFacadeName("queryOperationFacade");
-		Promise<List<OperationInfo>> promise = nettyClient.send(facade);
+		CallAct act = new CallAct();
+		act.setActName("queryOperationAct");
+		Promise<List<OperationInfo>> promise = nettyClient.send(act);
 		List<OperationInfo> listOperation = promise.awaitObject(10000);
 		model.put("operations", listOperation);
 		
@@ -52,9 +52,9 @@ public class PermissionController {
     public String saveOperation(ModelMap model, OperationInfo operationDto) throws Throwable {
 		
 		if (!StringUtils.isEmpty(operationDto.getOperationInfoEntity().getOperationName())) {
-			CallFacadeDef facade = new CallFacadeDef();
-			facade.setCallFacadeName("saveOperationFacade");
-			Promise<List<OperationInfoPK>> promiseId = nettyClient.send(facade, operationDto);
+			CallAct act = new CallAct();
+			act.setActName("saveOperationAct");
+			Promise<List<OperationInfoPK>> promiseId = nettyClient.send(act, operationDto);
 			promiseId.awaitObject(10000);
 		}
 		
@@ -63,9 +63,9 @@ public class PermissionController {
 	
 	@RequestMapping("/permission/resource/query.html")
     public String queryResource(ModelMap model) throws Throwable {
-		CallFacadeDef facade = new CallFacadeDef();
-		facade.setCallFacadeName("queryResourceFacade");
-		Promise<List<ResourceInfo>> promise = nettyClient.send(facade);
+		CallAct act = new CallAct();
+		act.setActName("queryResourceAct");
+		Promise<List<ResourceInfo>> promise = nettyClient.send(act);
 		List<ResourceInfo> listResource = promise.awaitObject(10000);
 		model.put("resources", listResource);
 		
@@ -75,9 +75,9 @@ public class PermissionController {
 	@RequestMapping("/permission/resource/save.html")
     public String saveResource(ModelMap model, ResourceInfo resourceDto) throws Throwable {
 		if (!StringUtils.isEmpty(resourceDto.getResourceInfoEntity().getResourceName())) {
-			CallFacadeDef facade = new CallFacadeDef();
-			facade.setCallFacadeName("saveResourceFacade");
-			Promise<List<ResourceInfoPK>> promiseId = nettyClient.send(facade, resourceDto);
+			CallAct act = new CallAct();
+			act.setActName("saveResourceAct");
+			Promise<List<ResourceInfoPK>> promiseId = nettyClient.send(act, resourceDto);
 			promiseId.awaitObject(10000);
 		}
 		
@@ -86,9 +86,9 @@ public class PermissionController {
 	
 	@RequestMapping("/permission/permission/query.html")
     public String queryPermission(ModelMap model) throws Throwable {
-		CallFacadeDef facade = new CallFacadeDef();
-		facade.setCallFacadeName("queryPermissionFacade");
-		Promise<List<PermissionInfo>> promise = nettyClient.send(facade, new PermissionInfo());
+		CallAct act = new CallAct();
+		act.setActName("queryPermissionAct");
+		Promise<List<PermissionInfo>> promise = nettyClient.send(act, new PermissionInfo());
 		List<PermissionInfo> listPermission = promise.awaitObject(10000);
 		model.put("permissions", listPermission);
 		
@@ -98,9 +98,9 @@ public class PermissionController {
 	@RequestMapping("/permission/permission/save.html")
     public String savePermission(ModelMap model, PermissionInfo resourceDto) throws Throwable {
 		if (!StringUtils.isEmpty(resourceDto.getPermissionInfoEntity().getPermissionName())) {
-			CallFacadeDef facade = new CallFacadeDef();
-			facade.setCallFacadeName("savePermissionFacade");
-			Promise<List<PermissionInfoPK>> promiseId = nettyClient.send(facade, resourceDto);
+			CallAct act = new CallAct();
+			act.setActName("savePermissionAct");
+			Promise<List<PermissionInfoPK>> promiseId = nettyClient.send(act, resourceDto);
 			promiseId.awaitObject(10000);
 		}
 		
@@ -109,9 +109,9 @@ public class PermissionController {
 	
 	@RequestMapping("/permission/identifier/query.html")
     public String queryIdentifier(ModelMap model) throws Throwable {
-		CallFacadeDef facade = new CallFacadeDef();
-		facade.setCallFacadeName("queryResourceIdentifierFacade");
-		Promise<List<ResourceIdentifier>> promise = nettyClient.send(facade, new ResourceIdentifier());
+		CallAct act = new CallAct();
+		act.setActName("queryResourceIdentifierAct");
+		Promise<List<ResourceIdentifier>> promise = nettyClient.send(act, new ResourceIdentifier());
 		List<ResourceIdentifier> listResourceIdentifier = promise.awaitObject(10000);
 		model.put("identifiers", listResourceIdentifier);
 		
@@ -121,9 +121,9 @@ public class PermissionController {
 	@RequestMapping("/permission/identifier/save.html")
     public String saveIdentifier(ModelMap model, ResourceIdentifier identifier, Long resourceId, Long operationId) throws Throwable {
 		if (!StringUtils.isEmpty(identifier.getResourceIdentifierEntity().getIdentifierPath())) {
-			CallFacadeDef facade = new CallFacadeDef();
-			facade.setCallFacadeName("saveResourceIdentifierFacade");
-			Promise<ResourceIdentifierPK> promise = nettyClient.send(facade, identifier, resourceId, operationId);
+			CallAct act = new CallAct();
+			act.setActName("saveResourceIdentifierAct");
+			Promise<ResourceIdentifierPK> promise = nettyClient.send(act, identifier, resourceId, operationId);
 			promise.awaitObject(10000);
 		}
 		
@@ -140,9 +140,9 @@ public class PermissionController {
 	
 	@RequestMapping("/permission/menu/query.html")
     public String queryMenu(ModelMap model) throws Throwable {
-		CallFacadeDef facade = new CallFacadeDef();
-		facade.setCallFacadeName("queryMenuFacade");
-		Promise<List<MenuInfo>> promise = nettyClient.send(facade, new MenuInfo());
+		CallAct act = new CallAct();
+		act.setActName("queryMenuAct");
+		Promise<List<MenuInfo>> promise = nettyClient.send(act, new MenuInfo());
 		List<MenuInfo> listMenu = promise.awaitObject(10000);
 		model.put("menus", listMenu);
 		
@@ -151,9 +151,9 @@ public class PermissionController {
 	
 	@RequestMapping("/permission/menu/load.html")
     public String loadMenu(ModelMap model, MenuInfoPK menuId) throws Throwable {
-		CallFacadeDef facade = new CallFacadeDef();
-		facade.setCallFacadeName("loadMenuFacade");
-		Promise<MenuInfo> promise = nettyClient.send(facade, menuId);
+		CallAct act = new CallAct();
+		act.setActName("loadMenuAct");
+		Promise<MenuInfo> promise = nettyClient.send(act, menuId);
 		MenuInfo menu = promise.awaitObject(10000);
 		model.put("menu", menu);
 		
@@ -163,9 +163,9 @@ public class PermissionController {
 	@RequestMapping("/permission/menu/save.html")
     public String saveMenu(ModelMap model, MenuInfo menuInfo) throws Throwable {
 		if (!StringUtils.isEmpty(menuInfo.getMenuInfoEntity().getMenuName())) {
-			CallFacadeDef facade = new CallFacadeDef();
-			facade.setCallFacadeName("saveMenuFacade");
-			Promise<ResourceIdentifierPK> promise = nettyClient.send(facade, menuInfo);
+			CallAct act = new CallAct();
+			act.setActName("saveMenuAct");
+			Promise<ResourceIdentifierPK> promise = nettyClient.send(act, menuInfo);
 			promise.awaitObject(10000);
 		}
 		
@@ -175,9 +175,9 @@ public class PermissionController {
 	@RequestMapping("/permission/identifier/load")
 	@JsonPropFilter(type = ResourceIdentifier.class, include = "resourceIdentifierPK, resourceIdentifierEntity")
 	public ResourceIdentifier loadIdentifier(ModelMap model, ResourceIdentifierPK identifier) throws Throwable {
-		CallFacadeDef facade = new CallFacadeDef();
-		facade.setCallFacadeName("loadResourceIdentifierFacade");
-		Promise<ResourceIdentifier> promise = nettyClient.send(facade, identifier);
+		CallAct act = new CallAct();
+		act.setActName("loadResourceIdentifierAct");
+		Promise<ResourceIdentifier> promise = nettyClient.send(act, identifier);
 		return promise.awaitObject(10000);
 	}
 	
@@ -190,9 +190,9 @@ public class PermissionController {
 		ResourceInfo query = new ResourceInfo();
 		query.getResourceInfoEntity().setParentResourceId(parentResourceId);
 		
-		CallFacadeDef facade = new CallFacadeDef();
-		facade.setCallFacadeName("queryParentResourceFacade");
-		Promise<List<ResourceInfo>> promise = nettyClient.send(facade, query);
+		CallAct act = new CallAct();
+		act.setActName("queryParentResourceAct");
+		Promise<List<ResourceInfo>> promise = nettyClient.send(act, query);
 		List<ResourceInfo> listResource = promise.awaitObject(10000);
 		
 		return listResource;
@@ -202,9 +202,9 @@ public class PermissionController {
 			@JsonPropFilter(type = OperationInfoPK.class, include = "operationId"),
 			@JsonPropFilter(type = OperationInfoEntity.class, include = "operationName") })
     public List<OperationInfo> queryOperation() throws Throwable {
-		CallFacadeDef facade = new CallFacadeDef();
-		facade.setCallFacadeName("queryOperationFacade");
-		Promise<List<OperationInfo>> promise = nettyClient.send(facade);
+		CallAct act = new CallAct();
+		act.setActName("queryOperationAct");
+		Promise<List<OperationInfo>> promise = nettyClient.send(act);
 		List<OperationInfo> listOperation = promise.awaitObject(10000);
 		
 		return listOperation;
@@ -216,9 +216,9 @@ public class PermissionController {
     public List<PermissionInfo> queryOperationOfPermission(Long resourceId) throws Throwable {
 		PermissionInfo queryDto = new PermissionInfo();
 		queryDto.getPermissionInfoEntity().setResourceId(resourceId);
-		CallFacadeDef facade = new CallFacadeDef();
-		facade.setCallFacadeName("queryPermissionFacade");
-		Promise<List<PermissionInfo>> promise = nettyClient.send(facade, queryDto);
+		CallAct act = new CallAct();
+		act.setActName("queryPermissionAct");
+		Promise<List<PermissionInfo>> promise = nettyClient.send(act, queryDto);
 		List<PermissionInfo> listPermission = promise.awaitObject(10000);
 		
 		return listPermission;
@@ -231,9 +231,9 @@ public class PermissionController {
     public List<MenuInfo> queryParentOfMenu(Long parentMenuId) throws Throwable {
 		MenuInfo query = new MenuInfo();
 		query.getMenuInfoEntity().setParentMenuId(parentMenuId);
-		CallFacadeDef facade = new CallFacadeDef();
-		facade.setCallFacadeName("queryParentMenuFacade");
-		Promise<List<MenuInfo>> promise = nettyClient.send(facade, query);
+		CallAct act = new CallAct();
+		act.setActName("queryParentMenuAct");
+		Promise<List<MenuInfo>> promise = nettyClient.send(act, query);
 		List<MenuInfo> listMenu = promise.awaitObject(10000);
 		
 		return listMenu;
@@ -244,9 +244,9 @@ public class PermissionController {
 			@JsonPropFilter(type = ResourceIdentifierPK.class, include = "identifierId"),
 			@JsonPropFilter(type = ResourceIdentifierEntity.class, include = "identifierPath")})
     public List<ResourceIdentifier> queryIdentifierOfMenu() throws Throwable {
-		CallFacadeDef facade = new CallFacadeDef();
-		facade.setCallFacadeName("queryResourceIdentifierFacade");
-		Promise<List<ResourceIdentifier>> promise = nettyClient.send(facade, new ResourceIdentifier());
+		CallAct act = new CallAct();
+		act.setActName("queryResourceIdentifierAct");
+		Promise<List<ResourceIdentifier>> promise = nettyClient.send(act, new ResourceIdentifier());
 		List<ResourceIdentifier> listResourceIdentifier = promise.awaitObject(10000);
 		
 		return listResourceIdentifier;

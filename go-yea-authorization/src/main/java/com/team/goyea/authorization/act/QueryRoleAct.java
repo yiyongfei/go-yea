@@ -1,4 +1,4 @@
-package com.team.goyea.authorization.facade;
+package com.team.goyea.authorization.act;
 
 
 import java.util.List;
@@ -8,25 +8,19 @@ import org.springframework.stereotype.Service;
 
 import com.team.goyea.authorization.model.RoleInfo;
 import com.team.goyea.authorization.service.AuthorizationService;
-import com.yea.core.base.facade.AbstractFacade;
+import com.yea.core.base.act.AbstractAct;
 
 
 /**
  * 
- * @author lenovo
- * @version $Id: V1.0 2015年9月6日 上午9:18:43 Exp $
+ * @author yiyongfei
  */
 @Service
-public class QueryRoleFacade extends AbstractFacade<List<RoleInfo>> {
+public class QueryRoleAct extends AbstractAct<List<RoleInfo>> {
 	private static final long serialVersionUID = 1L;
 
 	@Autowired
 	private AuthorizationService authorizationService;
-
-	/**
-	 * @throws Exception
-	 * @see com.AbstractFacade.remote.facade.AbstractFacade#perform(java.lang.Object[])
-	 */
 
 	@Override
 	protected List<RoleInfo> perform(Object[] messages) throws Throwable {
