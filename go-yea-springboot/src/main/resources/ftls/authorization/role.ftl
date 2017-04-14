@@ -77,12 +77,12 @@
         $(document).ready(function() {
             
             $("#saveButton").bind("click",function(){
-	            $("#roleForm").attr("action","/authorization/role/save.html");
+	            $("#roleForm").attr("action","${basepath}/authorization/role/save.html");
 	            $("#roleForm").submit();
 			});
 			
 			$("#returnButton").bind("click",function(){
-	            $("#roleForm").attr("action","/authorization/role/query.html");
+	            $("#roleForm").attr("action","${basepath}/authorization/role/query.html");
 	            $("#roleForm").submit();
 			});
         });

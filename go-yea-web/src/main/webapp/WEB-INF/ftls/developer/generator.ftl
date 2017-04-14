@@ -29,7 +29,7 @@
 	                            </div>
 	                        </div>
 	                        <div class="ibox-content">
-	                            <form action="/developer/generator/generator.html" method="post" class="form-horizontal" >
+	                            <form action="${basepath}/developer/generator/generator.html" method="post" class="form-horizontal" >
 	                                <div class="form-group"><label class="col-sm-2 control-label">模块名</label>
 	                                    <div class="col-sm-10"><input name="moduleName" type="text" class="form-control"></div>
 	                                </div>

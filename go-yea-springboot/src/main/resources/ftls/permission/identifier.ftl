@@ -176,7 +176,7 @@
 		function getResource(object) {
 		    initOperation();
 		    $.ajax({
-			    url:'/permission/resource/query/parent',
+			    url:'${basepath}/permission/resource/query/parent',
 			    type:'GET',
 			    async:true,
 			    data:{
@@ -209,7 +209,7 @@
 		
 		function getOperation(resourceId) {
 		    $.ajax({
-			    url:'/permission/permission/operation/query',
+			    url:'${basepath}/permission/permission/operation/query',
 			    type:'GET',
 			    async:true,
 			    data:{
@@ -274,7 +274,7 @@
 		
         function loadResourceIdentifier(identifierId) {
             $.ajax({
-			    url:'/permission/identifier/load',
+			    url:'${basepath}/permission/identifier/load',
 			    type:'GET',
 			    async:true,
 			    data:{
@@ -330,12 +330,12 @@
 		            }
 	            }
 	            
-	            $("#resourceIdentifierForm").attr("action","/permission/identifier/save.html");
+	            $("#resourceIdentifierForm").attr("action","${basepath}/permission/identifier/save.html");
 	            $("#resourceIdentifierForm").submit();
 			});
 			
 			$("#effectButton").bind("click",function(){
-	            $("#resourceIdentifierForm").attr("action","/permission/identifier/effect.html");
+	            $("#resourceIdentifierForm").attr("action","${basepath}/permission/identifier/effect.html");
 	            $("#resourceIdentifierForm").submit();
 			});
 			

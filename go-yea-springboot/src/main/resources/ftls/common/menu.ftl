@@ -17,14 +17,14 @@
                     <#list systemMenu.menus?if_exists as menu>
 			        <li <#if (systemMenu.currMenu?? && menu.menuPath?contains(systemMenu.currMenu)) >class="active"</#if>>
                     <#if (menu.childMenu?size > 0) >
-					    <a href="${menu.menuPath}"><i class="fa fa-sitemap"></i> <span class="nav-label">${menu.menuName}</span> <span class="fa arrow"></span></a>
+					    <a href="${basepath+menu.menuPath}"><i class="fa fa-sitemap"></i> <span class="nav-label">${menu.menuName}</span> <span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
                             <#list menu.childMenu?if_exists as childMenu>
-                            <li <#if (systemMenu.currMenu?? && childMenu.menuPath?contains(systemMenu.currMenu)) >class="active"</#if> ><a href="${childMenu.menuPath}">${childMenu.menuName}</a></li>
+                            <li <#if (systemMenu.currMenu?? && childMenu.menuPath?contains(systemMenu.currMenu)) >class="active"</#if> ><a href="${basepath+childMenu.menuPath}">${childMenu.menuName}</a></li>
                             </#list>
                         </ul>
 					<#else>
-					    <a href="${menu.menuPath}"><i class="fa fa-diamond"></i> <span class="nav-label">${menu.menuName}</span></a>
+					    <a href="${basepath+menu.menuPath}"><i class="fa fa-diamond"></i> <span class="nav-label">${menu.menuName}</span></a>
 					</#if>
                     </li>
 			      	</#list>

@@ -16,7 +16,7 @@
             <h3>欢迎您来到YEA的世界</h3>
             <p>
             </p>
-            <form class="m-t" role="form" method="post" action="/authenticed.html">
+            <form class="m-t" role="form" method="post" action="${basepath}/authenticed.html">
                 <#if login_message?? >
                 <div class="form-group has-error">
                     <label class="control-label">${login_message}</label>

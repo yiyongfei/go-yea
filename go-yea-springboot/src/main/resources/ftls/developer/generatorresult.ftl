@@ -37,7 +37,7 @@
 	                                   </#list>
 			                        </p>
 			                    </div>
-			                    <form action="/developer/generator/load.html" method="post" class="form-horizontal" >
+			                    <form action="${basepath}/developer/generator/load.html" method="post" class="form-horizontal" >
 	                                <div class="hr-line-dashed"></div>
 	                                <div class="form-group">
 	                                    <div class="col-sm-12 col-sm-offset-10">

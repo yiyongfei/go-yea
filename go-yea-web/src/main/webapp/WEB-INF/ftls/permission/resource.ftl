@@ -36,7 +36,7 @@
 	                            </div>
 	                        </div>
 	                        <div class="ibox-content">
-	                            <form action="/permission/resource/save.html" method="post" class="form-horizontal" >
+	                            <form action="${basepath}/permission/resource/save.html" method="post" class="form-horizontal" >
 	                                <div class="form-group" id="parent_select_area">
 		                                <label class="col-sm-2 control-label">父资源</label>
 		                                <input name="resourceInfoEntity.parentResourceId" type="hidden" class="form-control" value="">
@@ -137,7 +137,7 @@
 		
 		function getParentResource(object) {
 		    $.ajax({
-			    url:'/permission/resource/query/parent',
+			    url:'${basepath}/permission/resource/query/parent',
 			    type:'GET',
 			    async:true,
 			    data:{

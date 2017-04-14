@@ -102,20 +102,20 @@
             
             $("#addUserButton").bind("click",function(){
 	            $("[name='partyId']").val("");
-	            $("#userForm").attr("action","/authorization/user/load.html");
+	            $("#userForm").attr("action","${basepath}/authorization/user/load.html");
 	            $("#userForm").submit();
 			});
         });
         
         function updateUser(partyId) {
         	$("[name='partyId']").val(partyId);
-        	$("#userForm").attr("action","/authorization/user/load.html");
+        	$("#userForm").attr("action","${basepath}/authorization/user/load.html");
 	        $("#userForm").submit();
         }
         
         function loadUserRole(partyId){
        	 	$("[name='partyId']").val(partyId);
-        	$("#userForm").attr("action","/authorization/user/role/load.html");
+        	$("#userForm").attr("action","${basepath}/authorization/user/role/load.html");
 	        $("#userForm").submit();
         }
     </script>

@@ -10,11 +10,11 @@
 	            </li>
 	            <li>
 	              <#if (loginuser.partyId)??>
-	                <a href="/logout.html">
+	                <a href="${basepath}/logout.html">
 	                    <i class="fa fa-sign-out"></i> Log out
 	                </a>
 	              <#else>
-	                <a href="/login.html">
+	                <a href="${basepath}/login.html">
 	                    <i class="fa fa-sign-out"></i> Log in
 	                </a>
 				  </#if>

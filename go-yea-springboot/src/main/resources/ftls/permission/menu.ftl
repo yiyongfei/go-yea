@@ -87,7 +87,7 @@
 		
 		function initIdentifier(identifierId) {
 		    $.ajax({
-			    url:'/permission/menu/identifier/query',
+			    url:'${basepath}/permission/menu/identifier/query',
 			    type:'GET',
 			    async:true,
 			    timeout:5000,    //超时时间
@@ -124,7 +124,7 @@
 		
 		function getParentMenu(object) {
 		    $.ajax({
-			    url:'/permission/menu/parent/query',
+			    url:'${basepath}/permission/menu/parent/query',
 			    type:'GET',
 			    async:true,
 			    data:{
@@ -154,12 +154,12 @@
 		
         $(document).ready(function() {
             $("#saveButton").bind("click",function(){
-	            $("#menuForm").attr("action","/permission/menu/save.html");
+	            $("#menuForm").attr("action","${basepath}/permission/menu/save.html");
 	            $("#menuForm").submit();
 			});
 			
 			$("#returnButton").bind("click",function(){
-	            $("#menuForm").attr("action","/permission/menu/query.html");
+	            $("#menuForm").attr("action","${basepath}/permission/menu/query.html");
 	            $("#menuForm").submit();
 			});
             initParentMenu();

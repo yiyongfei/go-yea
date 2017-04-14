@@ -100,20 +100,20 @@
             
             $("#addRoldButton").bind("click",function(){
 	            $("[name='roleId']").val("");
-	            $("#roleForm").attr("action","/authorization/role/load.html");
+	            $("#roleForm").attr("action","${basepath}/authorization/role/load.html");
 	            $("#roleForm").submit();
 			});
         });
         
         function updateRole(roleId) {
         	$("[name='roleId']").val(roleId);
-        	$("#roleForm").attr("action","/authorization/role/load.html");
+        	$("#roleForm").attr("action","${basepath}/authorization/role/load.html");
 	        $("#roleForm").submit();
         }
         
         function loadRolePermission(roleId){
        	 	$("[name='roleId']").val(roleId);
-        	$("#roleForm").attr("action","/authorization/role/permission/load.html");
+        	$("#roleForm").attr("action","${basepath}/authorization/role/permission/load.html");
 	        $("#roleForm").submit();
         }
     </script>

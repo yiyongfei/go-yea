@@ -108,12 +108,12 @@
         $(document).ready(function() {
             
             $("#saveButton").bind("click",function(){
-	            $("#userForm").attr("action","/authorization/user/save.html");
+	            $("#userForm").attr("action","${basepath}/authorization/user/save.html");
 	            $("#userForm").submit();
 			});
 			
 			$("#returnButton").bind("click",function(){
-	            $("#userForm").attr("action","/authorization/user/query.html");
+	            $("#userForm").attr("action","${basepath}/authorization/user/query.html");
 	            $("#userForm").submit();
 			});
 			

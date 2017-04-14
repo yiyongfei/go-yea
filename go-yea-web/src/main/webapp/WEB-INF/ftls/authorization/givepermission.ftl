@@ -140,7 +140,7 @@
 		function getResource(object) {
 		    initOperation();
 		    $.ajax({
-			    url:'/permission/resource/query/parent',
+			    url:'${basepath}/permission/resource/query/parent',
 			    type:'GET',
 			    async:true,
 			    data:{
@@ -173,7 +173,7 @@
 		
 		function getOperation(resourceId) {
 		    $.ajax({
-			    url:'/permission/permission/operation/query',
+			    url:'${basepath}/permission/permission/operation/query',
 			    type:'GET',
 			    async:true,
 			    data:{
@@ -215,19 +215,19 @@
 	                alert("为角色赋权时必须设置资源！");
 	                return false;
 	            }
-	            $("#rolePermissionForm").attr("action","/authorization/role/permission/save.html");
+	            $("#rolePermissionForm").attr("action","${basepath}/authorization/role/permission/save.html");
 	            $("#rolePermissionForm").submit();
 			});
 			
 			$("#returnButton").bind("click",function(){
-	            $("#rolePermissionForm").attr("action","/authorization/role/query.html");
+	            $("#rolePermissionForm").attr("action","${basepath}/authorization/role/query.html");
 	            $("#rolePermissionForm").submit();
 			});
 			
         });
         
         function deleteRolePermission(rolePermissionId) {
-            $("#rolePermissionForm").attr("action","/authorization/role/permission/delete.html?rolePermissionId="+rolePermissionId);
+            $("#rolePermissionForm").attr("action","${basepath}/authorization/role/permission/delete.html?rolePermissionId="+rolePermissionId);
             $("#rolePermissionForm").submit();
 		};
     </script>

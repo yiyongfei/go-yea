@@ -31,7 +31,7 @@
 	                            </div>
 	                        </div>
 	                        <div class="ibox-content">
-	                            <form action="/permission/operation/save.html" method="post" class="form-horizontal" >
+	                            <form action="${basepath}/permission/operation/save.html" method="post" class="form-horizontal" >
 	                                <div class="form-group">
 	                                    <label class="col-sm-2 control-label">操作名</label>
 	                                    <div class="col-sm-4"><input name="operationInfoEntity.operationName" type="text" class="form-control"></div>

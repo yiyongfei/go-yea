@@ -69,7 +69,7 @@
 	    </profile>
 	</profiles>
     <build>
-        <finalName>demo-yea-web</finalName>
+        <finalName>go-yea-web</finalName>
         <resources>
 	        <resource>
 	            <directory>src/main/resources</directory>

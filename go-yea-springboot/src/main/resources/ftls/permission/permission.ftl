@@ -36,7 +36,7 @@
 	                            </div>
 	                        </div>
 	                        <div class="ibox-content">
-	                            <form id="permissionForm" action="/permission/permission/save.html" method="post" class="form-horizontal" >
+	                            <form id="permissionForm" action="${basepath}/permission/permission/save.html" method="post" class="form-horizontal" >
 	                                
 	                                <div class="form-group">
 	                                    <label class="col-sm-2 control-label">权限名</label>
@@ -141,7 +141,7 @@
 		
 		function getResource(object) {
 		    $.ajax({
-			    url:'/permission/resource/query/parent',
+			    url:'${basepath}/permission/resource/query/parent',
 			    type:'GET',
 			    async:true,
 			    data:{
@@ -171,7 +171,7 @@
 		
 		function initOperation() {
 		    $.ajax({
-			    url:'/permission/operation/query',
+			    url:'${basepath}/permission/operation/query',
 			    type:'GET',
 			    async:true,
 			    timeout:5000,    //超时时间

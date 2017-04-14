@@ -42,4 +42,4 @@
 <#include "/common/script.ftl"/>
 
 <!-- Custom and plugin javascript -->
-<script src="js/plugins/pace/pace.min.js"></script>
+<script src="${basepath}/js/plugins/pace/pace.min.js"></script>

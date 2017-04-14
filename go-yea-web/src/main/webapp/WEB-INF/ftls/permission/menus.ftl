@@ -97,14 +97,14 @@
             
             $("#addButton").bind("click",function(){
 	            $("[name='menuId']").val("");
-	            $("#menuForm").attr("action","/permission/menu/load.html");
+	            $("#menuForm").attr("action","${basepath}/permission/menu/load.html");
 	            $("#menuForm").submit();
 			});
         });
         
         function updateMenu(menuId) {
         	$("[name='menuId']").val(menuId);
-        	$("#menuForm").attr("action","/permission/menu/load.html");
+        	$("#menuForm").attr("action","${basepath}/permission/menu/load.html");
 	        $("#menuForm").submit();
         }
         
