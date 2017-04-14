@@ -17,8 +17,8 @@ import com.team.goyea.authorization.model.pk.PersonInfoPK;
 import com.team.goyea.authorization.model.pk.UserInfoPK;
 import com.team.goyea.common.dao.CommonDao;
 import com.yea.core.base.model.BaseModel;
+import com.yea.core.shiro.password.EncrytPassword;
 import com.yea.orm.handle.ORMConstants;
-import com.yea.shiro.password.EncrytPassword;
 
 
 @Repository

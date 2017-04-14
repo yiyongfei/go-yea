@@ -8,11 +8,6 @@
     <artifactId>go-yea-authorization</artifactId>
     <dependencies>
         <dependency>
-	        <groupId>com.yea</groupId>
-	        <artifactId>yea-shiro</artifactId>
-		</dependency>
-		
-		<dependency>
 	        <groupId>com.team</groupId>
 	        <artifactId>go-yea-common</artifactId>
 	        <version>0.0.1</version>
