@@ -11,3 +11,8 @@ mvn clean package -Dmaven.test.skip=true -Pdevelop
 ```
 ## 3、部署War包并启动
 复制go-yea-web/target/go-yea-web.war到应用服务器部署目录内，启动服务器
+
+## 4、登录访问
+浏览器输入http://localhost:port/go-yea-web/
+登录用户:admin
+登录密码:admin
