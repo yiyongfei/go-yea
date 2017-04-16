@@ -15,13 +15,7 @@
 		    <artifactId>freemarker</artifactId>
 		</dependency>
 		
-        <!-- Netty，通过客户端与Netty服务端交互 -->
-        <dependency>
-	        <groupId>com.yea</groupId>
-	        <artifactId>yea-dispatcher</artifactId>
-	    </dependency>
-	    
-	    <!-- Shiro，权限认证 -->
+        <!-- Shiro，权限认证 -->
 	    <dependency>
 	        <groupId>com.yea</groupId>
 	        <artifactId>yea-shiro</artifactId>
@@ -63,6 +57,13 @@
 	            <profiles.active>staging</profiles.active>
 	            <jetty.port>8888</jetty.port>
 	        </properties>
+			<dependencies>        
+			    <!-- Netty，通过客户端与Netty服务端交互 -->
+		        <dependency>
+			        <groupId>com.yea</groupId>
+			        <artifactId>yea-dispatcher</artifactId>
+			    </dependency>
+		    </dependencies>
 	        <activation>
 	            <activeByDefault>true</activeByDefault>
 	        </activation>
