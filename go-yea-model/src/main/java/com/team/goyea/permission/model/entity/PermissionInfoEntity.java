@@ -35,8 +35,6 @@ public class PermissionInfoEntity extends BaseEntity {
     
     private String permissionName;
     
-    private String accessType;
-    
     public PermissionInfoEntity() {
         super(new PermissionInfoPK());
     }
@@ -85,13 +83,6 @@ public class PermissionInfoEntity extends BaseEntity {
     }
     public String getPermissionName() {
         return this.permissionName;
-    }
-    
-    public void setAccessType(String accessType) {
-        this.accessType = accessType;
-    }
-    public String getAccessType() {
-        return this.accessType;
     }
     
 }

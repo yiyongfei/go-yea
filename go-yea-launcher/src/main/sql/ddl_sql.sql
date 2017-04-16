@@ -28,8 +28,7 @@ CREATE TABLE t_permission_info (
     permission_desc character varying(45),
     is_valid character varying(2) DEFAULT '01'::character varying NOT NULL,
     is_delete character varying(2) DEFAULT '01'::character varying NOT NULL,
-    permission_name character(30),
-    access_type character varying(2) DEFAULT 1
+    permission_name character varying(30)
 );
 ALTER TABLE t_permission_info
     ADD CONSTRAINT t_permission_info_pkey PRIMARY KEY (permission_id);
@@ -152,4 +151,3 @@ CREATE TABLE t_relationship_type_code (
 );
 ALTER TABLE ONLY t_relationship_type_code
     ADD CONSTRAINT t_relationship_type_code_pkey PRIMARY KEY (relationship_type_code);
-

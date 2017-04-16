@@ -11,8 +11,7 @@
           permission_desc,
           is_valid,
           is_delete,
-          permission_name,
-          access_type
+          permission_name
         ) VALUES (
     	  #{pk.permissionId, jdbcType=BIGINT},
     	  #{resourceId, jdbcType=BIGINT},
@@ -20,8 +19,7 @@
     	  #{permissionDesc, jdbcType=VARCHAR},
     	  #{isValid, jdbcType=VARCHAR},
     	  #{isDelete, jdbcType=VARCHAR},
-    	  #{permissionName, jdbcType=CHAR},
-    	  #{accessType, jdbcType=VARCHAR}
+    	  #{permissionName, jdbcType=CHAR}
         )
   </insert>
   
@@ -49,9 +47,6 @@
     	<if test="permissionName != null" >
           permission_name,
       	</if>
-    	<if test="accessType != null" >
-          access_type,
-      	</if>
       </trim>
     VALUES
       <trim prefix="(" suffix=")" suffixOverrides="," >
@@ -76,9 +71,6 @@
     	<if test="permissionName != null" >
           #{permissionName, jdbcType=CHAR},
       	</if>
-    	<if test="accessType != null" >
-          #{accessType, jdbcType=VARCHAR},
-      	</if>
       </trim>
   </insert>
   
@@ -89,8 +81,7 @@
           permission_desc = #{permissionDesc, jdbcType=VARCHAR},
           is_valid = #{isValid, jdbcType=VARCHAR},
           is_delete = #{isDelete, jdbcType=VARCHAR},
-          permission_name = #{permissionName, jdbcType=CHAR},
-          access_type = #{accessType, jdbcType=VARCHAR}
+          permission_name = #{permissionName, jdbcType=CHAR}
      WHERE 1 = 1
        AND permission_id = #{pk.permissionId, jdbcType=BIGINT}
   </update>
@@ -115,9 +106,6 @@
       	</if>
     	<if test="permissionName != null" >
           permission_name = #{permissionName, jdbcType=CHAR},
-      	</if>
-    	<if test="accessType != null" >
-          access_type = #{accessType, jdbcType=VARCHAR},
       	</if>
       </trim>
      WHERE 1 = 1
@@ -154,9 +142,6 @@
         <if test="permissionName != null and permissionName != ''" >
           AND permission_name = #{permissionName, jdbcType=CHAR}
         </if>
-        <if test="accessType != null and accessType != ''" >
-          AND access_type = #{accessType, jdbcType=VARCHAR}
-        </if>
      </trim>
   </delete>
   
@@ -176,7 +161,6 @@
     <result column="is_valid" property="isValid" jdbcType="VARCHAR" />
     <result column="is_delete" property="isDelete" jdbcType="VARCHAR" />
     <result column="permission_name" property="permissionName" jdbcType="CHAR" />
-    <result column="access_type" property="accessType" jdbcType="VARCHAR" />
     <association property="pk" javaType="com.team.goyea.permission.model.pk.PermissionInfoPK" resultMap="permissionInfoPKMap"/>
   </resultMap>
   <resultMap id="permissionInfoPKMap" type="com.team.goyea.permission.model.pk.PermissionInfoPK" >
@@ -192,8 +176,7 @@
     permission_desc,
     is_valid,
     is_delete,
-    permission_name,
-    access_type
+    permission_name
   </sql>
   
   <select id="permissionInfo_load" parameterType="com.team.goyea.permission.model.pk.PermissionInfoPK" resultMap="permissionInfoResultMap">
@@ -230,9 +213,6 @@
         <if test="permissionInfoEntity != null and permissionInfoEntity.permissionName != null and permissionInfoEntity.permissionName != ''" >
           AND permission_name = #{permissionInfoEntity.permissionName, jdbcType=CHAR}
         </if>
-        <if test="permissionInfoEntity != null and permissionInfoEntity.accessType != null and permissionInfoEntity.accessType != ''" >
-          AND access_type = #{permissionInfoEntity.accessType, jdbcType=VARCHAR}
-        </if>
       </trim>
   </select>
   <select id="permissionInfo_selectBySelectiveCount" parameterType="com.team.goyea.permission.model.PermissionInfo" resultType="int">
@@ -259,9 +239,6 @@
         <if test="permissionInfoEntity != null and permissionInfoEntity.permissionName != null and permissionInfoEntity.permissionName != ''" >
           AND permission_name = #{permissionInfoEntity.permissionName, jdbcType=CHAR}
         </if>
-        <if test="permissionInfoEntity != null and permissionInfoEntity.accessType != null and permissionInfoEntity.accessType != ''" >
-          AND access_type = #{permissionInfoEntity.accessType, jdbcType=VARCHAR}
-        </if>
       </trim>
   </select>
   <select id="permissionInfo_selectPermission" parameterType="com.team.goyea.permission.model.PermissionInfo" resultMap="permissionInfoResultMap">
@@ -273,7 +250,6 @@
 		   a.is_valid,
 	       a.is_delete,
 	       a.permission_name,
-	       a.access_type,
 	       b.resource_name,
            b.resource_content,
            c.operation_name
@@ -299,9 +275,6 @@
         </if>
         <if test="permissionInfoEntity != null and permissionInfoEntity.permissionName != null and permissionInfoEntity.permissionName != ''" >
           AND a.permission_name = #{permissionInfoEntity.permissionName, jdbcType=CHAR}
-        </if>
-        <if test="permissionInfoEntity != null and permissionInfoEntity.accessType != null and permissionInfoEntity.accessType != ''" >
-          AND a.access_type = #{permissionInfoEntity.accessType, jdbcType=VARCHAR}
         </if>
   </select>
 </mapper>
