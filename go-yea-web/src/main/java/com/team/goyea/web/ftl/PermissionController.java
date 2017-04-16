@@ -134,6 +134,7 @@ public class PermissionController {
     public String effectIdentifier(ModelMap model) throws Throwable {
 		WebApplicationContext webApplicationContext = ContextLoader.getCurrentWebApplicationContext();
 		ShiroFilterWrapper shiroFilterWrapper = (ShiroFilterWrapper) webApplicationContext.getBean(ShiroFilterWrapper.class);
+		shiroFilterWrapper.setIsReset(true);
 		shiroFilterWrapper.reset();
 		return "redirect:/permission/identifier/query.html";
 	}
