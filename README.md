@@ -141,7 +141,7 @@ public class CommonDao<T> extends AbstractBaseDAO<T> {
 	<!-- Netty服务端的配置 End -->
 ```
 ### 5、生成Mybatis的映射文件及相应的Domain
-
+![Alt 生成工具](https://github.com/yiyongfei/picture/blob/master/go-yea/生成工具.tiff)
 * Mybatis映射文件内包含单表常规操作
 	* 生成的映射文件请复制到启动器内的src/main/resources/sqlmap
 	* 样例请参看go-yea/go-yea-launcher/src/main/resources/sqlmap/authorization/personinfo-sqlmap-mapping.xml
