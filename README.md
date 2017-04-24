@@ -245,7 +245,7 @@ public class SaveOperationAct extends AbstractTransactionAct {
 	</bean>
 	
 	<!-- Netty客户端配置，启动时将会根据服务注册名主动连接服务端 -->
-    <bean id="nettyClient" class="com.yea.remote.netty.client.NettyClient" init-method="connect" destroy-method="disconnect">
+        <bean id="nettyClient" class="com.yea.remote.netty.client.NettyClient" init-method="connect" destroy-method="disconnect">
 		<property name="registerName" value="${netty.server.register}" /><!-- 服务注册名 -->
 		<property name="dispatcher" ref="zkDispatcher" />
 		<property name="host" value="${netty.client.host}" /><!-- 该主机未设置时，系统将会读取本机IP自动设入 -->
@@ -288,70 +288,82 @@ public class SaveOperationAct extends AbstractTransactionAct {
 ```
 - Shiro的配置，请注意单机模式与RPC模式endpoint的设置(单机模式设置为DefaultClient，RPC模式设置成NettyClient):
 ```xml
-    <bean id="sessionIdGenerator" class="org.apache.shiro.session.mgt.eis.JavaUuidSessionIdGenerator"/>  
-	<bean id="sessionDAO" class="org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO">  
-	    <property name="activeSessionsCacheName" value="shiro-activeSessionCache"/>  
-	    <property name="sessionIdGenerator" ref="sessionIdGenerator"/>  
-	</bean>
+    <bean id="sessionIdGenerator" class="org.apache.shiro.session.mgt.eis.JavaUuidSessionIdGenerator"/>  
+    <bean id="sessionDAO" class="org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO">  
+        <property name="activeSessionsCacheName" value="shiro-activeSessionCache"/>  
+        <property name="sessionIdGenerator" ref="sessionIdGenerator"/>  
+    </bean>
 	
-    <!-- 会话Cookie模板 -->  
-	<bean id="sessionIdCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
-	    <constructor-arg value="JEA_SESSIONID"/>
-	    <property name="httpOnly" value="true"/>
-	    <property name="maxAge" value="-1"/>    <!-- maxAge=-1，表示浏览器关闭时失效此Cookie -->
-	</bean>
+    <!-- 会话Cookie模板 -->  
+    <bean id="sessionIdCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
+        <constructor-arg value="JEA_SESSIONID"/>
+        <property name="httpOnly" value="true"/>
+        <property name="maxAge" value="-1"/>    <!-- maxAge=-1，表示浏览器关闭时失效此Cookie -->
+    </bean>
 	
-	<!-- 会话管理器 -->  
-	<bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">  
-	    <property name="globalSessionTimeout" value="1800000"/>
-	    <property name="deleteInvalidSessions" value="true"/>
-	    <property name="sessionValidationSchedulerEnabled" value="true"/>
-	    <property name="sessionDAO" ref="sessionDAO"/>
-	    <property name="sessionIdCookieEnabled" value="true"/>
-	    <property name="sessionIdCookie" ref="sessionIdCookie"/>
-	</bean>
+    <!-- 会话管理器 -->  
+    <bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">  
+        <property name="globalSessionTimeout" value="1800000"/>
+        <property name="deleteInvalidSessions" value="true"/>
+        <property name="sessionValidationSchedulerEnabled" value="true"/>
+        <property name="sessionDAO" ref="sessionDAO"/>
+        <property name="sessionIdCookieEnabled" value="true"/>
+        <property name="sessionIdCookie" ref="sessionIdCookie"/>
+    </bean>
 	
-	<!-- rememberMe的Cookie模板 -->
-	<bean id="rememberMeCookie" class="org.apache.shiro.web.servlet.SimpleCookie">  
-	    <constructor-arg value="rememberMe"/>  
-	    <property name="httpOnly" value="true"/>  
-	    <property name="maxAge" value="604800"/><!-- 记住我的Cookie，保存时长7天 -->
-	</bean>
-	<!-- rememberMe管理器 -->
-	<bean id="rememberMeManager" class="org.apache.shiro.web.mgt.CookieRememberMeManager">
-	     <property name="cipherKey" value="#{T(org.apache.shiro.codec.Base64).decode('9AVvhnFLuS3KTV8KprsdAg==')}" />
-         <property name="cookie" ref="rememberMeCookie"/>
-	</bean>
+    <!-- rememberMe的Cookie模板 -->
+    <bean id="rememberMeCookie" class="org.apache.shiro.web.servlet.SimpleCookie">  
+        <constructor-arg value="rememberMe"/>  
+        <property name="httpOnly" value="true"/>  
+        <property name="maxAge" value="604800"/><!-- 记住我的Cookie，保存时长7天 -->
+    </bean>
+    <!-- rememberMe管理器 -->
+    <bean id="rememberMeManager" class="org.apache.shiro.web.mgt.CookieRememberMeManager">
+         <property name="cipherKey" value="#{T(org.apache.shiro.codec.Base64).decode('9AVvhnFLuS3KTV8KprsdAg==')}" />
+         <property name="cookie" ref="rememberMeCookie"/>
+    </bean>
 	
     <bean id="securityManager" class="com.yea.shiro.web.mgt.WebSecurityManager">
         <property name="endpoint" ref="nettyClient"/>
         <property name="sessionManager" ref="sessionManager"/>
-        <property name="rememberMeManager" ref="rememberMeManager"/>
+        <property name="rememberMeManager" ref="rememberMeManager"/>
     </bean>
     
-    <!-- 相当于调用SecurityUtils.setSecurityManager(securityManager) -->
-	<bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
-		<property name="staticMethod" value="org.apache.shiro.SecurityUtils.setSecurityManager"/>
-	    <property name="arguments" ref="securityManager"/>
-	</bean>
+    <!-- 相当于调用SecurityUtils.setSecurityManager(securityManager) -->
+    <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+	<property name="staticMethod" value="org.apache.shiro.SecurityUtils.setSecurityManager"/>
+        <property name="arguments" ref="securityManager"/>
+    </bean>
 	
-	<!-- Shiro的Web过滤器 -->
-	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean" >
-	    <property name="securityManager" ref="securityManager"/>
-	    <property name="loginUrl" value="/login.html"/>
-	    <property name="successUrl" value="/index.html"/>
-	    <property name="unauthorizedUrl" value="/unauthorized.html"/>
+    <!-- Shiro的Web过滤器 -->
+    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean" >
+        <property name="securityManager" ref="securityManager"/>
+        <property name="loginUrl" value="/login.html"/>
+        <property name="successUrl" value="/index.html"/>
+        <property name="unauthorizedUrl" value="/unauthorized.html"/>
     </bean>
     <!-- 对ShiroWeb过滤器进行包装，以初始化过滤器链（不允许延迟加载） -->
-    <bean id="shiroFilterWrapper" class="com.yea.shiro.web.wrapper.ShiroFilterWrapper" init-method="init" lazy-init="false" >
-	    <property name="endpoint" ref="nettyClient"/>
-	    <property name="shiroFilter" ref="shiroFilter"/>
-	    <property name="authenticedUrl" value="/authenticed.html"/>
-	    <property name="logoutUrl" value="/logout.html"/>
+    <bean id="shiroFilterWrapper" class="com.yea.shiro.web.wrapper.ShiroFilterWrapper" init-method="init" lazy-init="false" >
+        <property name="endpoint" ref="nettyClient"/>
+        <property name="shiroFilter" ref="shiroFilter"/>
+        <property name="authenticedUrl" value="/authenticed.html"/>
+	<property name="logoutUrl" value="/logout.html"/>
     </bean>
 
     <!-- Shiro生命周期处理器-->
     <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
+```
+- Shiro+Redis的配置，解决负载均衡模式下分布式Session共享问题:
+```xml
+    <!-- Redis池 -->
+    <bean id="redisGeneralPool" class="com.yea.cache.jedis.pool.RedisGeneralPool" init-method="initPool" destroy-method="destroyPool">
+        <property name="server" value="${redis.server}"/>
+    </bean>
+    
+    <!-- RedisSessionDAO的支持，将Session放置在Redis服务上，可解决多Web服务器的Session同步问题 -->
+    <bean id="sessionDAO" class="com.yea.shiro.session.mgt.redis.ShiroSessionDAO">
+	<property name="cachePool" ref="redisGeneralPool"/>
+    </bean>
 ```
 ### 3、spring-mvc.xml
 - 配置拦截器，自动设置当前登录用户的用户信息及菜单信息
