@@ -239,7 +239,7 @@
 		   CASE WHEN a.permission_id is null 
 		   THEN a.permission_wildcards
 		   ELSE b.permission_wildcards
-		   END
+		   END as permission_wildcards
       FROM t_role_permission_rela a
       LEFT OUTER JOIN (SELECT d1.permission_id, d2.resource_content || ':' || d3.operation_name as permission_wildcards 
                          FROM t_permission_info d1, t_resource_info d2, t_operation_info d3 
