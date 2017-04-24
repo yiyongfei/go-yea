@@ -1,5 +1,11 @@
 # go-yea
 
+# YEA
+使用go-yea前，请先下载yea，并且执行yea/pom.xml
+```bash
+mvn clean install -Dmaven.test.skip=true
+```
+
 # 启动
 
 ## 单机模式
