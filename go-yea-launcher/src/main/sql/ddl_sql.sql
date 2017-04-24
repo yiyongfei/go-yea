@@ -55,7 +55,7 @@ CREATE TABLE t_menu_info (
     is_delete character varying(2) DEFAULT '01'::character varying NOT NULL,
     menu_sequence integer
 );
-ALTER TABLE ONLY t_menu_info
+ALTER TABLE t_menu_info
     ADD CONSTRAINT t_menu_info_pkey PRIMARY KEY (menu_id);
 
 
@@ -67,7 +67,7 @@ CREATE TABLE t_role_info (
     is_valid character varying(2) DEFAULT '01'::character varying,
     is_delete character varying(2) DEFAULT '01'::character varying
 );
-ALTER TABLE ONLY t_role_info
+ALTER TABLE t_role_info
     ADD CONSTRAINT t_role_info_pkey PRIMARY KEY (role_id);
 COMMENT ON COLUMN t_role_info.role_type IS '角色类型';
 COMMENT ON COLUMN t_role_info.role_name IS '角色名称';
@@ -81,7 +81,7 @@ CREATE TABLE t_role_permission_rela (
     permission_id bigint,
     permission_wildcards character varying(100)
 );
-ALTER TABLE ONLY t_role_permission_rela
+ALTER TABLE t_role_permission_rela
     ADD CONSTRAINT t_role_permission_rela_pkey PRIMARY KEY (role_permission_id);
 
 
@@ -89,7 +89,7 @@ CREATE TABLE t_party_info (
     party_id bigint NOT NULL,
     party_type character varying(4) NOT NULL
 );
-ALTER TABLE ONLY t_party_info
+ALTER TABLE t_party_info
     ADD CONSTRAINT t_party_info_pkey PRIMARY KEY (party_id);
 
 
@@ -98,7 +98,7 @@ CREATE TABLE t_party_role_rela (
     party_id bigint NOT NULL,
     role_id bigint NOT NULL
 );
-ALTER TABLE ONLY t_party_role_rela
+ALTER TABLE t_party_role_rela
     ADD CONSTRAINT t_party_role_rela_pkey PRIMARY KEY (party_role_id);
 
 
@@ -110,7 +110,7 @@ CREATE TABLE t_person_info (
     marital_type_code character varying(10),
     person_memo character varying(500)
 );
-ALTER TABLE ONLY t_person_info
+ALTER TABLE t_person_info
     ADD CONSTRAINT t_person_info_pkey PRIMARY KEY (party_id);
     
 
@@ -120,7 +120,7 @@ CREATE TABLE t_user_info (
     login_salt character varying(20) NOT NULL,
     is_lock character varying(2) DEFAULT '01'::character varying NOT NULL
 );
-ALTER TABLE ONLY t_user_info
+ALTER TABLE t_user_info
     ADD CONSTRAINT t_user_info_pkey PRIMARY KEY (party_id);
     
 CREATE TABLE t_login_info (
@@ -141,7 +141,7 @@ CREATE TABLE t_party_relationship (
     start_date date,
     end_date date
 );
-ALTER TABLE ONLY t_party_relationship
+ALTER TABLE t_party_relationship
     ADD CONSTRAINT t_party_relationship_pkey PRIMARY KEY (relationship_id);
 
 
@@ -149,5 +149,5 @@ CREATE TABLE t_relationship_type_code (
     relationship_type_code character varying(4) NOT NULL,
     relationship_type_desc character varying(45)
 );
-ALTER TABLE ONLY t_relationship_type_code
+ALTER TABLE t_relationship_type_code
     ADD CONSTRAINT t_relationship_type_code_pkey PRIMARY KEY (relationship_type_code);
