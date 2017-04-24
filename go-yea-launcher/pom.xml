@@ -7,14 +7,17 @@
     </parent>
     <artifactId>go-yea-launcher</artifactId>
     <dependencies>
-    
     	<!-- 数据库连接池支持 -->
 		<dependency>
 		    <groupId>com.alibaba</groupId>
 		    <artifactId>druid</artifactId>
 		</dependency>
 		
-        <!-- 数据库驱动支持 -->
+		<!-- 数据库驱动支持 -->
+		<dependency>
+		    <groupId>com.h2database</groupId>
+       		<artifactId>h2</artifactId>
+		</dependency>
 		<dependency>
 		    <groupId>org.postgresql</groupId>
 		    <artifactId>postgresql</artifactId>
@@ -51,6 +54,13 @@
 	        <properties>
 	            <profiles.active>develop</profiles.active>
 	        </properties>
+		    <build>
+		        <resources>
+			        <resource>
+			            <directory>src/main/sql</directory>
+			        </resource>
+			    </resources>
+			</build>
 	    </profile>
 	    <profile>
 	        <!-- 测试环境 -->

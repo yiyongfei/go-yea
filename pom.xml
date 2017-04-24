@@ -21,6 +21,7 @@
         <mybatis.spring.version>1.2.2</mybatis.spring.version>
 		<druid.version>1.0.29</druid.version>
         <postgresql.version>9.3-1102-jdbc41</postgresql.version>
+        <h2.version>1.4.193</h2.version>
         <fst.version>2.48</fst.version>
 		<hessian.version>4.0.38</hessian.version>
 		<ehcache.version>2.8.8</ehcache.version>
@@ -102,6 +103,12 @@
 			    <version>${postgresql.version}</version>
 			</dependency>
 			
+			<dependency>
+		        <groupId>com.h2database</groupId>
+		        <artifactId>h2</artifactId>
+		        <version>${h2.version}</version>
+		    </dependency>
+					
 			<!-- freemarker支持 -->
 			<dependency>
 			    <groupId>org.freemarker</groupId>
