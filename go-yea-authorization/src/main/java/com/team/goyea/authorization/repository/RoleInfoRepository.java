@@ -17,6 +17,13 @@ public class RoleInfoRepository {
 	private CommonDao<BaseModel> commonDao;
 	
 	public RoleInfoPK saveRoleInfo(RoleInfo roleInfo) throws Exception {
+		RoleInfo queryDto = new RoleInfo();
+		queryDto.getRoleInfoEntity().setRoleName(roleInfo.getRoleInfoEntity().getRoleName());
+		List<BaseModel> listRole = commonDao.queryMany(RoleInfo.Sqlid.ROLEINFO_SELECT_SELECTIVE.value(), queryDto);
+		if(listRole.size() > 0) {
+			throw new Exception("角色名["+roleInfo.getRoleInfoEntity().getRoleName()+"]已存在，请设置角色名");
+		}
+		
 		if(roleInfo.getRoleInfoPK() != null && roleInfo.getRoleInfoPK().getRoleId() != null) {
 			roleInfo.getRoleInfoEntity().setPk(roleInfo.getRoleInfoPK());
 			commonDao.update(RoleInfo.Sqlid.ROLEINFO_UPDATE.value(), roleInfo.getRoleInfoEntity());

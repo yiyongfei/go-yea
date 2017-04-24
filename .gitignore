@@ -8,4 +8,8 @@
 
 */target/*
 
+*/target*/*
+
 */.gitignore
+
+*/java.io.tmpdir/*

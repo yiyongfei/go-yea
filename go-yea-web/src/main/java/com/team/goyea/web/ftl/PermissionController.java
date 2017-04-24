@@ -58,7 +58,7 @@ public class PermissionController {
 			promiseId.awaitObject(10000);
 		}
 		
-		return "redirect:/permission/operation/query.html";
+		return "forward:/permission/operation/query.html";
 	}
 	
 	@RequestMapping("/permission/resource/query.html")
@@ -81,7 +81,7 @@ public class PermissionController {
 			promiseId.awaitObject(10000);
 		}
 		
-		return "redirect:/permission/resource/query.html";
+		return "forward:/permission/resource/query.html";
 	}
 	
 	@RequestMapping("/permission/permission/query.html")
@@ -104,7 +104,7 @@ public class PermissionController {
 			promiseId.awaitObject(10000);
 		}
 		
-		return "redirect:/permission/permission/query.html";
+		return "forward:/permission/permission/query.html";
 	}
 	
 	@RequestMapping("/permission/identifier/query.html")
@@ -127,7 +127,7 @@ public class PermissionController {
 			promise.awaitObject(10000);
 		}
 		
-		return "redirect:/permission/identifier/query.html";
+		return "forward:/permission/identifier/query.html";
 	}
 	
 	@RequestMapping("/permission/identifier/effect.html")
@@ -136,7 +136,7 @@ public class PermissionController {
 		ShiroFilterWrapper shiroFilterWrapper = (ShiroFilterWrapper) webApplicationContext.getBean(ShiroFilterWrapper.class);
 		shiroFilterWrapper.setIsReset(true);
 		shiroFilterWrapper.reset();
-		return "redirect:/permission/identifier/query.html";
+		return "forward:/permission/identifier/query.html";
 	}
 	
 	@RequestMapping("/permission/menu/query.html")
@@ -170,7 +170,7 @@ public class PermissionController {
 			promise.awaitObject(10000);
 		}
 		
-		return "redirect:/permission/menu/query.html";
+		return "forward:/permission/menu/query.html";
 	}
 	
 	@RequestMapping("/permission/identifier/load")

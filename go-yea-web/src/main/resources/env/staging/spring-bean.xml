@@ -76,7 +76,17 @@
 	</bean>
     <!-- Netty客户端的配置 End -->
 	
-	<bean id="sessionIdGenerator" class="org.apache.shiro.session.mgt.eis.JavaUuidSessionIdGenerator"/>  
+	<!-- Redis池 -->
+	<!-- bean id="redisGeneralPool" class="com.yea.cache.jedis.pool.RedisGeneralPool" init-method="initPool" destroy-method="destroyPool">
+        <property name="server" value="${redis.server}"/>
+    </bean-->
+    
+    <!-- RedisSessionDAO的支持，将Session放置在Redis服务上，可解决多Web服务器的Session同步问题 -->
+	<!-- bean id="sessionDAO" class="com.yea.shiro.session.mgt.redis.ShiroSessionDAO">
+	    <property name="cachePool" ref="redisGeneralPool"/>
+	</bean -->
+	
+	<bean id="sessionIdGenerator" class="com.yea.shiro.session.mgt.eis.ShiroSessionIdGenerator"/>  
 	<bean id="sessionDAO" class="org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO">  
 	    <property name="activeSessionsCacheName" value="shiro-activeSessionCache"/>  
 	    <property name="sessionIdGenerator" ref="sessionIdGenerator"/>  
@@ -90,7 +100,7 @@
 	</bean>
 	
 	<!-- 会话管理器 -->  
-	<bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">  
+	<bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
 	    <property name="globalSessionTimeout" value="1800000"/>
 	    <property name="deleteInvalidSessions" value="true"/>
 	    <property name="sessionValidationSchedulerEnabled" value="true"/>
@@ -100,21 +110,28 @@
 	</bean>
 	
 	<!-- rememberMe的Cookie模板 -->
-	<bean id="rememberMeCookie" class="org.apache.shiro.web.servlet.SimpleCookie">  
-	    <constructor-arg value="rememberMe"/>  
-	    <property name="httpOnly" value="true"/>  
+	<bean id="rememberMeCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
+	    <constructor-arg value="rememberMe"/>
+	    <property name="httpOnly" value="true"/>
 	    <property name="maxAge" value="604800"/><!-- 记住我的Cookie，保存时长7天 -->
 	</bean>
 	<!-- rememberMe管理器 -->
 	<bean id="rememberMeManager" class="org.apache.shiro.web.mgt.CookieRememberMeManager">
-	     <property name="cipherKey" value="#{T(org.apache.shiro.codec.Base64).decode('9AVvhnFLuS3KTV8KprsdAg==')}" />
-         <property name="cookie" ref="rememberMeCookie"/>
+	    <property name="cipherKey" value="#{T(org.apache.shiro.codec.Base64).decode('9AVvhnFLuS3KTV8KprsdAg==')}" />
+        <property name="cookie" ref="rememberMeCookie"/>
 	</bean>
 	
+	<!-- 缓存管理器，设置缓存管理器后并设置到WebSecurityManager，默认将开启登录用户授权信息的缓存（认证信息不缓存） -->
+	<!-- bean id="cacheManager" class="com.yea.shiro.cache.redis.ShiroCacheManager">
+	    <property name="cachePool" ref="redisGeneralPool"/>
+	    <property name="expireMilliseconds" value="3600000"/>
+	</bean -->
+	
     <bean id="securityManager" class="com.yea.shiro.web.mgt.WebSecurityManager">
-        <property name="endpoint" ref="nettyClient"/>
+        <!-- property name="cacheManager" ref="cacheManager"/ -->
         <property name="sessionManager" ref="sessionManager"/>
         <property name="rememberMeManager" ref="rememberMeManager"/>
+        <property name="endpoint" ref="nettyClient"/>
     </bean>
     
     <!-- 相当于调用SecurityUtils.setSecurityManager(securityManager) -->

@@ -11,6 +11,7 @@ import org.apache.shiro.authc.ExcessiveAttemptsException;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.LockedAccountException;
 import org.apache.shiro.authc.UnknownAccountException;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -26,28 +27,12 @@ import com.team.goyea.authorization.model.pk.UserInfoPK;
 import com.yea.core.remote.AbstractEndpoint;
 import com.yea.core.remote.promise.Promise;
 import com.yea.core.remote.struct.CallAct;
+import com.yea.core.shiro.model.UserPrincipal;
 
 @Controller
 public class AuthorizationController {
 	@Autowired
 	private AbstractEndpoint nettyClient;
-	
-	@RequestMapping("/")
-    public String index(ModelMap model) throws Throwable {
-		return "redirect:/index.html";
-	}
-	
-	@RequestMapping("/login.html")
-    public String loginInit(ModelMap model) throws Throwable {
-		if(SecurityUtils.getSubject().isAuthenticated() || SecurityUtils.getSubject().isRemembered()) {
-			return "redirect:/index.html";
-		}
-		return "/login";
-	}
-	@RequestMapping("/logout.html")
-    public String logout(ModelMap model) throws Throwable {
-		return "redirect:/login.html";
-	}
 	
 	@RequestMapping("/authenticed.html")
 	public String authenticed(ModelMap model, HttpServletRequest request) throws Throwable {
@@ -59,7 +44,7 @@ public class AuthorizationController {
 			if (AccountException.class.getName().equals(exceptionClassName)) {
 				message = ("提供用户名后再认证");
 			} else if (UnknownAccountException.class.getName().equals(exceptionClassName)) {
-				message = ("用户名不存在");
+				message = ("查无此用户");
 			} else if (IncorrectCredentialsException.class.getName().equals(exceptionClassName)) {
 				message = ("用户名/密码不正确");
 			} else if (ExcessiveAttemptsException.class.getName().equals(exceptionClassName)){
@@ -99,6 +84,14 @@ public class AuthorizationController {
 			roleInfo = new RoleInfo();
 		}
 		
+		Subject subject = SecurityUtils.getSubject();
+		if (!subject.hasRole("超级管理员")) {
+			if ("超级管理员".equals(roleInfo.getRoleInfoEntity().getRoleName())) {
+				/*当登录用户未拥有超级管理员角色时，该用户不能更改超级管理员角色*/
+				throw new Exception("用户["+((UserPrincipal)subject.getPrincipal()).getLoginName()+"]不是超级管理员，无权限操作");
+			}
+		}
+		
 		model.put("role", roleInfo);
 		return "authorization/role";
 	}
@@ -112,7 +105,7 @@ public class AuthorizationController {
 			promiseId.awaitObject(10000);
 		}
 		
-		return "redirect:/authorization/role/query.html";
+		return "forward:/authorization/role/query.html";
 	}
 	
 	@RequestMapping("/authorization/role/permission/load.html")
@@ -122,6 +115,14 @@ public class AuthorizationController {
 		Promise<RoleInfo> permissionPromise = nettyClient.send(act, new RoleInfoPK(roleId));
 		RoleInfo roleInfo = permissionPromise.awaitObject(10000);
 		model.put("role", roleInfo);
+		
+		Subject subject = SecurityUtils.getSubject();
+		if (!subject.hasRole("超级管理员")) {
+			if ("超级管理员".equals(roleInfo.getRoleInfoEntity().getRoleName())) {
+				/*当登录用户未拥有超级管理员角色时，该用户不能更改超级管理员角色*/
+				throw new Exception("用户["+((UserPrincipal)subject.getPrincipal()).getLoginName()+"]不是超级管理员，无权限操作");
+			}
+		}
 		
 		return "authorization/givepermission";
 	}
@@ -133,7 +134,7 @@ public class AuthorizationController {
 		Promise<?> promise = nettyClient.send(act, roleId, resourceId, operationId);
 		promise.awaitObject(10000);
 		
-		return "redirect:/authorization/role/permission/load.html?roleId="+roleId;
+		return "forward:/authorization/role/permission/load.html?roleId="+roleId;
 	}
 	
 	@RequestMapping("/authorization/role/permission/delete.html")
@@ -143,7 +144,7 @@ public class AuthorizationController {
 		Promise<?> promise = nettyClient.send(act, new RolePermissionRelaPK(rolePermissionId));
 		promise.awaitObject(10000);
 		
-		return "redirect:/authorization/role/permission/load.html?roleId="+roleId;
+		return "forward:/authorization/role/permission/load.html?roleId="+roleId;
 	}
 	
 	@RequestMapping("/authorization/user/query.html")
@@ -169,6 +170,14 @@ public class AuthorizationController {
 			userInfo = new UserInfo();
 		}
 		
+		Subject subject = SecurityUtils.getSubject();
+		if (!subject.hasRole("超级管理员")) {
+			if ("admin".equals(userInfo.getUsername())) {
+				/*当登录用户未拥有超级管理员角色时，该用户不能更改超级管理员用户信息*/
+				throw new Exception("用户["+((UserPrincipal)subject.getPrincipal()).getLoginName()+"]不是超级管理员，无权限操作");
+			}
+		}
+		
 		model.put("user", userInfo);
 		return "authorization/user";
 	}
@@ -182,15 +191,24 @@ public class AuthorizationController {
 			promiseId.awaitObject(10000);
 		}
 		
-		return "redirect:/authorization/user/query.html";
+		return "forward:/authorization/user/query.html";
 	}
 	
 	@RequestMapping("/authorization/user/role/load.html")
     public String loadUserRole(ModelMap model, UserInfoPK userInfoPk) throws Throwable {
+		Subject subject = SecurityUtils.getSubject();
+		
 		CallAct act = new CallAct();
 		act.setActName("loadUserRoleAct");
 		Promise<UserInfo> promise = nettyClient.send(act, userInfoPk);
 		UserInfo userInfo = promise.awaitObject(10000);
+		
+		if (!subject.hasRole("超级管理员")) {
+			if ("admin".equals(userInfo.getUsername())) {
+				/*当登录用户未拥有超级管理员角色时，该用户不能更改超级管理员用户信息*/
+				throw new Exception("用户["+((UserPrincipal)subject.getPrincipal()).getLoginName()+"]不是超级管理员，无权限操作");
+			}
+		}
 		
 		act = new CallAct();
 		act.setActName("queryRoleAct");
@@ -205,6 +223,12 @@ public class AuthorizationController {
 		List<RoleInfo> selectRole = new ArrayList<RoleInfo>();
 		List<RoleInfo> unselectRole = new ArrayList<RoleInfo>();
 		for(RoleInfo role : listRole) {
+			if (!subject.hasRole("超级管理员")) {
+				if ("超级管理员".equals(role.getRoleInfoEntity().getRoleName())) {
+					/*当登录用户没有超级管理员角色时，该用户不能设置超级管理员角色给用户*/
+					continue;
+				}
+			}
 			if(userRoleId.contains(role.getRoleInfoPK().getRoleId())) {
 				selectRole.add(role);
 			} else {
@@ -225,6 +249,6 @@ public class AuthorizationController {
 		Promise<?> promise = nettyClient.send(act, partyId, roleIds);
 		promise.awaitObject(10000);
 		
-		return "redirect:/authorization/user/role/load.html?partyId="+partyId;
+		return "forward:/authorization/user/role/load.html?partyId="+partyId;
 	}
 }
