@@ -66,12 +66,14 @@ public class CommonDao<T> extends AbstractBaseDAO<T> {
 ```
 - 通用Dao请参看go-yea/go-yea-common里的com.team.goyea.common.dao.CommonDao
 - 若不使用通用Dao，则各业务所产生的Dao类请放置各个模块对应的Maven Module Project内
+- 使用通用Dao的好处：将来可以将与DB的交互单独封装成服务，由该服务统一处理数据存储
 ### 2、建立Model层
 - Model层将存放各模块所需要的模型类，它们将会被APP服务和WEB服务共同使用
 ### 3、建立模块对应的Maven Module Project
 - 模块允许单独部署成APP服务，便于未来拆分服务
-- 模块间调用分二种场景，非JVM内的将通过RPC完成，而JVM的调用将通过com.yea.core.remote.client.DefaultClient来完成
+- 模块间调用分二种场景，非JVM内的将通过Netty-RPC完成，而JVM的调用将通过com.yea.core.remote.client.DefaultClient来完成
 - 模块请参看权限模块go-yea/go-yea-permission和授权模块go-yea/go-yea-authorization
+- 请注意：同JVM内模块间的调用务必使用DefaultClient来完成，未来若被调用方单独部署成服务，只需重新注入该服务的对应Client即可
 ### 4、建立启动器
 - 每个单独部署的APP服务均需要启动器，启动器内将存放Main类、该APP服务所涉及的DB操作以及启动APP服务所需的Spring配置文件
 - 启动器提供Netty服务端配置、DB配置，同时基于APP服务的实际调用情况酌情提供Netty客户端配置
@@ -154,8 +156,9 @@ public class CommonDao<T> extends AbstractBaseDAO<T> {
 	* 样例请参看go-yea/go-yea-launcher/src/main/resources/sqlmap/authorization/personinfo-sqlmap-mapping.xml
 * 模型类主要有：聚合类、实体类、主键类
 	* 生成的模型类请复制到Model层
-	* 实体类对应单表，通过实体类完成对表进行增、改操作，
-	* 聚合类默认由实体类和主键类组成，完成对表的查操作，类属性的扩充只在聚合类里扩充
+	* 实体类对应单表，通过实体类完成对表进行增、改操作，通过主键类完成基于主键的查、删操作
+	* 聚合类默认由实体类和主键类组成，完成对表的查操作
+	* 聚合类，将根据实际业务模型对聚合类进行属性扩充：一个聚合类可以对应一个或多个实体类，若存在一对多关系，对应的实体类应封装成集合
 	* 样例请参看go-yea/go-yea-model里的com.team.goyea.authorization.model.PersonInfo，扩充属性的对比:UserInfo
 * 生成工具使用说明：
 	* 模块名：com.team.goyea.authorization.model.PersonInfo里，authorization是模块名
@@ -390,7 +393,7 @@ public class SaveOperationAct extends AbstractTransactionAct {
 	@Autowired
 	private AbstractEndpoint nettyClient;
 ```
-- 发送请求到APP服务
+- 发送请求到APP服务，欲请求的服务名(ActName)是服务方已注册的BeanName
 ```java
 	CallAct act = new CallAct();
 	act.setActName("queryOperationAct");
