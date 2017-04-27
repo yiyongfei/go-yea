@@ -12,7 +12,7 @@ import com.team.goyea.permission.model.PermissionInfo;
 import com.team.goyea.permission.model.ResourceInfo;
 import com.team.goyea.permission.model.pk.ResourceInfoPK;
 import com.yea.core.base.model.BaseModel;
-import com.yea.core.remote.AbstractEndpoint;
+import com.yea.core.remote.client.ClientRegister;
 import com.yea.core.remote.promise.Promise;
 import com.yea.core.remote.struct.CallAct;
 
@@ -20,8 +20,6 @@ import com.yea.core.remote.struct.CallAct;
 public class RolePermissionRelaRepository {
 	@Autowired
 	private CommonDao<BaseModel> commonDao;
-	@Autowired
-	private AbstractEndpoint launcherClient;
 	
 	public RolePermissionRelaPK saveRolePermissionRela(RolePermissionRela rolePermissionRela) throws Exception {
 		rolePermissionRela.generatePK();
@@ -38,7 +36,7 @@ public class RolePermissionRelaRepository {
 		act.setActName("queryPermissionAct");
 		Promise<List<PermissionInfo>> promise;
 		try {
-			promise = launcherClient.send(act, permissionInfo);
+			promise = ClientRegister.<List<PermissionInfo>> getInstance().send(act, permissionInfo);
 			return promise.awaitObject(10000);
 		} catch (Throwable e) {
 			throw new Exception(e);
@@ -50,7 +48,7 @@ public class RolePermissionRelaRepository {
 		act.setActName("loadResourceAct");
 		Promise<ResourceInfo> promise;
 		try {
-			promise = launcherClient.send(act, resourcePk);
+			promise = ClientRegister.<ResourceInfo> getInstance().send(act, resourcePk);
 			return promise.awaitObject(10000);
 		} catch (Throwable e) {
 			throw new Exception(e);

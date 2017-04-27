@@ -16,7 +16,8 @@
     
     <context:component-scan base-package="com.yea,com.team"></context:component-scan>
     
-    <bean id="launcherClient" class="com.yea.core.remote.client.DefaultClient" ></bean>
+    <!-- 注意，DefaultClient在定义时lazy需要设置成立即加载 -->
+    <bean id="launcherClient" class="com.yea.core.remote.client.DefaultClient" lazy-init="false" init-method="connect" destroy-method="disconnect" ></bean>
 	
 	<!-- Netty服务端的配置 Start -->
 	<!-- Netty编码与解码的Handler -->
