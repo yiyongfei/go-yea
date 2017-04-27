@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.team.goyea.common.dao.CommonDao" >
+  
+  <insert id="roleInfo_insert" parameterType="com.team.goyea.authorization.model.entity.RoleInfoEntity" >
+    INSERT INTO t_role_info 
+       (
+          role_id,
+          role_type,
+          role_name,
+          role_desc,
+          is_valid,
+          is_delete
+        ) VALUES (
+    	  #{pk.roleId, jdbcType=BIGINT},
+    	  #{roleType, jdbcType=VARCHAR},
+    	  #{roleName, jdbcType=VARCHAR},
+    	  #{roleDesc, jdbcType=VARCHAR},
+    	  #{isValid, jdbcType=VARCHAR},
+    	  #{isDelete, jdbcType=VARCHAR}
+        )
+  </insert>
+  
+  <insert id="roleInfo_insertSelective" parameterType="com.team.goyea.authorization.model.entity.RoleInfoEntity" >
+    INSERT INTO t_role_info
+      <trim prefix="(" suffix=")" suffixOverrides="," >
+    	<if test="pk != null and pk.roleId != null" >
+          role_id,
+      	</if>
+    	<if test="roleType != null" >
+          role_type,
+      	</if>
+    	<if test="roleName != null" >
+          role_name,
+      	</if>
+    	<if test="roleDesc != null" >
+          role_desc,
+      	</if>
+    	<if test="isValid != null" >
+          is_valid,
+      	</if>
+    	<if test="isDelete != null" >
+          is_delete,
+      	</if>
+      </trim>
+    VALUES
+      <trim prefix="(" suffix=")" suffixOverrides="," >
+    	<if test="pk != null and pk.roleId != null" >
+          #{pk.roleId, jdbcType=BIGINT},
+      	</if>
+    	<if test="roleType != null" >
+          #{roleType, jdbcType=VARCHAR},
+      	</if>
+    	<if test="roleName != null" >
+          #{roleName, jdbcType=VARCHAR},
+      	</if>
+    	<if test="roleDesc != null" >
+          #{roleDesc, jdbcType=VARCHAR},
+      	</if>
+    	<if test="isValid != null" >
+          #{isValid, jdbcType=VARCHAR},
+      	</if>
+    	<if test="isDelete != null" >
+          #{isDelete, jdbcType=VARCHAR},
+      	</if>
+      </trim>
+  </insert>
+  
+  <update id="roleInfo_update" parameterType="com.team.goyea.authorization.model.entity.RoleInfoEntity" >
+    UPDATE t_role_info SET 
+          role_type = #{roleType, jdbcType=VARCHAR},
+          role_name = #{roleName, jdbcType=VARCHAR},
+          role_desc = #{roleDesc, jdbcType=VARCHAR},
+          is_valid = #{isValid, jdbcType=VARCHAR},
+          is_delete = #{isDelete, jdbcType=VARCHAR}
+     WHERE 1 = 1
+       AND role_id = #{pk.roleId, jdbcType=BIGINT}
+  </update>
+  
+  <update id="roleInfo_updateSelective" parameterType="com.team.goyea.authorization.model.entity.RoleInfoEntity" >
+    UPDATE t_role_info
+      <trim prefix="SET" suffixOverrides="," >
+    	<if test="roleType != null" >
+          role_type = #{roleType, jdbcType=VARCHAR},
+      	</if>
+    	<if test="roleName != null" >
+          role_name = #{roleName, jdbcType=VARCHAR},
+      	</if>
+    	<if test="roleDesc != null" >
+          role_desc = #{roleDesc, jdbcType=VARCHAR},
+      	</if>
+    	<if test="isValid != null" >
+          is_valid = #{isValid, jdbcType=VARCHAR},
+      	</if>
+    	<if test="isDelete != null" >
+          is_delete = #{isDelete, jdbcType=VARCHAR},
+      	</if>
+      </trim>
+     WHERE 1 = 1
+       AND role_id = #{pk.roleId, jdbcType=BIGINT}
+  </update>
+  
+  <delete id="roleInfo_delete" parameterType="com.team.goyea.authorization.model.pk.RoleInfoPK" >
+    DELETE FROM t_role_info
+     WHERE 1 = 1
+       AND role_id = #{roleId, jdbcType=BIGINT}
+  </delete>
+  
+  <delete id="roleInfo_deleteBySelective" parameterType="com.team.goyea.authorization.model.entity.RoleInfoEntity" >
+    DELETE FROM t_role_info
+     <trim prefix="WHERE" prefixOverrides="AND" >
+        <if test="pk != null and pk.roleId != null" >
+          AND role_id = #{pk.roleId, jdbcType=BIGINT}
+        </if>
+        <if test="roleType != null and roleType != ''" >
+          AND role_type = #{roleType, jdbcType=VARCHAR}
+        </if>
+        <if test="roleName != null and roleName != ''" >
+          AND role_name = #{roleName, jdbcType=VARCHAR}
+        </if>
+        <if test="roleDesc != null and roleDesc != ''" >
+          AND role_desc = #{roleDesc, jdbcType=VARCHAR}
+        </if>
+        <if test="isValid != null and isValid != ''" >
+          AND is_valid = #{isValid, jdbcType=VARCHAR}
+        </if>
+        <if test="isDelete != null and isDelete != ''" >
+          AND is_delete = #{isDelete, jdbcType=VARCHAR}
+        </if>
+     </trim>
+  </delete>
+  
+  <resultMap id="roleInfoResultMap" type="com.team.goyea.authorization.model.RoleInfo" >
+    <constructor>
+       <idArg column="role_id" javaType="Long" jdbcType="BIGINT"/>
+    </constructor>
+    <association property="roleInfoEntity" javaType="com.team.goyea.authorization.model.entity.RoleInfoEntity" resultMap="roleInfoEntityMap"/>
+  </resultMap>
+  <resultMap id="roleInfoEntityMap" type="com.team.goyea.authorization.model.entity.RoleInfoEntity" >
+    <result column="role_type" property="roleType" jdbcType="VARCHAR" />
+    <result column="role_name" property="roleName" jdbcType="VARCHAR" />
+    <result column="role_desc" property="roleDesc" jdbcType="VARCHAR" />
+    <result column="is_valid" property="isValid" jdbcType="VARCHAR" />
+    <result column="is_delete" property="isDelete" jdbcType="VARCHAR" />
+    <association property="pk" javaType="com.team.goyea.authorization.model.pk.RoleInfoPK" resultMap="roleInfoPKMap"/>
+  </resultMap>
+  <resultMap id="roleInfoPKMap" type="com.team.goyea.authorization.model.pk.RoleInfoPK" >
+	<constructor>
+       <idArg column="role_id" javaType="Long" jdbcType="BIGINT"/>
+	</constructor>
+  </resultMap>
+  
+  <sql id="t_role_info_Column_List" >
+    role_id,
+    role_type,
+    role_name,
+    role_desc,
+    is_valid,
+    is_delete
+  </sql>
+  
+  <select id="roleInfo_load" parameterType="com.team.goyea.authorization.model.pk.RoleInfoPK" resultMap="roleInfoResultMap">
+    SELECT 
+    <include refid="t_role_info_Column_List" />
+      FROM t_role_info
+     WHERE 1 = 1
+       AND role_id = #{roleId, jdbcType=BIGINT}
+  </select>
+  
+  <select id="roleInfo_selectBySelective" parameterType="com.team.goyea.authorization.model.RoleInfo" resultMap="roleInfoResultMap">
+    SELECT 
+    <include refid="t_role_info_Column_List" />
+      FROM t_role_info
+      <trim prefix="WHERE" prefixOverrides="AND" >
+        <if test="roleInfoPK != null and roleInfoPK.roleId != null" >
+          AND role_id = #{roleInfoPK.roleId, jdbcType=BIGINT}
+        </if>
+        <if test="roleInfoEntity != null and roleInfoEntity.roleType != null and roleInfoEntity.roleType != ''" >
+          AND role_type = #{roleInfoEntity.roleType, jdbcType=VARCHAR}
+        </if>
+        <if test="roleInfoEntity != null and roleInfoEntity.roleName != null and roleInfoEntity.roleName != ''" >
+          AND role_name = #{roleInfoEntity.roleName, jdbcType=VARCHAR}
+        </if>
+        <if test="roleInfoEntity != null and roleInfoEntity.roleDesc != null and roleInfoEntity.roleDesc != ''" >
+          AND role_desc = #{roleInfoEntity.roleDesc, jdbcType=VARCHAR}
+        </if>
+        <if test="roleInfoEntity != null and roleInfoEntity.isValid != null and roleInfoEntity.isValid != ''" >
+          AND is_valid = #{roleInfoEntity.isValid, jdbcType=VARCHAR}
+        </if>
+        <if test="roleInfoEntity != null and roleInfoEntity.isDelete != null and roleInfoEntity.isDelete != ''" >
+          AND is_delete = #{roleInfoEntity.isDelete, jdbcType=VARCHAR}
+        </if>
+      </trim>
+  </select>
+  <select id="roleInfo_selectBySelectiveCount" parameterType="com.team.goyea.authorization.model.RoleInfo" resultType="int">
+    SELECT count(1) FROM t_role_info
+      <trim prefix="WHERE" prefixOverrides="AND" >
+        <if test="roleInfoPK != null and roleInfoPK.roleId != null" >
+          AND role_id = #{roleInfoPK.roleId, jdbcType=BIGINT}
+        </if>
+        <if test="roleInfoEntity != null and roleInfoEntity.roleType != null and roleInfoEntity.roleType != ''" >
+          AND role_type = #{roleInfoEntity.roleType, jdbcType=VARCHAR}
+        </if>
+        <if test="roleInfoEntity != null and roleInfoEntity.roleName != null and roleInfoEntity.roleName != ''" >
+          AND role_name = #{roleInfoEntity.roleName, jdbcType=VARCHAR}
+        </if>
+        <if test="roleInfoEntity != null and roleInfoEntity.roleDesc != null and roleInfoEntity.roleDesc != ''" >
+          AND role_desc = #{roleInfoEntity.roleDesc, jdbcType=VARCHAR}
+        </if>
+        <if test="roleInfoEntity != null and roleInfoEntity.isValid != null and roleInfoEntity.isValid != ''" >
+          AND is_valid = #{roleInfoEntity.isValid, jdbcType=VARCHAR}
+        </if>
+        <if test="roleInfoEntity != null and roleInfoEntity.isDelete != null and roleInfoEntity.isDelete != ''" >
+          AND is_delete = #{roleInfoEntity.isDelete, jdbcType=VARCHAR}
+        </if>
+      </trim>
+  </select>
+  
+  
+  <resultMap id="rolePermissionResultMap" type="com.team.goyea.authorization.model.RoleInfo" >
+    <constructor>
+       <idArg column="role_id" javaType="Long" jdbcType="BIGINT"/>
+    </constructor>
+    <association property="roleInfoEntity" javaType="com.team.goyea.authorization.model.entity.RoleInfoEntity" resultMap="roleInfoEntityMap"/>
+    <collection property="listRolePermissionRelaEntity" column="role_id" select="rolePermission_selectPermissionWildcards"/>
+  </resultMap>
+  <select id="rolePermission_load" parameterType="com.team.goyea.authorization.model.pk.RoleInfoPK" resultMap="rolePermissionResultMap">
+    SELECT 
+    <include refid="t_role_info_Column_List" />
+      FROM t_role_info
+     WHERE 1 = 1
+       AND role_id = #{roleId, jdbcType=BIGINT}
+  </select>
+  <select id="rolePermission_selectPermissionWildcards" resultMap="rolePermissionRelaEntityMap">
+    SELECT 
+		   a.role_permission_id,
+		   a.role_id,
+		   a.permission_id,
+		   CASE WHEN a.permission_id is null 
+		   THEN a.permission_wildcards
+		   ELSE b.permission_wildcards
+		   END as permission_wildcards
+      FROM t_role_permission_rela a
+      LEFT OUTER JOIN (SELECT d1.permission_id, d2.resource_content || ':' || d3.operation_name as permission_wildcards 
+                         FROM t_permission_info d1, t_resource_info d2, t_operation_info d3 
+                        WHERE d1.resource_id = d2.resource_id and d1.operation_id = d3.operation_id and d1.is_valid = '01' and d1.is_delete = '01') b on a.permission_id = b.permission_id
+     WHERE a.role_id = #{roleId, jdbcType=BIGINT}
+  </select>
+</mapper>

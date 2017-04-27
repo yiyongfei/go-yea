@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.team.goyea.common.dao.CommonDao" >
+  
+  <insert id="partyRelationship_insert" parameterType="com.team.goyea.authorization.model.entity.PartyRelationshipEntity" >
+    INSERT INTO t_party_relationship 
+       (
+          relationship_id,
+          relationship_type_code,
+          src_party_role_id,
+          tag_party_role_id,
+          start_date,
+          end_date
+        ) VALUES (
+    	  #{pk.relationshipId, jdbcType=BIGINT},
+    	  #{relationshipTypeCode, jdbcType=VARCHAR},
+    	  #{srcPartyRoleId, jdbcType=BIGINT},
+    	  #{tagPartyRoleId, jdbcType=BIGINT},
+    	  #{startDate, jdbcType=DATE},
+    	  #{endDate, jdbcType=DATE}
+        )
+  </insert>
+  
+  <insert id="partyRelationship_insertSelective" parameterType="com.team.goyea.authorization.model.entity.PartyRelationshipEntity" >
+    INSERT INTO t_party_relationship
+      <trim prefix="(" suffix=")" suffixOverrides="," >
+    	<if test="pk != null and pk.relationshipId != null" >
+          relationship_id,
+      	</if>
+    	<if test="relationshipTypeCode != null" >
+          relationship_type_code,
+      	</if>
+    	<if test="srcPartyRoleId != null" >
+          src_party_role_id,
+      	</if>
+    	<if test="tagPartyRoleId != null" >
+          tag_party_role_id,
+      	</if>
+    	<if test="startDate != null" >
+          start_date,
+      	</if>
+    	<if test="endDate != null" >
+          end_date,
+      	</if>
+      </trim>
+    VALUES
+      <trim prefix="(" suffix=")" suffixOverrides="," >
+    	<if test="pk != null and pk.relationshipId != null" >
+          #{pk.relationshipId, jdbcType=BIGINT},
+      	</if>
+    	<if test="relationshipTypeCode != null" >
+          #{relationshipTypeCode, jdbcType=VARCHAR},
+      	</if>
+    	<if test="srcPartyRoleId != null" >
+          #{srcPartyRoleId, jdbcType=BIGINT},
+      	</if>
+    	<if test="tagPartyRoleId != null" >
+          #{tagPartyRoleId, jdbcType=BIGINT},
+      	</if>
+    	<if test="startDate != null" >
+          #{startDate, jdbcType=DATE},
+      	</if>
+    	<if test="endDate != null" >
+          #{endDate, jdbcType=DATE},
+      	</if>
+      </trim>
+  </insert>
+  
+  <update id="partyRelationship_update" parameterType="com.team.goyea.authorization.model.entity.PartyRelationshipEntity" >
+    UPDATE t_party_relationship SET 
+          relationship_type_code = #{relationshipTypeCode, jdbcType=VARCHAR},
+          src_party_role_id = #{srcPartyRoleId, jdbcType=BIGINT},
+          tag_party_role_id = #{tagPartyRoleId, jdbcType=BIGINT},
+          start_date = #{startDate, jdbcType=DATE},
+          end_date = #{endDate, jdbcType=DATE}
+     WHERE 1 = 1
+       AND relationship_id = #{pk.relationshipId, jdbcType=BIGINT}
+  </update>
+  
+  <update id="partyRelationship_updateSelective" parameterType="com.team.goyea.authorization.model.entity.PartyRelationshipEntity" >
+    UPDATE t_party_relationship
+      <trim prefix="SET" suffixOverrides="," >
+    	<if test="relationshipTypeCode != null" >
+          relationship_type_code = #{relationshipTypeCode, jdbcType=VARCHAR},
+      	</if>
+    	<if test="srcPartyRoleId != null" >
+          src_party_role_id = #{srcPartyRoleId, jdbcType=BIGINT},
+      	</if>
+    	<if test="tagPartyRoleId != null" >
+          tag_party_role_id = #{tagPartyRoleId, jdbcType=BIGINT},
+      	</if>
+    	<if test="startDate != null" >
+          start_date = #{startDate, jdbcType=DATE},
+      	</if>
+    	<if test="endDate != null" >
+          end_date = #{endDate, jdbcType=DATE},
+      	</if>
+      </trim>
+     WHERE 1 = 1
+       AND relationship_id = #{pk.relationshipId, jdbcType=BIGINT}
+  </update>
+  
+  <delete id="partyRelationship_delete" parameterType="com.team.goyea.authorization.model.pk.PartyRelationshipPK" >
+    DELETE FROM t_party_relationship
+     WHERE 1 = 1
+       AND relationship_id = #{relationshipId, jdbcType=BIGINT}
+  </delete>
+  
+  <delete id="partyRelationship_deleteBySelective" parameterType="com.team.goyea.authorization.model.entity.PartyRelationshipEntity" >
+    DELETE FROM t_party_relationship
+     <trim prefix="WHERE" prefixOverrides="AND" >
+        <if test="pk != null and pk.relationshipId != null" >
+          AND relationship_id = #{pk.relationshipId, jdbcType=BIGINT}
+        </if>
+        <if test="relationshipTypeCode != null and relationshipTypeCode != ''" >
+          AND relationship_type_code = #{relationshipTypeCode, jdbcType=VARCHAR}
+        </if>
+        <if test="srcPartyRoleId != null" >
+          AND src_party_role_id = #{srcPartyRoleId, jdbcType=BIGINT}
+        </if>
+        <if test="tagPartyRoleId != null" >
+          AND tag_party_role_id = #{tagPartyRoleId, jdbcType=BIGINT}
+        </if>
+        <if test="startDate != null" >
+          AND start_date = #{startDate, jdbcType=DATE}
+        </if>
+        <if test="endDate != null" >
+          AND end_date = #{endDate, jdbcType=DATE}
+        </if>
+     </trim>
+  </delete>
+  
+  <resultMap id="partyRelationshipResultMap" type="com.team.goyea.authorization.model.PartyRelationship" >
+    <constructor>
+       <idArg column="relationship_id" javaType="Long" jdbcType="BIGINT"/>
+    </constructor>
+    <association property="partyRelationshipEntity" javaType="com.team.goyea.authorization.model.entity.PartyRelationshipEntity" resultMap="partyRelationshipEntityMap"/>
+  </resultMap>
+  <resultMap id="partyRelationshipEntityMap" type="com.team.goyea.authorization.model.entity.PartyRelationshipEntity" >
+    <result column="relationship_type_code" property="relationshipTypeCode" jdbcType="VARCHAR" />
+    <result column="src_party_role_id" property="srcPartyRoleId" jdbcType="BIGINT" />
+    <result column="tag_party_role_id" property="tagPartyRoleId" jdbcType="BIGINT" />
+    <result column="start_date" property="startDate" jdbcType="DATE" />
+    <result column="end_date" property="endDate" jdbcType="DATE" />
+    <association property="pk" javaType="com.team.goyea.authorization.model.pk.PartyRelationshipPK" resultMap="partyRelationshipPKMap"/>
+  </resultMap>
+  <resultMap id="partyRelationshipPKMap" type="com.team.goyea.authorization.model.pk.PartyRelationshipPK" >
+	<constructor>
+       <idArg column="relationship_id" javaType="Long" jdbcType="BIGINT"/>
+	</constructor>
+  </resultMap>
+  
+  <sql id="t_party_relationship_Column_List" >
+    relationship_id,
+    relationship_type_code,
+    src_party_role_id,
+    tag_party_role_id,
+    start_date,
+    end_date
+  </sql>
+  
+  <select id="partyRelationship_load" parameterType="com.team.goyea.authorization.model.pk.PartyRelationshipPK" resultMap="partyRelationshipResultMap">
+    SELECT 
+    <include refid="t_party_relationship_Column_List" />
+      FROM t_party_relationship
+     WHERE 1 = 1
+       AND relationship_id = #{relationshipId, jdbcType=BIGINT}
+  </select>
+  
+  <select id="partyRelationship_selectBySelective" parameterType="com.team.goyea.authorization.model.PartyRelationship" resultMap="partyRelationshipResultMap">
+    SELECT 
+    <include refid="t_party_relationship_Column_List" />
+      FROM t_party_relationship
+      <trim prefix="WHERE" prefixOverrides="AND" >
+        <if test="partyRelationshipPK != null and partyRelationshipPK.relationshipId != null" >
+          AND relationship_id = #{partyRelationshipPK.relationshipId, jdbcType=BIGINT}
+        </if>
+        <if test="partyRelationshipEntity != null and partyRelationshipEntity.relationshipTypeCode != null and partyRelationshipEntity.relationshipTypeCode != ''" >
+          AND relationship_type_code = #{partyRelationshipEntity.relationshipTypeCode, jdbcType=VARCHAR}
+        </if>
+        <if test="partyRelationshipEntity != null and partyRelationshipEntity.srcPartyRoleId != null" >
+          AND src_party_role_id = #{partyRelationshipEntity.srcPartyRoleId, jdbcType=BIGINT}
+        </if>
+        <if test="partyRelationshipEntity != null and partyRelationshipEntity.tagPartyRoleId != null" >
+          AND tag_party_role_id = #{partyRelationshipEntity.tagPartyRoleId, jdbcType=BIGINT}
+        </if>
+        <if test="partyRelationshipEntity != null and partyRelationshipEntity.startDate != null" >
+          AND start_date = #{partyRelationshipEntity.startDate, jdbcType=DATE}
+        </if>
+        <if test="partyRelationshipEntity != null and partyRelationshipEntity.endDate != null" >
+          AND end_date = #{partyRelationshipEntity.endDate, jdbcType=DATE}
+        </if>
+      </trim>
+  </select>
+  <select id="partyRelationship_selectBySelectiveCount" parameterType="com.team.goyea.authorization.model.PartyRelationship" resultType="int">
+    SELECT count(1) FROM t_party_relationship
+      <trim prefix="WHERE" prefixOverrides="AND" >
+        <if test="partyRelationshipPK != null and partyRelationshipPK.relationshipId != null" >
+          AND relationship_id = #{partyRelationshipPK.relationshipId, jdbcType=BIGINT}
+        </if>
+        <if test="partyRelationshipEntity != null and partyRelationshipEntity.relationshipTypeCode != null and partyRelationshipEntity.relationshipTypeCode != ''" >
+          AND relationship_type_code = #{partyRelationshipEntity.relationshipTypeCode, jdbcType=VARCHAR}
+        </if>
+        <if test="partyRelationshipEntity != null and partyRelationshipEntity.srcPartyRoleId != null" >
+          AND src_party_role_id = #{partyRelationshipEntity.srcPartyRoleId, jdbcType=BIGINT}
+        </if>
+        <if test="partyRelationshipEntity != null and partyRelationshipEntity.tagPartyRoleId != null" >
+          AND tag_party_role_id = #{partyRelationshipEntity.tagPartyRoleId, jdbcType=BIGINT}
+        </if>
+        <if test="partyRelationshipEntity != null and partyRelationshipEntity.startDate != null" >
+          AND start_date = #{partyRelationshipEntity.startDate, jdbcType=DATE}
+        </if>
+        <if test="partyRelationshipEntity != null and partyRelationshipEntity.endDate != null" >
+          AND end_date = #{partyRelationshipEntity.endDate, jdbcType=DATE}
+        </if>
+      </trim>
+  </select>
+</mapper>

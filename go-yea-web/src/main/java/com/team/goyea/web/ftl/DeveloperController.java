@@ -3,21 +3,18 @@ package com.team.goyea.web.ftl;
 import java.util.Map;
 import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.yea.core.remote.AbstractEndpoint;
+import com.yea.core.remote.client.ClientRegister;
 import com.yea.core.remote.promise.Promise;
 import com.yea.core.remote.struct.CallAct;
 
 @Controller
 public class DeveloperController {
-	@Autowired
-	private AbstractEndpoint nettyClient;
 	
 	@RequestMapping("/developer/generator/load.html")
     public String loadGenerator(ModelMap model, @RequestParam Map<String, String> config) throws Throwable {
@@ -43,7 +40,7 @@ public class DeveloperController {
 		if (message == null) {
 			CallAct act = new CallAct();
 			act.setActName("generatorAct");
-			Promise<Set<String>> promise = nettyClient.send(act, config);
+			Promise<Set<String>> promise = ClientRegister.<Set<String>>getInstance().send(act, config);
 			Set<String> tablenames = promise.awaitObject(10000);
 			model.put("tablenames", tablenames);
 			message = "生成成功";

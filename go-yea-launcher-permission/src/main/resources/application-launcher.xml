@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:jdbc="http://www.springframework.org/schema/jdbc"  
+	xmlns:jee="http://www.springframework.org/schema/jee" xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+		http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-4.0.xsd
+		http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-4.0.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd"
+	default-lazy-init="true">
+
+	<description>Spring公共配置 </description> 
+    
+    <context:property-placeholder location="classpath:/config/launcher-config.properties" ignore-unresolvable="true"/>
+    
+    <context:component-scan base-package="com.yea,com.team"></context:component-scan>
+    
+    <!-- 注意，DefaultClient在定义时lazy需要设置成立即加载 -->
+    <bean id="launcherClient" class="com.yea.core.remote.client.DefaultClient" lazy-init="false" init-method="connect" destroy-method="disconnect" ></bean>
+	
+	<!-- Netty服务端的配置 Start -->
+	<!-- Netty编码与解码的Handler -->
+    <bean id="nettyMessageDecoder" class="com.yea.remote.netty.codec.NettyMessageDecoder"></bean>
+	<bean id="nettyMessageEncoder" class="com.yea.remote.netty.codec.NettyMessageEncoder"></bean>
+	
+	<!-- Netty心跳Handler -->
+	<bean id="heartBeatServerHandler" class="com.yea.remote.netty.server.handle.HeartBeatServerHandler">
+		<constructor-arg index="0" type="int" value="60"/>
+		<constructor-arg index="1" type="int" value="60"/>
+	</bean>
+	
+	<!-- Netty服务处理Handler，所有业务操作均由该Handler处理 -->
+	<bean id="serviceServerHandler" class="com.yea.remote.netty.server.handle.ServiceServerHandler"></bean>
+	<!-- Netty异常处理Handler，Netty处理时若抛出异常，由该Handler封装异常并返回调用端 -->
+	<bean id="exceptionHandler" class="com.yea.remote.netty.handle.ExceptionHandler"></bean>
+	
+	<!-- 调度中心的配置 -->
+	<bean id="zkDispatcher" class="com.yea.dispatcher.zookeeper.ZookeeperDispatcher" init-method="init">
+		<property name="host" value="${zookeeper.host}" />
+		<property name="port" value="${zookeeper.port}" />
+	</bean>
+	
+	<bean id="nettyServer" class="com.yea.remote.netty.server.NettyServer" destroy-method="shutdown">
+		<property name="registerName" value="${netty.server.register}" /><!-- 服务注册名 -->
+		<property name="dispatcher" ref="zkDispatcher" />
+		<property name="host" value="${netty.server.host}" /><!-- 该主机未设置时，系统将会读取本机IP自动设入 -->
+		<property name="port" value="${netty.server.port}" /><!-- 该端口在执行start.sh脚本时，允许外部输入并替换 -->
+	    <property name="listHandler">
+            <list>
+                <map>
+	                <entry key="MessageDecoder">
+	                    <ref bean="nettyMessageDecoder"/>
+	                </entry>
+	            </map>
+	            <map>
+	                <entry key="MessageEncoder">
+	                    <ref bean="nettyMessageEncoder"/>
+	                </entry>
+	            </map>
+	            <map>
+	                <entry key="HeartBeatHandler">
+	                    <ref bean="heartBeatServerHandler"/>
+	                </entry>
+	            </map>
+	            <map>
+	                <entry key="ServiceHandler">
+	                    <ref bean="serviceServerHandler"/>
+	                </entry>
+	            </map>
+	            <map>
+	                <entry key="ExceptionHandler">
+	                    <ref bean="exceptionHandler"/>
+	                </entry>
+	            </map>
+            </list>
+        </property>
+	</bean>
+	<!-- Netty服务端的配置 End -->
+	
+	<!-- 配置数据源(连接池，druid) -->  
+	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+	    <!-- 数据源驱动类可不写，Druid默认会自动根据URL识别DriverClass -->
+	    <property name="driverClassName" value="${datasource.driverClassName}" />
+
+		<!-- 基本属性 url、user、password -->
+		<property name="url" value="${datasource.url}" />
+		<property name="username" value="${datasource.username}" />
+		<property name="password" value="${datasource.password}" />
+
+		<!-- 配置初始化大小、最小、最大 -->
+		<property name="initialSize" value="${datasource.initialSize}" />
+		<property name="minIdle" value="${datasource.minIdle}" />
+		<property name="maxActive" value="${datasource.maxActive}" />
+
+		<!-- 配置获取连接等待超时的时间 -->
+		<property name="maxWait" value="${datasource.maxWait}" />
+
+		<!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+		<property name="timeBetweenEvictionRunsMillis" value="${datasource.timeBetweenEvictionRunsMillis}" />
+
+		<!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+		<property name="minEvictableIdleTimeMillis" value="${datasource.minEvictableIdleTimeMillis}" />
+
+		<!-- 通过getConnontion()不能超过指定的租期(removeAbandonedTimeoutMillis) -->
+		<property name="removeAbandoned" value="${datasource.removeAbandoned}" />
+		<property name="removeAbandonedTimeoutMillis" value="${datasource.removeAbandonedTimeoutMillis}" />
+
+		<property name="validationQuery" value="${datasource.validationQuery}" />
+		<property name="testWhileIdle" value="${datasource.testWhileIdle}" />
+		<property name="testOnBorrow" value="${datasource.testOnBorrow}" />
+		<property name="testOnReturn" value="${datasource.testOnReturn}" />
+
+		<!-- 打开PSCache，并且指定每个连接上PSCache的大小（Oracle使用）
+		<property name="poolPreparedStatements" value="true" />
+		<property name="maxPoolPreparedStatementPerConnectionSize" value="20" /> -->
+
+		<!-- 配置监控统计拦截的filters -->
+		<property name="filters" value="stat" />
+	</bean>
+	<!-- 配置Session工厂 -->
+	<bean id="mybatisSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <property name="configLocation" value="classpath:mybatis.xml" />
+        <property name="mapperLocations" value="classpath*:/sqlmap/**/*sqlmap-mapping.xml" />
+    </bean>
+    
+    <!-- 配置SessionTemplate -->
+    <bean id="readSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+        <constructor-arg name="sqlSessionFactory" ref="mybatisSessionFactory" />
+    </bean>
+    <!-- 配置SessionTemplate -->
+    <bean id="writeSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+        <constructor-arg name="sqlSessionFactory" ref="mybatisSessionFactory" />
+    </bean>
+    
+    <!-- 配置事务管理 -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+	    <property name="dataSource" ref="dataSource" />
+	</bean>
+    
+</beans>

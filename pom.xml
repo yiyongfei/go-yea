@@ -166,5 +166,7 @@
         <module>go-yea-common</module>
         <module>go-yea-authorization</module>
         <module>go-yea-permission</module>
+        <module>go-yea-launcher-authorization</module>
+        <module>go-yea-launcher-permission</module>
     </modules>
 </project>

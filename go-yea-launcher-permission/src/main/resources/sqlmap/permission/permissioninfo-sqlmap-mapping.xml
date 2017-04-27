@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.team.goyea.common.dao.CommonDao" >
+  
+  <insert id="permissionInfo_insert" parameterType="com.team.goyea.permission.model.entity.PermissionInfoEntity" >
+    INSERT INTO t_permission_info 
+       (
+          permission_id,
+          resource_id,
+          operation_id,
+          permission_desc,
+          is_valid,
+          is_delete,
+          permission_name
+        ) VALUES (
+    	  #{pk.permissionId, jdbcType=BIGINT},
+    	  #{resourceId, jdbcType=BIGINT},
+    	  #{operationId, jdbcType=BIGINT},
+    	  #{permissionDesc, jdbcType=VARCHAR},
+    	  #{isValid, jdbcType=VARCHAR},
+    	  #{isDelete, jdbcType=VARCHAR},
+    	  #{permissionName, jdbcType=CHAR}
+        )
+  </insert>
+  
+  <insert id="permissionInfo_insertSelective" parameterType="com.team.goyea.permission.model.entity.PermissionInfoEntity" >
+    INSERT INTO t_permission_info
+      <trim prefix="(" suffix=")" suffixOverrides="," >
+    	<if test="pk != null and pk.permissionId != null" >
+          permission_id,
+      	</if>
+    	<if test="resourceId != null" >
+          resource_id,
+      	</if>
+    	<if test="operationId != null" >
+          operation_id,
+      	</if>
+    	<if test="permissionDesc != null" >
+          permission_desc,
+      	</if>
+    	<if test="isValid != null" >
+          is_valid,
+      	</if>
+    	<if test="isDelete != null" >
+          is_delete,
+      	</if>
+    	<if test="permissionName != null" >
+          permission_name,
+      	</if>
+      </trim>
+    VALUES
+      <trim prefix="(" suffix=")" suffixOverrides="," >
+    	<if test="pk != null and pk.permissionId != null" >
+          #{pk.permissionId, jdbcType=BIGINT},
+      	</if>
+    	<if test="resourceId != null" >
+          #{resourceId, jdbcType=BIGINT},
+      	</if>
+    	<if test="operationId != null" >
+          #{operationId, jdbcType=BIGINT},
+      	</if>
+    	<if test="permissionDesc != null" >
+          #{permissionDesc, jdbcType=VARCHAR},
+      	</if>
+    	<if test="isValid != null" >
+          #{isValid, jdbcType=VARCHAR},
+      	</if>
+    	<if test="isDelete != null" >
+          #{isDelete, jdbcType=VARCHAR},
+      	</if>
+    	<if test="permissionName != null" >
+          #{permissionName, jdbcType=CHAR},
+      	</if>
+      </trim>
+  </insert>
+  
+  <update id="permissionInfo_update" parameterType="com.team.goyea.permission.model.entity.PermissionInfoEntity" >
+    UPDATE t_permission_info SET 
+          resource_id = #{resourceId, jdbcType=BIGINT},
+          operation_id = #{operationId, jdbcType=BIGINT},
+          permission_desc = #{permissionDesc, jdbcType=VARCHAR},
+          is_valid = #{isValid, jdbcType=VARCHAR},
+          is_delete = #{isDelete, jdbcType=VARCHAR},
+          permission_name = #{permissionName, jdbcType=CHAR}
+     WHERE 1 = 1
+       AND permission_id = #{pk.permissionId, jdbcType=BIGINT}
+  </update>
+  
+  <update id="permissionInfo_updateSelective" parameterType="com.team.goyea.permission.model.entity.PermissionInfoEntity" >
+    UPDATE t_permission_info
+      <trim prefix="SET" suffixOverrides="," >
+    	<if test="resourceId != null" >
+          resource_id = #{resourceId, jdbcType=BIGINT},
+      	</if>
+    	<if test="operationId != null" >
+          operation_id = #{operationId, jdbcType=BIGINT},
+      	</if>
+    	<if test="permissionDesc != null" >
+          permission_desc = #{permissionDesc, jdbcType=VARCHAR},
+      	</if>
+    	<if test="isValid != null" >
+          is_valid = #{isValid, jdbcType=VARCHAR},
+      	</if>
+    	<if test="isDelete != null" >
+          is_delete = #{isDelete, jdbcType=VARCHAR},
+      	</if>
+    	<if test="permissionName != null" >
+          permission_name = #{permissionName, jdbcType=CHAR},
+      	</if>
+      </trim>
+     WHERE 1 = 1
+       AND permission_id = #{pk.permissionId, jdbcType=BIGINT}
+  </update>
+  
+  <delete id="permissionInfo_delete" parameterType="com.team.goyea.permission.model.pk.PermissionInfoPK" >
+    DELETE FROM t_permission_info
+     WHERE 1 = 1
+       AND permission_id = #{permissionId, jdbcType=BIGINT}
+  </delete>
+  
+  <delete id="permissionInfo_deleteBySelective" parameterType="com.team.goyea.permission.model.entity.PermissionInfoEntity" >
+    DELETE FROM t_permission_info
+     <trim prefix="WHERE" prefixOverrides="AND" >
+        <if test="pk != null and pk.permissionId != null" >
+          AND permission_id = #{pk.permissionId, jdbcType=BIGINT}
+        </if>
+        <if test="resourceId != null" >
+          AND resource_id = #{resourceId, jdbcType=BIGINT}
+        </if>
+        <if test="operationId != null" >
+          AND operation_id = #{operationId, jdbcType=BIGINT}
+        </if>
+        <if test="permissionDesc != null and permissionDesc != ''" >
+          AND permission_desc = #{permissionDesc, jdbcType=VARCHAR}
+        </if>
+        <if test="isValid != null and isValid != ''" >
+          AND is_valid = #{isValid, jdbcType=VARCHAR}
+        </if>
+        <if test="isDelete != null and isDelete != ''" >
+          AND is_delete = #{isDelete, jdbcType=VARCHAR}
+        </if>
+        <if test="permissionName != null and permissionName != ''" >
+          AND permission_name = #{permissionName, jdbcType=CHAR}
+        </if>
+     </trim>
+  </delete>
+  
+  <resultMap id="permissionInfoResultMap" type="com.team.goyea.permission.model.PermissionInfo" >
+    <constructor>
+       <idArg column="permission_id" javaType="Long" jdbcType="BIGINT"/>
+    </constructor>
+    <result column="resource_name" property="resourceName" jdbcType="VARCHAR" />
+    <result column="resource_content" property="resourceContent" jdbcType="VARCHAR" />
+    <result column="operation_name" property="operationName" jdbcType="VARCHAR" />
+    <association property="permissionInfoEntity" javaType="com.team.goyea.permission.model.entity.PermissionInfoEntity" resultMap="permissionInfoEntityMap"/>
+  </resultMap>
+  <resultMap id="permissionInfoEntityMap" type="com.team.goyea.permission.model.entity.PermissionInfoEntity" >
+    <result column="resource_id" property="resourceId" jdbcType="BIGINT" />
+    <result column="operation_id" property="operationId" jdbcType="BIGINT" />
+    <result column="permission_desc" property="permissionDesc" jdbcType="VARCHAR" />
+    <result column="is_valid" property="isValid" jdbcType="VARCHAR" />
+    <result column="is_delete" property="isDelete" jdbcType="VARCHAR" />
+    <result column="permission_name" property="permissionName" jdbcType="CHAR" />
+    <association property="pk" javaType="com.team.goyea.permission.model.pk.PermissionInfoPK" resultMap="permissionInfoPKMap"/>
+  </resultMap>
+  <resultMap id="permissionInfoPKMap" type="com.team.goyea.permission.model.pk.PermissionInfoPK" >
+	<constructor>
+       <idArg column="permission_id" javaType="Long" jdbcType="BIGINT"/>
+	</constructor>
+  </resultMap>
+  
+  <sql id="t_permission_info_Column_List" >
+    permission_id,
+    resource_id,
+    operation_id,
+    permission_desc,
+    is_valid,
+    is_delete,
+    permission_name
+  </sql>
+  
+  <select id="permissionInfo_load" parameterType="com.team.goyea.permission.model.pk.PermissionInfoPK" resultMap="permissionInfoResultMap">
+    SELECT 
+    <include refid="t_permission_info_Column_List" />
+      FROM t_permission_info
+     WHERE 1 = 1
+       AND permission_id = #{permissionId, jdbcType=BIGINT}
+  </select>
+  
+  <select id="permissionInfo_selectBySelective" parameterType="com.team.goyea.permission.model.PermissionInfo" resultMap="permissionInfoResultMap">
+    SELECT 
+    <include refid="t_permission_info_Column_List" />
+      FROM t_permission_info
+      <trim prefix="WHERE" prefixOverrides="AND" >
+        <if test="permissionInfoPK != null and permissionInfoPK.permissionId != null" >
+          AND permission_id = #{permissionInfoPK.permissionId, jdbcType=BIGINT}
+        </if>
+        <if test="permissionInfoEntity != null and permissionInfoEntity.resourceId != null" >
+          AND resource_id = #{permissionInfoEntity.resourceId, jdbcType=BIGINT}
+        </if>
+        <if test="permissionInfoEntity != null and permissionInfoEntity.operationId != null" >
+          AND operation_id = #{permissionInfoEntity.operationId, jdbcType=BIGINT}
+        </if>
+        <if test="permissionInfoEntity != null and permissionInfoEntity.permissionDesc != null and permissionInfoEntity.permissionDesc != ''" >
+          AND permission_desc = #{permissionInfoEntity.permissionDesc, jdbcType=VARCHAR}
+        </if>
+        <if test="permissionInfoEntity != null and permissionInfoEntity.isValid != null and permissionInfoEntity.isValid != ''" >
+          AND is_valid = #{permissionInfoEntity.isValid, jdbcType=VARCHAR}
+        </if>
+        <if test="permissionInfoEntity != null and permissionInfoEntity.isDelete != null and permissionInfoEntity.isDelete != ''" >
+          AND is_delete = #{permissionInfoEntity.isDelete, jdbcType=VARCHAR}
+        </if>
+        <if test="permissionInfoEntity != null and permissionInfoEntity.permissionName != null and permissionInfoEntity.permissionName != ''" >
+          AND permission_name = #{permissionInfoEntity.permissionName, jdbcType=CHAR}
+        </if>
+      </trim>
+  </select>
+  <select id="permissionInfo_selectBySelectiveCount" parameterType="com.team.goyea.permission.model.PermissionInfo" resultType="int">
+    SELECT count(1) FROM t_permission_info
+      <trim prefix="WHERE" prefixOverrides="AND" >
+        <if test="permissionInfoPK != null and permissionInfoPK.permissionId != null" >
+          AND permission_id = #{permissionInfoPK.permissionId, jdbcType=BIGINT}
+        </if>
+        <if test="permissionInfoEntity != null and permissionInfoEntity.resourceId != null" >
+          AND resource_id = #{permissionInfoEntity.resourceId, jdbcType=BIGINT}
+        </if>
+        <if test="permissionInfoEntity != null and permissionInfoEntity.operationId != null" >
+          AND operation_id = #{permissionInfoEntity.operationId, jdbcType=BIGINT}
+        </if>
+        <if test="permissionInfoEntity != null and permissionInfoEntity.permissionDesc != null and permissionInfoEntity.permissionDesc != ''" >
+          AND permission_desc = #{permissionInfoEntity.permissionDesc, jdbcType=VARCHAR}
+        </if>
+        <if test="permissionInfoEntity != null and permissionInfoEntity.isValid != null and permissionInfoEntity.isValid != ''" >
+          AND is_valid = #{permissionInfoEntity.isValid, jdbcType=VARCHAR}
+        </if>
+        <if test="permissionInfoEntity != null and permissionInfoEntity.isDelete != null and permissionInfoEntity.isDelete != ''" >
+          AND is_delete = #{permissionInfoEntity.isDelete, jdbcType=VARCHAR}
+        </if>
+        <if test="permissionInfoEntity != null and permissionInfoEntity.permissionName != null and permissionInfoEntity.permissionName != ''" >
+          AND permission_name = #{permissionInfoEntity.permissionName, jdbcType=CHAR}
+        </if>
+      </trim>
+  </select>
+  <select id="permissionInfo_selectPermission" parameterType="com.team.goyea.permission.model.PermissionInfo" resultMap="permissionInfoResultMap">
+    SELECT 
+		   a.permission_id,
+		   a.resource_id,
+		   a.operation_id,
+		   a.permission_desc,
+		   a.is_valid,
+	       a.is_delete,
+	       a.permission_name,
+	       b.resource_name,
+           b.resource_content,
+           c.operation_name
+      FROM t_permission_info a, t_resource_info b, t_operation_info c
+     WHERE a.resource_id = b.resource_id and a.operation_id = c.operation_id
+        <if test="permissionInfoPK != null and permissionInfoPK.permissionId != null" >
+          AND a.permission_id = #{permissionInfoPK.permissionId, jdbcType=BIGINT}
+        </if>
+        <if test="permissionInfoEntity != null and permissionInfoEntity.resourceId != null" >
+          AND a.resource_id = #{permissionInfoEntity.resourceId, jdbcType=BIGINT}
+        </if>
+        <if test="permissionInfoEntity != null and permissionInfoEntity.operationId != null" >
+          AND a.operation_id = #{permissionInfoEntity.operationId, jdbcType=BIGINT}
+        </if>
+        <if test="permissionInfoEntity != null and permissionInfoEntity.permissionDesc != null and permissionInfoEntity.permissionDesc != ''" >
+          AND a.permission_desc = #{permissionInfoEntity.permissionDesc, jdbcType=VARCHAR}
+        </if>
+        <if test="permissionInfoEntity != null and permissionInfoEntity.isValid != null and permissionInfoEntity.isValid != ''" >
+          AND a.is_valid = #{permissionInfoEntity.isValid, jdbcType=VARCHAR}
+        </if>
+        <if test="permissionInfoEntity != null and permissionInfoEntity.isDelete != null and permissionInfoEntity.isDelete != ''" >
+          AND a.is_delete = #{permissionInfoEntity.isDelete, jdbcType=VARCHAR}
+        </if>
+        <if test="permissionInfoEntity != null and permissionInfoEntity.permissionName != null and permissionInfoEntity.permissionName != ''" >
+          AND a.permission_name = #{permissionInfoEntity.permissionName, jdbcType=CHAR}
+        </if>
+  </select>
+</mapper>

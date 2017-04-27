@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.team.goyea.common.dao.CommonDao" >
+  
+  <insert id="rolePermissionRela_insert" parameterType="com.team.goyea.authorization.model.entity.RolePermissionRelaEntity" >
+    INSERT INTO t_role_permission_rela 
+       (
+          role_permission_id,
+          role_id,
+          permission_id,
+          permission_wildcards
+        ) VALUES (
+    	  #{pk.rolePermissionId, jdbcType=BIGINT},
+    	  #{roleId, jdbcType=BIGINT},
+    	  #{permissionId, jdbcType=BIGINT},
+    	  #{permissionWildcards, jdbcType=VARCHAR}
+        )
+  </insert>
+  
+  <insert id="rolePermissionRela_insertSelective" parameterType="com.team.goyea.authorization.model.entity.RolePermissionRelaEntity" >
+    INSERT INTO t_role_permission_rela
+      <trim prefix="(" suffix=")" suffixOverrides="," >
+    	<if test="pk != null and pk.rolePermissionId != null" >
+          role_permission_id,
+      	</if>
+    	<if test="roleId != null" >
+          role_id,
+      	</if>
+    	<if test="permissionId != null" >
+          permission_id,
+      	</if>
+    	<if test="permissionWildcards != null" >
+          permission_wildcards,
+      	</if>
+      </trim>
+    VALUES
+      <trim prefix="(" suffix=")" suffixOverrides="," >
+    	<if test="pk != null and pk.rolePermissionId != null" >
+          #{pk.rolePermissionId, jdbcType=BIGINT},
+      	</if>
+    	<if test="roleId != null" >
+          #{roleId, jdbcType=BIGINT},
+      	</if>
+    	<if test="permissionId != null" >
+          #{permissionId, jdbcType=BIGINT},
+      	</if>
+    	<if test="permissionWildcards != null" >
+          #{permissionWildcards, jdbcType=VARCHAR},
+      	</if>
+      </trim>
+  </insert>
+  
+  <update id="rolePermissionRela_update" parameterType="com.team.goyea.authorization.model.entity.RolePermissionRelaEntity" >
+    UPDATE t_role_permission_rela SET 
+          role_id = #{roleId, jdbcType=BIGINT},
+          permission_id = #{permissionId, jdbcType=BIGINT},
+          permission_wildcards = #{permissionWildcards, jdbcType=VARCHAR}
+     WHERE 1 = 1
+       AND role_permission_id = #{pk.rolePermissionId, jdbcType=BIGINT}
+  </update>
+  
+  <update id="rolePermissionRela_updateSelective" parameterType="com.team.goyea.authorization.model.entity.RolePermissionRelaEntity" >
+    UPDATE t_role_permission_rela
+      <trim prefix="SET" suffixOverrides="," >
+    	<if test="roleId != null" >
+          role_id = #{roleId, jdbcType=BIGINT},
+      	</if>
+    	<if test="permissionId != null" >
+          permission_id = #{permissionId, jdbcType=BIGINT},
+      	</if>
+    	<if test="permissionWildcards != null" >
+          permission_wildcards = #{permissionWildcards, jdbcType=VARCHAR},
+      	</if>
+      </trim>
+     WHERE 1 = 1
+       AND role_permission_id = #{pk.rolePermissionId, jdbcType=BIGINT}
+  </update>
+  
+  <delete id="rolePermissionRela_delete" parameterType="com.team.goyea.authorization.model.pk.RolePermissionRelaPK" >
+    DELETE FROM t_role_permission_rela
+     WHERE 1 = 1
+       AND role_permission_id = #{rolePermissionId, jdbcType=BIGINT}
+  </delete>
+  
+  <delete id="rolePermissionRela_deleteBySelective" parameterType="com.team.goyea.authorization.model.entity.RolePermissionRelaEntity" >
+    DELETE FROM t_role_permission_rela
+     <trim prefix="WHERE" prefixOverrides="AND" >
+        <if test="pk != null and pk.rolePermissionId != null" >
+          AND role_permission_id = #{pk.rolePermissionId, jdbcType=BIGINT}
+        </if>
+        <if test="roleId != null" >
+          AND role_id = #{roleId, jdbcType=BIGINT}
+        </if>
+        <if test="permissionId != null" >
+          AND permission_id = #{permissionId, jdbcType=BIGINT}
+        </if>
+        <if test="permissionWildcards != null and permissionWildcards != ''" >
+          AND permission_wildcards = #{permissionWildcards, jdbcType=VARCHAR}
+        </if>
+     </trim>
+  </delete>
+  
+  <resultMap id="rolePermissionRelaResultMap" type="com.team.goyea.authorization.model.RolePermissionRela" >
+    <constructor>
+       <idArg column="role_permission_id" javaType="Long" jdbcType="BIGINT"/>
+    </constructor>
+    <association property="rolePermissionRelaEntity" javaType="com.team.goyea.authorization.model.entity.RolePermissionRelaEntity" resultMap="rolePermissionRelaEntityMap"/>
+  </resultMap>
+  <resultMap id="rolePermissionRelaEntityMap" type="com.team.goyea.authorization.model.entity.RolePermissionRelaEntity" >
+    <result column="role_id" property="roleId" jdbcType="BIGINT" />
+    <result column="permission_id" property="permissionId" jdbcType="BIGINT" />
+    <result column="permission_wildcards" property="permissionWildcards" jdbcType="VARCHAR" />
+    <association property="pk" javaType="com.team.goyea.authorization.model.pk.RolePermissionRelaPK" resultMap="rolePermissionRelaPKMap"/>
+  </resultMap>
+  <resultMap id="rolePermissionRelaPKMap" type="com.team.goyea.authorization.model.pk.RolePermissionRelaPK" >
+	<constructor>
+       <idArg column="role_permission_id" javaType="Long" jdbcType="BIGINT"/>
+	</constructor>
+  </resultMap>
+  
+  <sql id="t_role_permission_rela_Column_List" >
+    role_permission_id,
+    role_id,
+    permission_id,
+    permission_wildcards
+  </sql>
+  
+  <select id="rolePermissionRela_load" parameterType="com.team.goyea.authorization.model.pk.RolePermissionRelaPK" resultMap="rolePermissionRelaResultMap">
+    SELECT 
+    <include refid="t_role_permission_rela_Column_List" />
+      FROM t_role_permission_rela
+     WHERE 1 = 1
+       AND role_permission_id = #{rolePermissionId, jdbcType=BIGINT}
+  </select>
+  
+  <select id="rolePermissionRela_selectBySelective" parameterType="com.team.goyea.authorization.model.RolePermissionRela" resultMap="rolePermissionRelaResultMap">
+    SELECT 
+    <include refid="t_role_permission_rela_Column_List" />
+      FROM t_role_permission_rela
+      <trim prefix="WHERE" prefixOverrides="AND" >
+        <if test="rolePermissionRelaPK != null and rolePermissionRelaPK.rolePermissionId != null" >
+          AND role_permission_id = #{rolePermissionRelaPK.rolePermissionId, jdbcType=BIGINT}
+        </if>
+        <if test="rolePermissionRelaEntity != null and rolePermissionRelaEntity.roleId != null" >
+          AND role_id = #{rolePermissionRelaEntity.roleId, jdbcType=BIGINT}
+        </if>
+        <if test="rolePermissionRelaEntity != null and rolePermissionRelaEntity.permissionId != null" >
+          AND permission_id = #{rolePermissionRelaEntity.permissionId, jdbcType=BIGINT}
+        </if>
+        <if test="rolePermissionRelaEntity != null and rolePermissionRelaEntity.permissionWildcards != null and rolePermissionRelaEntity.permissionWildcards != ''" >
+          AND permission_wildcards = #{rolePermissionRelaEntity.permissionWildcards, jdbcType=VARCHAR}
+        </if>
+      </trim>
+  </select>
+  <select id="rolePermissionRela_selectBySelectiveCount" parameterType="com.team.goyea.authorization.model.RolePermissionRela" resultType="int">
+    SELECT count(1) FROM t_role_permission_rela
+      <trim prefix="WHERE" prefixOverrides="AND" >
+        <if test="rolePermissionRelaPK != null and rolePermissionRelaPK.rolePermissionId != null" >
+          AND role_permission_id = #{rolePermissionRelaPK.rolePermissionId, jdbcType=BIGINT}
+        </if>
+        <if test="rolePermissionRelaEntity != null and rolePermissionRelaEntity.roleId != null" >
+          AND role_id = #{rolePermissionRelaEntity.roleId, jdbcType=BIGINT}
+        </if>
+        <if test="rolePermissionRelaEntity != null and rolePermissionRelaEntity.permissionId != null" >
+          AND permission_id = #{rolePermissionRelaEntity.permissionId, jdbcType=BIGINT}
+        </if>
+        <if test="rolePermissionRelaEntity != null and rolePermissionRelaEntity.permissionWildcards != null and rolePermissionRelaEntity.permissionWildcards != ''" >
+          AND permission_wildcards = #{rolePermissionRelaEntity.permissionWildcards, jdbcType=VARCHAR}
+        </if>
+      </trim>
+  </select>
+  <select id="rolePermissionRela_selectPermissionWildcards" parameterType="com.team.goyea.authorization.model.RolePermissionRela" resultMap="rolePermissionRelaResultMap">
+    SELECT 
+		   a.role_permission_id,
+		   a.role_id,
+		   a.permission_id,
+		   CASE WHEN a.permission_id is null 
+		   THEN a.permission_wildcards
+		   ELSE b.permission_wildcards
+		   END as permission_wildcards
+      FROM t_role_permission_rela a
+      LEFT OUTER JOIN (SELECT d1.permission_id, d2.resource_content || ':' || d3.operation_name as permission_wildcards 
+                         FROM t_permission_info d1, t_resource_info d2, t_operation_info d3 
+                        WHERE d1.resource_id = d2.resource_id and d1.operation_id = d3.operation_id and d1.is_valid = '01' and d1.is_delete = '01') b on a.permission_id = b.permission_id
+      <trim prefix="WHERE" prefixOverrides="AND" >
+        <if test="rolePermissionRelaPK != null and rolePermissionRelaPK.rolePermissionId != null" >
+          AND a.role_permission_id = #{rolePermissionRelaPK.rolePermissionId, jdbcType=BIGINT}
+        </if>
+        <if test="rolePermissionRelaEntity != null and rolePermissionRelaEntity.roleId != null" >
+          AND a.role_id = #{rolePermissionRelaEntity.roleId, jdbcType=BIGINT}
+        </if>
+        <if test="rolePermissionRelaEntity != null and rolePermissionRelaEntity.permissionId != null" >
+          AND a.permission_id = #{rolePermissionRelaEntity.permissionId, jdbcType=BIGINT}
+        </if>
+        <if test="rolePermissionRelaEntity != null and rolePermissionRelaEntity.permissionWildcards != null and rolePermissionRelaEntity.permissionWildcards != ''" >
+          AND a.permission_wildcards = #{rolePermissionRelaEntity.permissionWildcards, jdbcType=VARCHAR}
+        </if>
+      </trim>
+  </select>
+</mapper>

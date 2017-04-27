@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.team.goyea.common.dao.CommonDao" >
+  
+  <insert id="loginInfo_insert" parameterType="com.team.goyea.authorization.model.entity.LoginInfoEntity" >
+    INSERT INTO t_login_info 
+       (
+          login_id,
+          party_id,
+          login_name,
+          is_primary
+        ) VALUES (
+    	  #{pk.loginId, jdbcType=BIGINT},
+    	  #{partyId, jdbcType=BIGINT},
+    	  #{loginName, jdbcType=VARCHAR},
+    	  #{isPrimary, jdbcType=VARCHAR}
+        )
+  </insert>
+  
+  <insert id="loginInfo_insertSelective" parameterType="com.team.goyea.authorization.model.entity.LoginInfoEntity" >
+    INSERT INTO t_login_info
+      <trim prefix="(" suffix=")" suffixOverrides="," >
+    	<if test="pk != null and pk.loginId != null" >
+          login_id,
+      	</if>
+    	<if test="partyId != null" >
+          party_id,
+      	</if>
+    	<if test="loginName != null" >
+          login_name,
+      	</if>
+    	<if test="isPrimary != null" >
+          is_primary,
+      	</if>
+      </trim>
+    VALUES
+      <trim prefix="(" suffix=")" suffixOverrides="," >
+    	<if test="pk != null and pk.loginId != null" >
+          #{pk.loginId, jdbcType=BIGINT},
+      	</if>
+    	<if test="partyId != null" >
+          #{partyId, jdbcType=BIGINT},
+      	</if>
+    	<if test="loginName != null" >
+          #{loginName, jdbcType=VARCHAR},
+      	</if>
+    	<if test="isPrimary != null" >
+          #{isPrimary, jdbcType=VARCHAR},
+      	</if>
+      </trim>
+  </insert>
+  
+  <update id="loginInfo_update" parameterType="com.team.goyea.authorization.model.entity.LoginInfoEntity" >
+    UPDATE t_login_info SET 
+          party_id = #{partyId, jdbcType=BIGINT},
+          login_name = #{loginName, jdbcType=VARCHAR},
+          is_primary = #{isPrimary, jdbcType=VARCHAR}
+     WHERE 1 = 1
+       AND login_id = #{pk.loginId, jdbcType=BIGINT}
+  </update>
+  
+  <update id="loginInfo_updateSelective" parameterType="com.team.goyea.authorization.model.entity.LoginInfoEntity" >
+    UPDATE t_login_info
+      <trim prefix="SET" suffixOverrides="," >
+    	<if test="partyId != null" >
+          party_id = #{partyId, jdbcType=BIGINT},
+      	</if>
+    	<if test="loginName != null" >
+          login_name = #{loginName, jdbcType=VARCHAR},
+      	</if>
+    	<if test="isPrimary != null" >
+          is_primary = #{isPrimary, jdbcType=VARCHAR},
+      	</if>
+      </trim>
+     WHERE 1 = 1
+       AND login_id = #{pk.loginId, jdbcType=BIGINT}
+  </update>
+  
+  <delete id="loginInfo_delete" parameterType="com.team.goyea.authorization.model.pk.LoginInfoPK" >
+    DELETE FROM t_login_info
+     WHERE 1 = 1
+       AND login_id = #{loginId, jdbcType=BIGINT}
+  </delete>
+  
+  <delete id="loginInfo_deleteBySelective" parameterType="com.team.goyea.authorization.model.entity.LoginInfoEntity" >
+    DELETE FROM t_login_info
+     <trim prefix="WHERE" prefixOverrides="AND" >
+        <if test="pk != null and pk.loginId != null" >
+          AND login_id = #{pk.loginId, jdbcType=BIGINT}
+        </if>
+        <if test="partyId != null" >
+          AND party_id = #{partyId, jdbcType=BIGINT}
+        </if>
+        <if test="loginName != null and loginName != ''" >
+          AND login_name = #{loginName, jdbcType=VARCHAR}
+        </if>
+        <if test="isPrimary != null and isPrimary != ''" >
+          AND is_primary = #{isPrimary, jdbcType=VARCHAR}
+        </if>
+     </trim>
+  </delete>
+  
+  <resultMap id="loginInfoResultMap" type="com.team.goyea.authorization.model.LoginInfo" >
+    <constructor>
+       <idArg column="login_id" javaType="Long" jdbcType="BIGINT"/>
+    </constructor>
+    <association property="loginInfoEntity" javaType="com.team.goyea.authorization.model.entity.LoginInfoEntity" resultMap="loginInfoEntityMap"/>
+  </resultMap>
+  <resultMap id="loginInfoEntityMap" type="com.team.goyea.authorization.model.entity.LoginInfoEntity" >
+    <result column="party_id" property="partyId" jdbcType="BIGINT" />
+    <result column="login_name" property="loginName" jdbcType="VARCHAR" />
+    <result column="is_primary" property="isPrimary" jdbcType="VARCHAR" />
+    <association property="pk" javaType="com.team.goyea.authorization.model.pk.LoginInfoPK" resultMap="loginInfoPKMap"/>
+  </resultMap>
+  <resultMap id="loginInfoPKMap" type="com.team.goyea.authorization.model.pk.LoginInfoPK" >
+	<constructor>
+       <idArg column="login_id" javaType="Long" jdbcType="BIGINT"/>
+	</constructor>
+  </resultMap>
+  
+  <sql id="t_login_info_Column_List" >
+    login_id,
+    party_id,
+    login_name,
+    is_primary
+  </sql>
+  
+  <select id="loginInfo_load" parameterType="com.team.goyea.authorization.model.pk.LoginInfoPK" resultMap="loginInfoResultMap">
+    SELECT 
+    <include refid="t_login_info_Column_List" />
+      FROM t_login_info
+     WHERE 1 = 1
+       AND login_id = #{loginId, jdbcType=BIGINT}
+  </select>
+  
+  <select id="loginInfo_selectBySelective" parameterType="com.team.goyea.authorization.model.LoginInfo" resultMap="loginInfoResultMap">
+    SELECT 
+    <include refid="t_login_info_Column_List" />
+      FROM t_login_info
+      <trim prefix="WHERE" prefixOverrides="AND" >
+        <if test="loginInfoPK != null and loginInfoPK.loginId != null" >
+          AND login_id = #{loginInfoPK.loginId, jdbcType=BIGINT}
+        </if>
+        <if test="loginInfoEntity != null and loginInfoEntity.partyId != null" >
+          AND party_id = #{loginInfoEntity.partyId, jdbcType=BIGINT}
+        </if>
+        <if test="loginInfoEntity != null and loginInfoEntity.loginName != null and loginInfoEntity.loginName != ''" >
+          AND login_name = #{loginInfoEntity.loginName, jdbcType=VARCHAR}
+        </if>
+        <if test="loginInfoEntity != null and loginInfoEntity.isPrimary != null and loginInfoEntity.isPrimary != ''" >
+          AND is_primary = #{loginInfoEntity.isPrimary, jdbcType=VARCHAR}
+        </if>
+      </trim>
+  </select>
+  <select id="loginInfo_selectBySelectiveCount" parameterType="com.team.goyea.authorization.model.LoginInfo" resultType="int">
+    SELECT count(1) FROM t_login_info
+      <trim prefix="WHERE" prefixOverrides="AND" >
+        <if test="loginInfoPK != null and loginInfoPK.loginId != null" >
+          AND login_id = #{loginInfoPK.loginId, jdbcType=BIGINT}
+        </if>
+        <if test="loginInfoEntity != null and loginInfoEntity.partyId != null" >
+          AND party_id = #{loginInfoEntity.partyId, jdbcType=BIGINT}
+        </if>
+        <if test="loginInfoEntity != null and loginInfoEntity.loginName != null and loginInfoEntity.loginName != ''" >
+          AND login_name = #{loginInfoEntity.loginName, jdbcType=VARCHAR}
+        </if>
+        <if test="loginInfoEntity != null and loginInfoEntity.isPrimary != null and loginInfoEntity.isPrimary != ''" >
+          AND is_primary = #{loginInfoEntity.isPrimary, jdbcType=VARCHAR}
+        </if>
+      </trim>
+  </select>
+</mapper>

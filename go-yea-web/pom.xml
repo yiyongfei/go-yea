@@ -36,13 +36,14 @@
     </dependencies>
     <profiles>
 	    <profile>
-	        <!-- 开发环境 -->
+	        <!-- 单机方式 -->
 	        <id>develop</id>
 	        <properties>
 	            <profiles.active>develop</profiles.active>
-	            <jetty.port>9999</jetty.port>
+	            <jetty.port>9090</jetty.port>
 	        </properties>
 			<dependencies>        
+			    <!-- Web与APP同JVM部署 -->
 			    <dependency>
 			        <groupId>com.team</groupId>
 			        <artifactId>go-yea-launcher</artifactId>
@@ -51,11 +52,11 @@
 		    </dependencies>
 	    </profile>
 	    <profile>
-	        <!-- 测试环境 -->
+	        <!-- RPC方式 -->
 	        <id>staging</id>
 	        <properties>
 	            <profiles.active>staging</profiles.active>
-	            <jetty.port>8888</jetty.port>
+	            <jetty.port>8080</jetty.port>
 	        </properties>
 			<dependencies>        
 			    <!-- Netty，通过客户端与Netty服务端交互 -->
@@ -68,9 +69,25 @@
 	            <activeByDefault>true</activeByDefault>
 	        </activation>
 	    </profile>
+	    <profile>
+	        <!-- 服务拆分后的部署 -->
+	        <id>split</id>
+	        <properties>
+	            <profiles.active>split</profiles.active>
+	            <jetty.port>8080</jetty.port>
+	        </properties>
+			<dependencies>        
+			    <!-- Netty，拆分成二个服务，分别与二个服务端交互 -->
+		        <dependency>
+			        <groupId>com.yea</groupId>
+			        <artifactId>yea-dispatcher</artifactId>
+			    </dependency>
+		    </dependencies>
+	    </profile>
 	</profiles>
     <build>
         <finalName>go-yea-web</finalName>
+        <directory>${basedir}/target-${jetty.port}</directory>
         <resources>
 	        <resource>
 	            <directory>src/main/resources</directory>

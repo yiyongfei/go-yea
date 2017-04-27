@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.team.goyea.common.dao.CommonDao" >
+  
+  <insert id="operationInfo_insert" parameterType="com.team.goyea.permission.model.entity.OperationInfoEntity" >
+    INSERT INTO t_operation_info 
+       (
+          operation_id,
+          operation_name,
+          operation_desc
+        ) VALUES (
+    	  #{pk.operationId, jdbcType=BIGINT},
+    	  #{operationName, jdbcType=VARCHAR},
+    	  #{operationDesc, jdbcType=VARCHAR}
+        )
+  </insert>
+  
+  <insert id="operationInfo_insertSelective" parameterType="com.team.goyea.permission.model.entity.OperationInfoEntity" >
+    INSERT INTO t_operation_info
+      <trim prefix="(" suffix=")" suffixOverrides="," >
+    	<if test="pk != null and pk.operationId != null" >
+          operation_id,
+      	</if>
+    	<if test="operationName != null" >
+          operation_name,
+      	</if>
+    	<if test="operationDesc != null" >
+          operation_desc,
+      	</if>
+      </trim>
+    VALUES
+      <trim prefix="(" suffix=")" suffixOverrides="," >
+    	<if test="pk != null and pk.operationId != null" >
+          #{pk.operationId, jdbcType=BIGINT},
+      	</if>
+    	<if test="operationName != null" >
+          #{operationName, jdbcType=VARCHAR},
+      	</if>
+    	<if test="operationDesc != null" >
+          #{operationDesc, jdbcType=VARCHAR},
+      	</if>
+      </trim>
+  </insert>
+  
+  <update id="operationInfo_update" parameterType="com.team.goyea.permission.model.entity.OperationInfoEntity" >
+    UPDATE t_operation_info SET 
+          operation_name = #{operationName, jdbcType=VARCHAR},
+          operation_desc = #{operationDesc, jdbcType=VARCHAR}
+     WHERE 1 = 1
+       AND operation_id = #{pk.operationId, jdbcType=BIGINT}
+  </update>
+  
+  <update id="operationInfo_updateSelective" parameterType="com.team.goyea.permission.model.entity.OperationInfoEntity" >
+    UPDATE t_operation_info
+      <trim prefix="SET" suffixOverrides="," >
+    	<if test="operationName != null" >
+          operation_name = #{operationName, jdbcType=VARCHAR},
+      	</if>
+    	<if test="operationDesc != null" >
+          operation_desc = #{operationDesc, jdbcType=VARCHAR},
+      	</if>
+      </trim>
+     WHERE 1 = 1
+       AND operation_id = #{pk.operationId, jdbcType=BIGINT}
+  </update>
+  
+  <delete id="operationInfo_delete" parameterType="com.team.goyea.permission.model.pk.OperationInfoPK" >
+    DELETE FROM t_operation_info
+     WHERE 1 = 1
+       AND operation_id = #{operationId, jdbcType=BIGINT}
+  </delete>
+  
+  <delete id="operationInfo_deleteBySelective" parameterType="com.team.goyea.permission.model.entity.OperationInfoEntity" >
+    DELETE FROM t_operation_info
+     <trim prefix="WHERE" prefixOverrides="AND" >
+        <if test="pk != null and pk.operationId != null" >
+          AND operation_id = #{pk.operationId, jdbcType=BIGINT}
+        </if>
+        <if test="operationName != null and operationName != ''" >
+          AND operation_name = #{operationName, jdbcType=VARCHAR}
+        </if>
+        <if test="operationDesc != null and operationDesc != ''" >
+          AND operation_desc = #{operationDesc, jdbcType=VARCHAR}
+        </if>
+     </trim>
+  </delete>
+  
+  <resultMap id="operationInfoResultMap" type="com.team.goyea.permission.model.OperationInfo" >
+    <constructor>
+       <idArg column="operation_id" javaType="Long" jdbcType="BIGINT"/>
+    </constructor>
+    <association property="operationInfoEntity" javaType="com.team.goyea.permission.model.entity.OperationInfoEntity" resultMap="operationInfoEntityMap"/>
+  </resultMap>
+  <resultMap id="operationInfoEntityMap" type="com.team.goyea.permission.model.entity.OperationInfoEntity" >
+    <result column="operation_name" property="operationName" jdbcType="VARCHAR" />
+    <result column="operation_desc" property="operationDesc" jdbcType="VARCHAR" />
+    <association property="pk" javaType="com.team.goyea.permission.model.pk.OperationInfoPK" resultMap="operationInfoPKMap"/>
+  </resultMap>
+  <resultMap id="operationInfoPKMap" type="com.team.goyea.permission.model.pk.OperationInfoPK" >
+	<constructor>
+       <idArg column="operation_id" javaType="Long" jdbcType="BIGINT"/>
+	</constructor>
+  </resultMap>
+  
+  <sql id="t_operation_info_Column_List" >
+    operation_id,
+    operation_name,
+    operation_desc
+  </sql>
+  
+  <select id="operationInfo_load" parameterType="com.team.goyea.permission.model.pk.OperationInfoPK" resultMap="operationInfoResultMap">
+    SELECT 
+    <include refid="t_operation_info_Column_List" />
+      FROM t_operation_info
+     WHERE 1 = 1
+       AND operation_id = #{operationId, jdbcType=BIGINT}
+  </select>
+  
+  <select id="operationInfo_selectBySelective" parameterType="com.team.goyea.permission.model.OperationInfo" resultMap="operationInfoResultMap">
+    SELECT 
+    <include refid="t_operation_info_Column_List" />
+      FROM t_operation_info
+      <trim prefix="WHERE" prefixOverrides="AND" >
+        <if test="operationInfoPK != null and operationInfoPK.operationId != null" >
+          AND operation_id = #{operationInfoPK.operationId, jdbcType=BIGINT}
+        </if>
+        <if test="operationInfoEntity != null and operationInfoEntity.operationName != null and operationInfoEntity.operationName != ''" >
+          AND operation_name = #{operationInfoEntity.operationName, jdbcType=VARCHAR}
+        </if>
+        <if test="operationInfoEntity != null and operationInfoEntity.operationDesc != null and operationInfoEntity.operationDesc != ''" >
+          AND operation_desc = #{operationInfoEntity.operationDesc, jdbcType=VARCHAR}
+        </if>
+      </trim>
+  </select>
+  <select id="operationInfo_selectBySelectiveCount" parameterType="com.team.goyea.permission.model.OperationInfo" resultType="int">
+    SELECT count(1) FROM t_operation_info
+      <trim prefix="WHERE" prefixOverrides="AND" >
+        <if test="operationInfoPK != null and operationInfoPK.operationId != null" >
+          AND operation_id = #{operationInfoPK.operationId, jdbcType=BIGINT}
+        </if>
+        <if test="operationInfoEntity != null and operationInfoEntity.operationName != null and operationInfoEntity.operationName != ''" >
+          AND operation_name = #{operationInfoEntity.operationName, jdbcType=VARCHAR}
+        </if>
+        <if test="operationInfoEntity != null and operationInfoEntity.operationDesc != null and operationInfoEntity.operationDesc != ''" >
+          AND operation_desc = #{operationInfoEntity.operationDesc, jdbcType=VARCHAR}
+        </if>
+      </trim>
+  </select>
+</mapper>

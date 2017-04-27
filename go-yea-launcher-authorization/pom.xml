@@ -1,0 +1,90 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+	    <groupId>com.team</groupId>
+	    <artifactId>go-yea</artifactId>
+	    <version>0.0.1</version>
+    </parent>
+    <artifactId>go-yea-launcher-authorization</artifactId>
+    <dependencies>
+    	<!-- 数据库连接池支持 -->
+		<dependency>
+		    <groupId>com.alibaba</groupId>
+		    <artifactId>druid</artifactId>
+		</dependency>
+		
+		<!-- 数据库驱动支持 -->
+		<dependency>
+		    <groupId>org.postgresql</groupId>
+		    <artifactId>postgresql</artifactId>
+		</dependency>
+		
+    	<!-- Netty，通过客户端与Netty服务端交互 -->
+        <dependency>
+	        <groupId>com.yea</groupId>
+	        <artifactId>yea-dispatcher</artifactId>
+	    </dependency>
+        
+	    <!-- 自动生成工具、Shiro数据表操作 -->
+	    <dependency>
+	        <groupId>com.yea</groupId>
+	        <artifactId>yea-achieve</artifactId>
+	    </dependency>
+	    
+	    <dependency>
+	        <groupId>com.team</groupId>
+	        <artifactId>go-yea-authorization</artifactId>
+	        <version>0.0.1</version>
+	    </dependency>
+    </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <defaultLibBundleDir>lib</defaultLibBundleDir>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+            <!-- 打包jar文件时，配置manifest文件，加入lib包的jar依赖 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+         	            <!-- 生成的jar中，不要包含pom.xml和pom.properties这两个文件 -->  
+                        <addMavenDescriptor>false</addMavenDescriptor>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib/</classpathPrefix>
+                            <mainClass>com.team.goyea.launcher.ServerLauncher</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+            <!-- The configuration of maven-assembly-plugin -->  
+            <plugin>  
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <descriptors>
+                        <descriptor>src/main/assembly/package.xml</descriptor>
+                    </descriptors>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

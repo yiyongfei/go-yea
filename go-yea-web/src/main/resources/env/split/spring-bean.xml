@@ -34,11 +34,52 @@
 		<property name="port" value="${zookeeper.port}" />
 	</bean>
 	
-    <bean id="nettyClient" class="com.yea.remote.netty.client.NettyClient" init-method="connect" destroy-method="disconnect">
-		<property name="registerName" value="${netty.server.register}" /><!-- 服务注册名 -->
+    <bean id="authorizationClient" class="com.yea.remote.netty.client.NettyClient" init-method="connect" destroy-method="disconnect">
+		<property name="registerName" value="${netty.authorization.register}" /><!-- 服务注册名 -->
 		<property name="dispatcher" ref="zkDispatcher" />
-		<property name="host" value="${netty.client.host}" /><!-- 该主机未设置时，系统将会读取本机IP自动设入 -->
-		<property name="port" value="${netty.client.port}" />
+		<property name="host" value="${netty.authorization.host}" /><!-- 该主机未设置时，系统将会读取本机IP自动设入 -->
+		<property name="port" value="${netty.authorization.port}" />
+	    <property name="listHandler">
+            <list>
+                <map>
+	                <entry key="MessageDecoder">
+	                    <ref bean="nettyMessageDecoder"/>
+	                </entry>
+	            </map>
+	            <map>
+	                <entry key="MessageEncoder">
+	                    <ref bean="nettyMessageEncoder"/>
+	                </entry>
+	            </map>
+	            <map>
+	                <entry key="HeartBeatHandler">
+	                    <ref bean="heartBeatClientHandler"/>
+	                </entry>
+	            </map>
+	            <map>
+	                <entry key="ServiceClientHandler">
+	                    <ref bean="serviceClientHandler"/>
+	                </entry>
+	            </map>
+	            <map>
+	                <entry key="ServiceServerHandler">
+	                    <ref bean="serviceServerHandler"/>
+	                </entry>
+	            </map>
+	            <map>
+	                <entry key="ExceptionHandler">
+	                    <ref bean="exceptionHandler"/>
+	                </entry>
+	            </map>
+            </list>
+        </property>
+	</bean>
+	
+	<bean id="permisstionClient" class="com.yea.remote.netty.client.NettyClient" init-method="connect" destroy-method="disconnect" lazy-init="false" >
+		<property name="registerName" value="${netty.permisstion.register}" /><!-- 服务注册名 -->
+		<property name="dispatcher" ref="zkDispatcher" />
+		<property name="host" value="${netty.permisstion.host}" /><!-- 该主机未设置时，系统将会读取本机IP自动设入 -->
+		<property name="port" value="${netty.permisstion.port}" />
 	    <property name="listHandler">
             <list>
                 <map>
@@ -131,7 +172,7 @@
         <!-- property name="cacheManager" ref="cacheManager"/ -->
         <property name="sessionManager" ref="sessionManager"/>
         <property name="rememberMeManager" ref="rememberMeManager"/>
-        <property name="endpoint" ref="nettyClient"/>
+        <property name="endpoint" ref="authorizationClient"/>
     </bean>
     
     <!-- 相当于调用SecurityUtils.setSecurityManager(securityManager) -->
@@ -149,7 +190,7 @@
     </bean>
     <!-- 对ShiroWeb过滤器进行包装，以初始化过滤器链（不允许延迟加载） -->
     <bean id="shiroFilterWrapper" class="com.yea.shiro.web.wrapper.ShiroFilterWrapper" init-method="init" lazy-init="false" >
-	    <property name="endpoint" ref="nettyClient"/>
+	    <property name="endpoint" ref="authorizationClient"/>
 	    <property name="shiroFilter" ref="shiroFilter"/>
 	    <property name="authenticedUrl" value="/authenticed.html"/>
 	    <property name="logoutUrl" value="/logout.html"/>

@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.team.goyea.common.dao.CommonDao" >
+  
+  <insert id="userInfo_insert" parameterType="com.team.goyea.authorization.model.entity.UserInfoEntity" >
+    INSERT INTO t_user_info 
+       (
+          party_id,
+          login_password,
+          login_salt,
+          is_lock
+        ) VALUES (
+    	  #{pk.partyId, jdbcType=BIGINT},
+    	  #{loginPassword, jdbcType=VARCHAR},
+    	  #{loginSalt, jdbcType=VARCHAR},
+    	  #{isLock, jdbcType=VARCHAR}
+        )
+  </insert>
+  
+  <insert id="userInfo_insertSelective" parameterType="com.team.goyea.authorization.model.entity.UserInfoEntity" >
+    INSERT INTO t_user_info
+      <trim prefix="(" suffix=")" suffixOverrides="," >
+    	<if test="pk != null and pk.partyId != null" >
+          party_id,
+      	</if>
+    	<if test="loginPassword != null" >
+          login_password,
+      	</if>
+    	<if test="loginSalt != null" >
+          login_salt,
+      	</if>
+    	<if test="isLock != null" >
+          is_lock,
+      	</if>
+      </trim>
+    VALUES
+      <trim prefix="(" suffix=")" suffixOverrides="," >
+    	<if test="pk != null and pk.partyId != null" >
+          #{pk.partyId, jdbcType=BIGINT},
+      	</if>
+    	<if test="loginPassword != null" >
+          #{loginPassword, jdbcType=VARCHAR},
+      	</if>
+    	<if test="loginSalt != null" >
+          #{loginSalt, jdbcType=VARCHAR},
+      	</if>
+    	<if test="isLock != null" >
+          #{isLock, jdbcType=VARCHAR},
+      	</if>
+      </trim>
+  </insert>
+  
+  <update id="userInfo_update" parameterType="com.team.goyea.authorization.model.entity.UserInfoEntity" >
+    UPDATE t_user_info SET 
+          login_password = #{loginPassword, jdbcType=VARCHAR},
+          login_salt = #{loginSalt, jdbcType=VARCHAR},
+          is_lock = #{isLock, jdbcType=VARCHAR}
+     WHERE 1 = 1
+       AND party_id = #{pk.partyId, jdbcType=BIGINT}
+  </update>
+  
+  <update id="userInfo_updateSelective" parameterType="com.team.goyea.authorization.model.entity.UserInfoEntity" >
+    UPDATE t_user_info
+      <trim prefix="SET" suffixOverrides="," >
+    	<if test="loginPassword != null" >
+          login_password = #{loginPassword, jdbcType=VARCHAR},
+      	</if>
+    	<if test="loginSalt != null" >
+          login_salt = #{loginSalt, jdbcType=VARCHAR},
+      	</if>
+    	<if test="isLock != null" >
+          is_lock = #{isLock, jdbcType=VARCHAR},
+      	</if>
+      </trim>
+     WHERE 1 = 1
+       AND party_id = #{pk.partyId, jdbcType=BIGINT}
+  </update>
+  
+  <delete id="userInfo_delete" parameterType="com.team.goyea.authorization.model.pk.UserInfoPK" >
+    DELETE FROM t_user_info
+     WHERE 1 = 1
+       AND party_id = #{partyId, jdbcType=BIGINT}
+  </delete>
+  
+  <delete id="userInfo_deleteBySelective" parameterType="com.team.goyea.authorization.model.entity.UserInfoEntity" >
+    DELETE FROM t_user_info
+     <trim prefix="WHERE" prefixOverrides="AND" >
+        <if test="pk != null and pk.partyId != null" >
+          AND party_id = #{pk.partyId, jdbcType=BIGINT}
+        </if>
+        <if test="loginPassword != null and loginPassword != ''" >
+          AND login_password = #{loginPassword, jdbcType=VARCHAR}
+        </if>
+        <if test="loginSalt != null and loginSalt != ''" >
+          AND login_salt = #{loginSalt, jdbcType=VARCHAR}
+        </if>
+        <if test="isLock != null and isLock != ''" >
+          AND is_lock = #{isLock, jdbcType=VARCHAR}
+        </if>
+     </trim>
+  </delete>
+  
+  <resultMap id="userInfoResultMap" type="com.team.goyea.authorization.model.UserInfo" >
+    <constructor>
+       <idArg column="party_id" javaType="Long" jdbcType="BIGINT"/>
+    </constructor>
+    <result column="login_name" property="username" jdbcType="VARCHAR" />
+    <association property="userInfoEntity" javaType="com.team.goyea.authorization.model.entity.UserInfoEntity" resultMap="userInfoEntityMap"/>
+    <association property="personInfoEntity" column="party_id" select="userInfo_selectPerson"/>
+  </resultMap>
+  <resultMap id="userInfoEntityMap" type="com.team.goyea.authorization.model.entity.UserInfoEntity" >
+    <result column="login_password" property="loginPassword" jdbcType="VARCHAR" />
+    <result column="login_salt" property="loginSalt" jdbcType="VARCHAR" />
+    <result column="is_lock" property="isLock" jdbcType="VARCHAR" />
+    <association property="pk" javaType="com.team.goyea.authorization.model.pk.UserInfoPK" resultMap="userInfoPKMap"/>
+  </resultMap>
+  <resultMap id="userInfoPKMap" type="com.team.goyea.authorization.model.pk.UserInfoPK" >
+	<constructor>
+       <idArg column="party_id" javaType="Long" jdbcType="BIGINT"/>
+	</constructor>
+  </resultMap>
+  
+  <sql id="t_user_info_Column_List" >
+    a.party_id,
+    a.login_password,
+    a.login_salt,
+    a.is_lock
+  </sql>
+  
+  <select id="userInfo_load" parameterType="com.team.goyea.authorization.model.pk.UserInfoPK" resultMap="userInfoResultMap">
+    SELECT b.login_name,
+    <include refid="t_user_info_Column_List" />
+      FROM t_user_info a, (SELECT party_id, login_name FROM t_login_info WHERE is_primary = '01') b
+     WHERE a.party_id = b.party_id
+       AND a.party_id = #{partyId, jdbcType=BIGINT}
+  </select>
+  
+  <select id="userInfo_selectBySelective" parameterType="com.team.goyea.authorization.model.UserInfo" resultMap="userInfoResultMap">
+    SELECT b.login_name,
+    <include refid="t_user_info_Column_List" />
+      FROM t_user_info a, (SELECT party_id, login_name FROM t_login_info WHERE is_primary = '01') b
+     WHERE a.party_id = b.party_id
+        <if test="userInfoPK != null and userInfoPK.partyId != null" >
+          AND a.party_id = #{userInfoPK.partyId, jdbcType=BIGINT}
+        </if>
+        <if test="userInfoEntity != null and userInfoEntity.loginPassword != null and userInfoEntity.loginPassword != ''" >
+          AND a.login_password = #{userInfoEntity.loginPassword, jdbcType=VARCHAR}
+        </if>
+        <if test="userInfoEntity != null and userInfoEntity.loginSalt != null and userInfoEntity.loginSalt != ''" >
+          AND a.login_salt = #{userInfoEntity.loginSalt, jdbcType=VARCHAR}
+        </if>
+        <if test="userInfoEntity != null and userInfoEntity.isLock != null and userInfoEntity.isLock != ''" >
+          AND a.is_lock = #{userInfoEntity.isLock, jdbcType=VARCHAR}
+        </if>
+  </select>
+  <select id="userInfo_selectBySelectiveCount" parameterType="com.team.goyea.authorization.model.UserInfo" resultType="int">
+    SELECT count(1) FROM t_user_info a
+      <trim prefix="WHERE" prefixOverrides="AND" >
+        <if test="userInfoPK != null and userInfoPK.partyId != null" >
+          AND a.party_id = #{userInfoPK.partyId, jdbcType=BIGINT}
+        </if>
+        <if test="userInfoEntity != null and userInfoEntity.loginPassword != null and userInfoEntity.loginPassword != ''" >
+          AND a.login_password = #{userInfoEntity.loginPassword, jdbcType=VARCHAR}
+        </if>
+        <if test="userInfoEntity != null and userInfoEntity.loginSalt != null and userInfoEntity.loginSalt != ''" >
+          AND a.login_salt = #{userInfoEntity.loginSalt, jdbcType=VARCHAR}
+        </if>
+        <if test="userInfoEntity != null and userInfoEntity.isLock != null and userInfoEntity.isLock != ''" >
+          AND a.is_lock = #{userInfoEntity.isLock, jdbcType=VARCHAR}
+        </if>
+      </trim>
+  </select>
+  <select id="userInfo_selectPerson" resultMap="personInfoEntityMap">
+    SELECT 
+    <include refid="t_person_info_Column_List" />
+      FROM t_person_info a
+     WHERE 1 = 1
+       AND a.party_id = #{partyId, jdbcType=BIGINT}
+  </select>
+  
+  <resultMap id="userRoleResultMap" type="com.team.goyea.authorization.model.UserInfo" >
+    <constructor>
+       <idArg column="party_id" javaType="Long" jdbcType="BIGINT"/>
+    </constructor>
+    <result column="login_name" property="username" jdbcType="VARCHAR" />
+    <association property="userInfoEntity" javaType="com.team.goyea.authorization.model.entity.UserInfoEntity" resultMap="userInfoEntityMap"/>
+    <association property="personInfoEntity" column="party_id" select="userInfo_selectPerson"/>
+    <collection property="listPartyRoleRelaEntity" column="party_id" select="userRole_selectRole"/>
+  </resultMap>
+  <select id="userRole_load" parameterType="com.team.goyea.authorization.model.pk.UserInfoPK" resultMap="userRoleResultMap">
+    SELECT b.login_name,
+    <include refid="t_user_info_Column_List" />
+      FROM t_user_info a, (SELECT party_id, login_name FROM t_login_info WHERE is_primary = '01') b
+     WHERE a.party_id = b.party_id
+       AND a.party_id = #{partyId, jdbcType=BIGINT}
+  </select>
+  <select id="userRole_selectRole" resultMap="partyRoleRelaEntityMap">
+    SELECT 
+    <include refid="t_party_role_rela_Column_List" />
+      FROM t_party_role_rela a
+     WHERE a.party_id = #{partyId, jdbcType=BIGINT}
+  </select>
+  
+</mapper>

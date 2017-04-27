@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.team.goyea.common.dao.CommonDao" >
+  
+  <insert id="partyInfo_insert" parameterType="com.team.goyea.authorization.model.entity.PartyInfoEntity" >
+    INSERT INTO t_party_info 
+       (
+          party_id,
+          party_type
+        ) VALUES (
+    	  #{pk.partyId, jdbcType=BIGINT},
+    	  #{partyType, jdbcType=VARCHAR}
+        )
+  </insert>
+  
+  <insert id="partyInfo_insertSelective" parameterType="com.team.goyea.authorization.model.entity.PartyInfoEntity" >
+    INSERT INTO t_party_info
+      <trim prefix="(" suffix=")" suffixOverrides="," >
+    	<if test="pk != null and pk.partyId != null" >
+          party_id,
+      	</if>
+    	<if test="partyType != null" >
+          party_type,
+      	</if>
+      </trim>
+    VALUES
+      <trim prefix="(" suffix=")" suffixOverrides="," >
+    	<if test="pk != null and pk.partyId != null" >
+          #{pk.partyId, jdbcType=BIGINT},
+      	</if>
+    	<if test="partyType != null" >
+          #{partyType, jdbcType=VARCHAR},
+      	</if>
+      </trim>
+  </insert>
+  
+  <update id="partyInfo_update" parameterType="com.team.goyea.authorization.model.entity.PartyInfoEntity" >
+    UPDATE t_party_info SET 
+          party_type = #{partyType, jdbcType=VARCHAR}
+     WHERE 1 = 1
+       AND party_id = #{pk.partyId, jdbcType=BIGINT}
+  </update>
+  
+  <update id="partyInfo_updateSelective" parameterType="com.team.goyea.authorization.model.entity.PartyInfoEntity" >
+    UPDATE t_party_info
+      <trim prefix="SET" suffixOverrides="," >
+    	<if test="partyType != null" >
+          party_type = #{partyType, jdbcType=VARCHAR},
+      	</if>
+      </trim>
+     WHERE 1 = 1
+       AND party_id = #{pk.partyId, jdbcType=BIGINT}
+  </update>
+  
+  <delete id="partyInfo_delete" parameterType="com.team.goyea.authorization.model.pk.PartyInfoPK" >
+    DELETE FROM t_party_info
+     WHERE 1 = 1
+       AND party_id = #{partyId, jdbcType=BIGINT}
+  </delete>
+  
+  <delete id="partyInfo_deleteBySelective" parameterType="com.team.goyea.authorization.model.entity.PartyInfoEntity" >
+    DELETE FROM t_party_info
+     <trim prefix="WHERE" prefixOverrides="AND" >
+        <if test="pk != null and pk.partyId != null" >
+          AND party_id = #{pk.partyId, jdbcType=BIGINT}
+        </if>
+        <if test="partyType != null and partyType != ''" >
+          AND party_type = #{partyType, jdbcType=VARCHAR}
+        </if>
+     </trim>
+  </delete>
+  
+  <resultMap id="partyInfoResultMap" type="com.team.goyea.authorization.model.PartyInfo" >
+    <constructor>
+       <idArg column="party_id" javaType="Long" jdbcType="BIGINT"/>
+    </constructor>
+    <association property="partyInfoEntity" javaType="com.team.goyea.authorization.model.entity.PartyInfoEntity" resultMap="partyInfoEntityMap"/>
+  </resultMap>
+  <resultMap id="partyInfoEntityMap" type="com.team.goyea.authorization.model.entity.PartyInfoEntity" >
+    <result column="party_type" property="partyType" jdbcType="VARCHAR" />
+    <association property="pk" javaType="com.team.goyea.authorization.model.pk.PartyInfoPK" resultMap="partyInfoPKMap"/>
+  </resultMap>
+  <resultMap id="partyInfoPKMap" type="com.team.goyea.authorization.model.pk.PartyInfoPK" >
+	<constructor>
+       <idArg column="party_id" javaType="Long" jdbcType="BIGINT"/>
+	</constructor>
+  </resultMap>
+  
+  <sql id="t_party_info_Column_List" >
+    party_id,
+    party_type
+  </sql>
+  
+  <select id="partyInfo_load" parameterType="com.team.goyea.authorization.model.pk.PartyInfoPK" resultMap="partyInfoResultMap">
+    SELECT 
+    <include refid="t_party_info_Column_List" />
+      FROM t_party_info
+     WHERE 1 = 1
+       AND party_id = #{partyId, jdbcType=BIGINT}
+  </select>
+  
+  <select id="partyInfo_selectBySelective" parameterType="com.team.goyea.authorization.model.PartyInfo" resultMap="partyInfoResultMap">
+    SELECT 
+    <include refid="t_party_info_Column_List" />
+      FROM t_party_info
+      <trim prefix="WHERE" prefixOverrides="AND" >
+        <if test="partyInfoPK != null and partyInfoPK.partyId != null" >
+          AND party_id = #{partyInfoPK.partyId, jdbcType=BIGINT}
+        </if>
+        <if test="partyInfoEntity != null and partyInfoEntity.partyType != null and partyInfoEntity.partyType != ''" >
+          AND party_type = #{partyInfoEntity.partyType, jdbcType=VARCHAR}
+        </if>
+      </trim>
+  </select>
+  <select id="partyInfo_selectBySelectiveCount" parameterType="com.team.goyea.authorization.model.PartyInfo" resultType="int">
+    SELECT count(1) FROM t_party_info
+      <trim prefix="WHERE" prefixOverrides="AND" >
+        <if test="partyInfoPK != null and partyInfoPK.partyId != null" >
+          AND party_id = #{partyInfoPK.partyId, jdbcType=BIGINT}
+        </if>
+        <if test="partyInfoEntity != null and partyInfoEntity.partyType != null and partyInfoEntity.partyType != ''" >
+          AND party_type = #{partyInfoEntity.partyType, jdbcType=VARCHAR}
+        </if>
+      </trim>
+  </select>
+</mapper>
