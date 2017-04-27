@@ -388,33 +388,48 @@ public class SaveOperationAct extends AbstractTransactionAct {
 </mvc:interceptors>
 ```
 ### 4、Controller里的远程调用
-- 注入NettyClient
+* 通过NettyClient注册点发送
+	* 发送请求到APP服务，欲请求的服务名(ActName)是服务方已注册的BeanName
+```java
+	CallAct act = new CallAct();
+	act.setActName("queryOperationAct");
+	Promise<List<OperationInfo>> promise = ClientRegister.<List<OperationInfo>>getInstance().send(act);
+```
+	* 如果发送时需要提供参数
+```java
+	CallAct act = new CallAct();
+	act.setActName("saveOperationAct");
+	Promise<List<OperationInfoPK>> promise = ClientRegister.<List<OperationInfoPK>>getInstance().send(act, operationDto);
+```
+	* 如果发送时需要提供多个参数
+```java
+	CallAct act = new CallAct();
+	act.setActName("saveResourceIdentifierAct");
+	Promise<ResourceIdentifierPK> promise = ClientRegister.<ResourceIdentifierPK>getInstance().send(act, identifier, resourceId, operationId);
+```
+	* 如果发送时指定的ActName在多个注册服务（RegisterName）里同时存在
+```java
+	CallAct act = new CallAct();
+	act.setActName("重ActName");
+	Promise<ResourceIdentifierPK> promise = ClientRegister.<ResourceIdentifierPK>getInstance().send("LAUNCHER", act, identifier, resourceId, operationId);
+```
+	* NIO发送，发送后可以执行其它步骤，如果要接收APP服务返回的对象可以在适合的时间点执行Promise.awaitObject方法获得结果
+```java
+	List<OperationInfo> listOperation = promise.awaitObject(10000);
+```
+* 通过注入NettyClient发送
+	* 注入NettyClient
 ```java
 	@Autowired
 	private AbstractEndpoint nettyClient;
 ```
-- 发送请求到APP服务，欲请求的服务名(ActName)是服务方已注册的BeanName
+	* 发送请求到APP服务，欲请求的服务名(ActName)是服务方已注册的BeanName
 ```java
 	CallAct act = new CallAct();
 	act.setActName("queryOperationAct");
 	Promise<List<OperationInfo>> promise = nettyClient.send(act);
 ```
-- 如果发送时需要提供参数
-```java
-	CallAct act = new CallAct();
-	act.setActName("saveOperationAct");
-	Promise<List<OperationInfoPK>> promise = nettyClient.send(act, operationDto);
-```
-- 如果发送时需要提供多个参数
-```java
-	CallAct act = new CallAct();
-	act.setActName("saveResourceIdentifierAct");
-	Promise<ResourceIdentifierPK> promise = nettyClient.send(act, identifier, resourceId, operationId);
-```
-- NIO发送，发送后可以执行其它步骤，如果要接收APP服务返回的对象可以在适合的时间点执行Promise.awaitObject方法获得结果
-```java
-	List<OperationInfo> listOperation = promise.awaitObject(10000);
-```
+* 通过ClientRegister，无需修改代码即能支持服务端所提供的Act服务的迁移，便于后续功能拆分或功能重新规划
 # 授权
 ## 匿名访问
 若新添加的功能允许匿名用户访问，不需做任何授权配置即可，默设Shiro的Web访问控制是匿名访问，研发人员也可以在资源标识设置里配置Web访问是匿名访问。
