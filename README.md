@@ -80,13 +80,13 @@ public class CommonDao<T> extends AbstractBaseDAO<T> {
 - 启动器请参看go-yea/go-yea-launcher
 - 运行在单机模式下的Netty配置内容:
 ```xml
-	<!-- JVM内调用 -->
-	<bean id="launcherClient" class="com.yea.core.remote.client.DefaultClient" ></bean>
+	<!-- JVM内调用，注意，DefaultClient需设置lazy为false，以确保向ClientRegister注册本地客户端 -->
+        <bean id="launcherClient" class="com.yea.core.remote.client.DefaultClient" lazy-init="false" init-method="connect" destroy-method="disconnect" ></bean>
 ```
 - 运行在RPC模式下的Netty配置内容:
 ```xml
-	<!-- JVM内调用 -->
-	<bean id="launcherClient" class="com.yea.core.remote.client.DefaultClient" ></bean>
+	<!-- JVM内调用，注意，DefaultClient需设置lazy为false，以确保向ClientRegister注册本地客户端 -->
+        <bean id="launcherClient" class="com.yea.core.remote.client.DefaultClient" lazy-init="false" init-method="connect" destroy-method="disconnect" ></bean>
 	
 	<!-- Netty编解码的Handler实现 -->
 	<bean id="nettyMessageDecoder" class="com.yea.remote.netty.codec.NettyMessageDecoder"></bean>
