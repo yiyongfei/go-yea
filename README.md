@@ -8,7 +8,7 @@ mvn clean install -Dmaven.test.skip=true
 # 概述
 ## YEA是什么
 GO-YEA是YEA的一个应用，它是一个快速启动分布式框架，致力于提供产品的快速启动以及后续的服务伸缩。
-其核心部分包含：
+</br>其核心部分包含：
 - RPC服务：基于Netty4NIO框架、FST序列化、Ketama Hash算法提供的RPC服务，完成服务之间的非阻塞通讯。
 - LOOKUP服务: 基于Zookeeper提供的注册中心，使地址透明，方便服务提供方平滑增加或减少机器。
 - 认证授权：基于Shiro框架、Redis服务提供的权限管理，提供用户的认证服务和可配置的授权服务。
@@ -493,7 +493,7 @@ public class SaveOperationAct extends AbstractTransactionAct {
 	act.setMethodName("addRolePermission");
 	Promise<?> promise = ClientRegister.getInstance().send("LAUNCHER", act, roleId, resourceId, operationId);
 ```
-* 通过反射机制不用额外提供Act类，但在Method的查找上存在一定隐患，性能也会弱于直接调用，另外使用ReflectAct将摈弃Fork-Join特性，在不考虑历史兼容性的情况下不推荐使用ReflectAct
+* 通过反射机制不用额外提供Act类，但在Method的查找上存在一定隐患，性能也会弱于直接调用，另外使用ReflectAct将摈弃Fork-Join特性以及Client端Lookup服务的特性，在不考虑历史兼容性的情况下不推荐使用ReflectAct
 # 授权
 ## 匿名访问
 若新添加的功能允许匿名用户访问，不需做任何授权配置即可，默设Shiro的Web访问控制是匿名访问，研发人员也可以在资源标识设置里配置Web访问是匿名访问。
