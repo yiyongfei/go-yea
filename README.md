@@ -6,6 +6,7 @@
 mvn clean install -Dmaven.test.skip=true
 ```
 # 概述
+## YEA是什么
 GO-YEA是YEA的一个应用，它是一个快速启动分布式框架，致力于提供产品的快速启动以及后续的服务伸缩。
 其核心部分包含：
 - RPC服务：基于Netty4NIO框架、FST序列化、Ketama Hash算法提供的RPC服务，完成服务之间的非阻塞通讯。
@@ -14,6 +15,44 @@ GO-YEA是YEA的一个应用，它是一个快速启动分布式框架，致力�
 - 代码生成：通过生成工具，生成基于Mybatis的Sql-Mapping文件及相应的Entity、PK、Domain类(均是贫血对象)，降低开发人员的重复工作。
 - Spring配置：透明化接入，通过Spring自身的注解机制无需额外编写代码即可为服务提供分布式能力。
 
+## YEA能做什么
+### 首先它是一个分布式服务框架，通过高性能的RPC远程调用以及SOA服务治理，提升产品在各个阶段不同的可伸缩要求。以达到最大程度降低由于伸缩性的改变对整个项目的变动影响。
+系统伸缩性通常以三种方式完成：1、增加副本；2、功能分割；3、数据分割。YEA主要考虑前二种方式。
+- 以GO-YEA举例，最初以单机方式部署运行
+</br>![Alt 早期部署](https://raw.githubusercontent.com/yiyongfei/picture/master/go-yea/早期.tiff)
+
+```xml
+    通过go-yea-launcher里配置的DefaultClient，以支持同JVM间Act相互调用
+    <bean id="launcherClient" class="com.yea.core.remote.client.DefaultClient" />
+    在go-yea-web里建立与go-yea-launcher的依赖关系，且将go-yea-launcher里的配置文件引入
+    <import resource="classpath:/application-launcher.xml" />
+```
+- 将Web层与应用层进行物理分离，为往分布式服务方向发展建立基础
+![Alt 发展期部署](https://raw.githubusercontent.com/yiyongfei/picture/master/go-yea/中期.tiff)
+```xml
+    go-yea-launcher作为服务生产者对外提供服务。
+    <bean id="nettyServer" class="com.yea.remote.netty.server.NettyServer" />
+    go-yea-web作为服务消费者通过NettyClient远程调用服务生产者所提供的服务来完成业务操作(不依赖于go-yea-launcher)
+    <bean id="nettyClient" class="com.yea.remote.netty.client.NettyClient" />
+```
+- 为了应对日益复杂的业务场景，通过使用分而治之的手段将整个业务拆分成不同的产品线，不同产品线的数据部署在不同的服务器上，同时实现一定意义上的数据分割
+![Alt 后期部署](https://raw.githubusercontent.com/yiyongfei/picture/master/go-yea/后期.tiff)
+```
+    基于产品线规划将go-yea-launcher拆分成go-yea-launcher-permission与go-yea-launcher-authorization，以二个不同的注册名向Zookeeper注册。
+    go-yea-web将建立二个Netty客户端分别与go-yea-launcher-permission与go-yea-launcher-authorization建立连接。
+```
+### 其次它是一个快速启动的应用开发平台，集成了项目中常用的基础组件。
+- 认证授权：基于Shiro实现的可配置授权管理系统，通过页面可定义整个系统的权限、角色、授权。
+- 缓存：按照Map接口对Jedis和Ehcache封装，降低使用门槛，同时也减少未来缓存方案的迁移开销(本地缓存向分布式缓存的迁移)。
+- ORM：基于Mybatis完成数据库层面的增、删、改、查操作。
+- 代码生成：基于数据表生成Sql-Mapping文件及相应的Entity、PK、Domain类。
+- 序列化：提高统一的序列化接口，支持三种序列化方式：FST、Hessian2、原生。
+- 等等
+![Alt 技术结构](https://raw.githubusercontent.com/yiyongfei/picture/master/go-yea/技术结构.tiff)
+
+### 最后，请访问GO-YEA(部署在bluemix上)
+- 访问地址：http://169.44.0.65
+- 用户名密码：admin  admin
 
 # 启动
 
@@ -454,7 +493,7 @@ public class SaveOperationAct extends AbstractTransactionAct {
 	act.setMethodName("addRolePermission");
 	Promise<?> promise = ClientRegister.getInstance().send("LAUNCHER", act, roleId, resourceId, operationId);
 ```
-* 通过反射机制不用额外提供Act类，但在Method的查找上存在一定隐患，性能上也会弱于直接调用，同时调用时需明确指明所注册的服务方
+* 通过反射机制不用额外提供Act类，但在Method的查找上存在一定隐患，性能也会弱于直接调用，另外使用ReflectAct将摈弃Fork-Join特性，在不考虑历史兼容性的情况下不推荐使用ReflectAct
 # 授权
 ## 匿名访问
 若新添加的功能允许匿名用户访问，不需做任何授权配置即可，默设Shiro的Web访问控制是匿名访问，研发人员也可以在资源标识设置里配置Web访问是匿名访问。
