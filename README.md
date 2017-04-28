@@ -198,7 +198,7 @@ public class CommonDao<T> extends AbstractBaseDAO<T> {
 ```
 ### 5、生成Mybatis的映射文件及相应的Domain
 进入开发管理->生成工具
-![Alt 生成工具](https://github.com/yiyongfei/picture/blob/master/go-yea/生成工具.tiff)
+![Alt 生成工具](https://raw.githubusercontent.com/yiyongfei/picture/master/go-yea/生成工具.tiff)
 * Mybatis映射文件内包含单表常规操作
 	* 生成的映射文件请复制到启动器内的src/main/resources/sqlmap
 	* 样例请参看go-yea/go-yea-launcher/src/main/resources/sqlmap/authorization/personinfo-sqlmap-mapping.xml
@@ -499,13 +499,13 @@ public class SaveOperationAct extends AbstractTransactionAct {
 若新添加的功能允许匿名用户访问，不需做任何授权配置即可，默设Shiro的Web访问控制是匿名访问，研发人员也可以在资源标识设置里配置Web访问是匿名访问。
 ## 登录访问或用户访问（记住我）
 若新添加的功能需要用户登录才能访问，需要研发人员在资源标识设置（权限管理->资源标识设置）里配置该Web资源的访问控制为基于用户或登录验证。
-![Alt 资源标识设置](https://github.com/yiyongfei/picture/blob/master/go-yea/资源标识设置.tiff)
+![Alt 资源标识设置](https://raw.githubusercontent.com/yiyongfei/picture/master/go-yea/资源标识设置.tiff)
 ## 授权访问
 若新添加的功能需要授予用户权限后才能访问，此时：
 ### 1、新增对应功能的资源描述（权限管理->资源设置）
-![Alt 资源设置](https://github.com/yiyongfei/picture/blob/master/go-yea/资源设置.tiff)
+![Alt 资源设置](https://raw.githubusercontent.com/yiyongfei/picture/master/go-yea/资源设置.tiff)
 ### 2、新增对应功能的权限描述（权限管理->权限设置）
-![Alt 权限设置](https://github.com/yiyongfei/picture/blob/master/go-yea/权限设置.tiff)
+![Alt 权限设置](https://raw.githubusercontent.com/yiyongfei/picture/master/go-yea/权限设置.tiff)
 ### 3、资源标识设置时选择对应的权限（权限管理->资源标识设置）
-![Alt 权限设置](https://github.com/yiyongfei/picture/blob/master/go-yea/资源标识设置-授权.tiff)
+![Alt 权限设置](https://raw.githubusercontent.com/yiyongfei/picture/master/go-yea/资源标识设置-授权.tiff)
 
