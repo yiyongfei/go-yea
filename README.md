@@ -28,7 +28,7 @@ GO-YEA是YEA的一个应用，它是一个快速启动分布式框架，致力�
     <import resource="classpath:/application-launcher.xml" />
 ```
 - 将Web层与应用层进行物理分离，为往分布式服务方向发展建立基础
-![Alt 发展期部署](https://raw.githubusercontent.com/yiyongfei/picture/master/go-yea/中期.tiff)
+</br>![Alt 发展期部署](https://raw.githubusercontent.com/yiyongfei/picture/master/go-yea/中期.tiff)
 ```xml
     go-yea-launcher作为服务生产者对外提供服务。
     <bean id="nettyServer" class="com.yea.remote.netty.server.NettyServer" />
@@ -36,7 +36,7 @@ GO-YEA是YEA的一个应用，它是一个快速启动分布式框架，致力�
     <bean id="nettyClient" class="com.yea.remote.netty.client.NettyClient" />
 ```
 - 为了应对日益复杂的业务场景，通过使用分而治之的手段将整个业务拆分成不同的产品线，不同产品线的数据部署在不同的服务器上，同时实现一定意义上的数据分割
-![Alt 后期部署](https://raw.githubusercontent.com/yiyongfei/picture/master/go-yea/后期.tiff)
+</br>![Alt 后期部署](https://raw.githubusercontent.com/yiyongfei/picture/master/go-yea/后期.tiff)
 ```
     基于产品线规划将go-yea-launcher拆分成go-yea-launcher-permission与go-yea-launcher-authorization，以二个不同的注册名向Zookeeper注册。
     go-yea-web将建立二个Netty客户端分别与go-yea-launcher-permission与go-yea-launcher-authorization建立连接。
@@ -48,7 +48,16 @@ GO-YEA是YEA的一个应用，它是一个快速启动分布式框架，致力�
 - 代码生成：基于数据表生成Sql-Mapping文件及相应的Entity、PK、Domain类。
 - 序列化：提高统一的序列化接口，支持三种序列化方式：FST、Hessian2、原生。
 - 等等
-![Alt 技术结构](https://raw.githubusercontent.com/yiyongfei/picture/master/go-yea/技术结构.tiff)
+</br>![Alt 技术结构](https://raw.githubusercontent.com/yiyongfei/picture/master/go-yea/技术结构.tiff)
+
+### 最后，附上性能测试数据。
+测试环境说明：三台Vultr的云主机，各1 CPU(单核)，1024MB 内存，一台部署go-yea-web(Tomcat)，一台部署Launcher(启三个服务)，一台部署Jmeter用于测试。</br>
+测试软件：Jmeter。</br>
+测试请求：permission/operation/query。</br>
+测试结果：
+</br>![Alt 技术结构](https://raw.githubusercontent.com/yiyongfei/picture/master/go-yea/性能测试.tiff)
+详细数据：
+<a href="https://raw.githubusercontent.com/yiyongfei/picture/master/go-yea/YEA性能测试结果.tar.gz" >详细结果</a>
 
 ### 最后，请访问GO-YEA(部署在bluemix上)
 - 访问地址：http://169.44.0.65
