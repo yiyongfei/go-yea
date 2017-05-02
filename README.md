@@ -213,7 +213,7 @@ public class CommonDao<T> extends AbstractBaseDAO<T> {
 	* 生成的映射文件请复制到启动器内的src/main/resources/sqlmap
 	* 样例请参看go-yea/go-yea-launcher/src/main/resources/sqlmap/authorization/personinfo-sqlmap-mapping.xml
 * 模型类主要有：聚合类、实体类、主键类
-	* 生成的模型类请复制到Model层
+	* 生成的模型类均是贫血对象，请复制到Model层
 	* 实体类对应单表，通过实体类完成对表进行增、改操作，通过主键类完成基于主键的查、删操作
 	* 聚合类默认由实体类和主键类组成，完成对表的查操作
 	* 聚合类，将根据实际业务模型对聚合类进行属性扩充：一个聚合类可以对应一个或多个实体类，若存在一对多关系，对应的实体类应封装成集合
@@ -223,6 +223,10 @@ public class CommonDao<T> extends AbstractBaseDAO<T> {
 	* 根包路径：com.team.goyea.authorization.model.PersonInfo里，com.team.goyea是根包路径
 	* 表名：数据库里的表名，例如t_person_info是表名，表名允许以%作后缀模糊匹配（如t_person%可以匹配t_person_info）
 	* 公共DAO：勾选该选项后，生成的Mybatis映射文件namespace将使用所设置的Dao包路径和Dao名
+* 关于贫血对象的说明：
+	* 使用贫血对象有过一段时间的权衡，考虑到分布式部署，最终还是违反DDD设计，生成的模型类更多是作为数据传输对象使用。
+	* 从服务消费者的角度来讲，它并不关注服务生产者如何实现领域业务，它更关注服务生产者需要什么样的数据以及结果。
+	* 虽然DDD适合在服务生产者中使用，但这个需要考虑数据传输对象与领域对象之间的转换，在没有找到适合的对象转换方案前，考虑使用贫血对象，而具体的业务逻辑在Service上完成
 ### 6、Repository以及Service
 ### 7、Act(重点)
 APP服务对外暴露的接口，客户端请求服务端时需提供Act名，Netty服务端收到请求后根据Act名找到相应的Bean并执行
