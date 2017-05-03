@@ -8,10 +8,14 @@ import org.springframework.ui.ModelMap;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.context.ContextLoader;
+import org.springframework.web.context.WebApplicationContext;
 
 import com.yea.core.remote.client.ClientRegister;
 import com.yea.core.remote.promise.Promise;
 import com.yea.core.remote.struct.CallAct;
+import com.yea.remote.netty.client.NettyClient;
+import com.yea.web.jsonbody.JsonPropFilter;
 
 @Controller
 public class DeveloperController {
@@ -50,4 +54,27 @@ public class DeveloperController {
 		
         return "developer/generatorresult";
     }
+	
+	@RequestMapping("/nettynode/statistics")
+	@JsonPropFilter(type = NodeStatistics.class)
+    public NodeStatistics nodeStatistics() throws Throwable {
+		WebApplicationContext webApplicationContext = ContextLoader.getCurrentWebApplicationContext();
+		NettyClient nettyClient = (NettyClient) webApplicationContext.getBean(NettyClient.class);
+		NodeStatistics nodeStatistics = new NodeStatistics();
+		nodeStatistics.setStatistics(nettyClient.useStatistics());
+		return nodeStatistics;
+	}
+	
+	private class NodeStatistics {
+		private String statistics;
+
+		@SuppressWarnings("unused")
+		public String getStatistics() {
+			return statistics;
+		}
+
+		public void setStatistics(String statistics) {
+			this.statistics = statistics;
+		}
+	}
 }
