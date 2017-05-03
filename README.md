@@ -59,6 +59,16 @@ GO-YEA是YEA的一个应用，它是一个快速启动分布式框架，致力�
 详细数据：
 <a href="https://raw.githubusercontent.com/yiyongfei/picture/master/go-yea/YEA性能测试结果.tar.gz" >详细结果</a>
 </br>提升性能指标：可以考虑先适当增加CPU核数和内存容量，然后再横向扩充。
+</br>
+</br>纵向扩展对比：
+</br>测试环境：二台Vultr的云主机，各2 CPU，4096MB 内存
+</br>测试请求：permission/operation/query。
+</br>测试结果(600并发)：
+</br>![Alt 600并发](https://raw.githubusercontent.com/yiyongfei/picture/master/go-yea/性能测试600.tiff)
+详细数据：
+<a href="https://raw.githubusercontent.com/yiyongfei/picture/master/go-yea/测试结果600.tar.gz" >600并发结果</a>
+<a href="https://raw.githubusercontent.com/yiyongfei/picture/master/go-yea/测试结果500.tar.gz" >500并发结果</a>
+<a href="https://raw.githubusercontent.com/yiyongfei/picture/master/go-yea/测试结果700.tar.gz" >700并发结果</a>
 
 ### 访问GO-YEA(部署在bluemix上)
 - 访问地址：http://169.44.0.65
