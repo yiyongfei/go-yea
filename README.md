@@ -7,10 +7,10 @@ mvn clean install -Dmaven.test.skip=true
 ```
 # 概述
 ## YEA是什么
-GO-YEA是YEA的一个应用，它是一个快速启动分布式框架，致力于提供产品的快速启动以及后续的服务伸缩。
+GO-YEA是YEA的一个应用，它是一个极其容易使用的分布式框架，致力于提供产品的快速启动以及后续的服务伸缩。
 </br>其核心部分包含：
-- RPC服务：基于Netty4NIO框架、FST序列化、Ketama Hash算法提供的RPC服务，完成服务之间的非阻塞通讯。
-- LOOKUP服务: 基于Zookeeper提供的注册中心，使地址透明，方便服务提供方平滑增加或减少机器。
+- RPC服务：基于Netty4NIO框架、FST序列化、Ketama负载均衡算法、心跳检测、断链重连等机制提供稳定的RPC服务，完成服务之间的非阻塞通讯。
+- LOOKUP服务: 基于Zookeeper提供的注册中心，使地址透明，方便服务生产者、消费者平滑增加或减少机器。
 - 认证授权：基于Shiro框架、Redis服务提供的权限管理，提供用户的认证服务和可配置的授权服务。
 - 代码生成：通过生成工具，生成基于Mybatis的Sql-Mapping文件及相应的Entity、PK、Domain类(均是贫血对象)，降低开发人员的重复工作。
 - Spring配置：透明化接入，通过Spring自身的注解机制无需额外编写代码即可为服务提供分布式能力。
