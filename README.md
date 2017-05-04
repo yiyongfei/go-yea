@@ -5,6 +5,7 @@
 ```bash
 mvn clean install -Dmaven.test.skip=true
 ```
+[帮助传送门](https://github.com/yiyongfei/go-yea/blob/master/README.md)
 # 概述
 ## YEA是什么
 GO-YEA是YEA的一个应用，它是一个极其容易使用的分布式框架，致力于提供产品的快速启动以及后续的服务伸缩。
