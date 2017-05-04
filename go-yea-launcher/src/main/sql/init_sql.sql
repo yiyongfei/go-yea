@@ -1,5 +1,5 @@
---初始化数据，包含资源、菜单、用户等等
---管理员用户admin，密码admin
+/*初始化数据，包含资源、菜单、用户等等*/
+/*管理员用户admin，密码admin*/
 
 INSERT INTO t_operation_info (operation_id, operation_name, operation_desc) VALUES (6398009414274949388, '新增', '添加某个指定资源');
 INSERT INTO t_operation_info (operation_id, operation_name, operation_desc) VALUES (6398009507734840419, '修改', '修改某个指定资源');

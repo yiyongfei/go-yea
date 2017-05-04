@@ -1,5 +1,5 @@
---具体字段完整定义，请参见yea-shiro内的shiro_db.mwb文件
---建表脚本对应postgresql，如果是mysql，直接根据shiro_db.mwb文件生成脚本
+/*具体字段完整定义，请参见yea-shiro内的shiro_db.mwb文件*/
+/*建表脚本对应postgresql，如果是mysql，直接根据shiro_db.mwb文件生成脚本*/
 
 CREATE TABLE t_operation_info (
     operation_id bigint NOT NULL,

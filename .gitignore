@@ -13,3 +13,5 @@
 */.gitignore
 
 */java.io.tmpdir/*
+
+*/.factorypath
