@@ -11,8 +11,10 @@ mvn clean install -Dmaven.test.skip=true
 ## YEA是什么
 GO-YEA是YEA的一个应用，它是一个极其容易使用的分布式框架，致力于提供产品的快速启动以及后续的服务伸缩。
 </br>其核心部分包含：
-- RPC服务：基于Netty4NIO框架、FST序列化、Ketama负载均衡算法、心跳检测、断链重连等机制提供稳定的RPC服务，完成服务之间的非阻塞通讯。
-- LOOKUP服务: 基于Zookeeper提供的注册中心，使地址透明，方便服务生产者、消费者平滑增加或减少机器。
+- RPC服务：基于Netty4NIO框架、FST序列化、心跳检测、断链重连等机制提供稳定的RPC服务，完成服务之间的非阻塞通讯。
+- 负载均衡：基于Ribbon提供的负载均衡算法，通过不同的负载均衡策略可以合理分担系统负载、加强网络数据处理能力。
+- 熔断处理：基于Hystrix提供的熔断机制，为分布式系统提供延迟和容错功能，防止级联失败，在面临不可避免的失败时仍能有其弹性。
+- LOOKUP服务：基于Zookeeper提供的注册中心，使地址透明，方便服务生产者、消费者平滑增加或减少机器。
 - 认证授权：基于Shiro框架、Redis服务提供的权限管理，提供用户的认证服务和可配置的授权服务。
 - 代码生成：通过生成工具，生成基于Mybatis的Sql-Mapping文件及相应的Entity、PK、Domain类(均是贫血对象)，降低开发人员的重复工作。
 - Spring配置：透明化接入，通过Spring自身的注解机制无需额外编写代码即可为服务提供分布式能力。
@@ -57,20 +59,18 @@ GO-YEA是YEA的一个应用，它是一个极其容易使用的分布式框架�
 测试软件：Jmeter。</br>
 测试请求：permission/operation/query。</br>
 测试结果：
-</br>![Alt 技术结构](https://raw.githubusercontent.com/yiyongfei/picture/master/go-yea/性能测试.tiff)
+</br>![Alt 360并发](https://raw.githubusercontent.com/yiyongfei/picture/master/go-yea/性能测试360.tiff)
 详细数据：
-<a href="https://raw.githubusercontent.com/yiyongfei/picture/master/go-yea/YEA性能测试结果.tar.gz" >详细结果</a>
+<a href="https://raw.githubusercontent.com/yiyongfei/picture/master/go-yea/outhtml-360.tar.gz" >详细结果</a>
 </br>提升性能指标：可以考虑先适当增加CPU核数和内存容量，然后再横向扩充。
 </br>
 </br>纵向扩展对比：
 </br>测试环境：二台Vultr的云主机，各2 CPU，4096MB 内存
 </br>测试请求：permission/operation/query。
-</br>测试结果(600并发)：
-</br>![Alt 600并发](https://raw.githubusercontent.com/yiyongfei/picture/master/go-yea/性能测试600.tiff)
+</br>测试结果(999并发)：
+</br>![Alt 999并发](https://raw.githubusercontent.com/yiyongfei/picture/master/go-yea/性能测试999.tiff)
 详细数据：
-<a href="https://raw.githubusercontent.com/yiyongfei/picture/master/go-yea/测试结果600.tar.gz" >600并发结果</a>
-<a href="https://raw.githubusercontent.com/yiyongfei/picture/master/go-yea/测试结果500.tar.gz" >500并发结果</a>
-<a href="https://raw.githubusercontent.com/yiyongfei/picture/master/go-yea/测试结果700.tar.gz" >700并发结果</a>
+<a href="https://raw.githubusercontent.com/yiyongfei/picture/master/go-yea/outhtml-999.tar.gz" >详细结果</a>
 
 ### 访问GO-YEA(部署在bluemix上)
 - 访问地址：http://169.44.0.65
