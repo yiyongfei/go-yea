@@ -55,10 +55,10 @@ GO-YEA是YEA的一个应用，它是一个极其容易使用的分布式框架�
 </br>![Alt 技术结构](https://raw.githubusercontent.com/yiyongfei/picture/master/go-yea/技术结构.tiff)
 
 ### 最后，附上性能测试数据。
-测试环境说明：三台Vultr的云主机，各1 CPU(单核)，1024MB 内存，一台部署go-yea-web(Tomcat)，一台部署Launcher(启三个服务，每个服务占用堆内存128MB)，一台部署Jmeter用于测试。</br>
+测试环境：三台Vultr的云主机，各1 CPU(单核)，1024MB 内存，一台部署go-yea-web(Tomcat)，一台部署Launcher(启三个服务，每个服务占用堆内存128MB)，一台部署Jmeter用于测试。</br>
 测试软件：Jmeter。</br>
-测试请求：permission/operation/query。</br>
-测试结果：
+测试说明：调用api:permission/operation/query。执行路径Jmeter--(http)-->Go-yea-web--(netty)-->Launcher--(tcp)-->DB--(tcp)-->Launcher--(netty)-->Go-yea-web--(http)-->Jmeter</br>
+测试结果(360并发)：
 </br>![Alt 360并发](https://raw.githubusercontent.com/yiyongfei/picture/master/go-yea/性能测试360.tiff)
 详细数据：
 <a href="https://raw.githubusercontent.com/yiyongfei/picture/master/go-yea/outhtml-360.tar.gz" >详细结果</a>
@@ -66,7 +66,7 @@ GO-YEA是YEA的一个应用，它是一个极其容易使用的分布式框架�
 </br>
 </br>纵向扩展对比：
 </br>测试环境：二台Vultr的云主机，各2 CPU，4096MB 内存
-</br>测试请求：permission/operation/query。
+</br>测试说明：调用api:permission/operation/query。执行路径Jmeter--(http)-->Go-yea-web--(netty)-->Launcher--(tcp)-->DB--(tcp)-->Launcher--(netty)-->Go-yea-web--(http)-->Jmeter
 </br>测试结果(999并发)：
 </br>![Alt 999并发](https://raw.githubusercontent.com/yiyongfei/picture/master/go-yea/性能测试999.tiff)
 详细数据：
