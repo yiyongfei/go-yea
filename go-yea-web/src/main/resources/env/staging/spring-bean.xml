@@ -2,11 +2,9 @@
 <beans xmlns="http://www.springframework.org/schema/beans" 
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:context="http://www.springframework.org/schema/context" 
-	xmlns:task="http://www.springframework.org/schema/task"
 	xsi:schemaLocation="
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
-		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
-		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.0.xsd"
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd"
 	default-lazy-init="true">
 
 	<description>Spring公共配置 </description>
@@ -23,6 +21,9 @@
 		<constructor-arg index="0" type="int" value="60"/>
 		<constructor-arg index="1" type="int" value="60"/>
 	</bean>
+	
+	<!-- Ping -->
+	<bean id="pingHandler" class="com.yea.remote.netty.handle.PingHandler"></bean>
 	
 	<bean id="serviceClientHandler" class="com.yea.remote.netty.client.handle.ServiceClientHandler"></bean>
 	
@@ -52,11 +53,6 @@
 	                </entry>
 	            </map>
 	            <map>
-	                <entry key="HeartBeatHandler">
-	                    <ref bean="heartBeatClientHandler"/>
-	                </entry>
-	            </map>
-	            <map>
 	                <entry key="ServiceClientHandler">
 	                    <ref bean="serviceClientHandler"/>
 	                </entry>
@@ -64,6 +60,16 @@
 	            <map>
 	                <entry key="ServiceServerHandler">
 	                    <ref bean="serviceServerHandler"/>
+	                </entry>
+	            </map>
+	            <map>
+	                <entry key="HeartBeatHandler">
+	                    <ref bean="heartBeatClientHandler"/>
+	                </entry>
+	            </map>
+	            <map>
+	                <entry key="PingHandler">
+	                    <ref bean="pingHandler"/>
 	                </entry>
 	            </map>
 	            <map>
@@ -160,9 +166,5 @@
     
     <!-- MVC统一异常处理-->
     <bean id="mvcExceptionHandler" class="com.yea.web.exception.WebExceptionHandler"/>
-    
-    <!-- Spring定时任务-->
-    <task:annotation-driven scheduler="springScheduler" />
-    <task:scheduler id="springScheduler" pool-size="6" />
     
 </beans>

@@ -30,6 +30,9 @@
 		<constructor-arg index="1" type="int" value="60"/>
 	</bean>
 	
+	<!-- Ping -->
+	<bean id="pingHandler" class="com.yea.remote.netty.handle.PingHandler"></bean>
+	
 	<!-- Netty服务处理Handler，所有业务操作均由该Handler处理 -->
 	<bean id="serviceServerHandler" class="com.yea.remote.netty.server.handle.ServiceServerHandler"></bean>
 	<!-- Netty异常处理Handler，Netty处理时若抛出异常，由该Handler封装异常并返回调用端 -->
@@ -61,6 +64,11 @@
 	            <map>
 	                <entry key="HeartBeatHandler">
 	                    <ref bean="heartBeatServerHandler"/>
+	                </entry>
+	            </map>
+	            <map>
+	                <entry key="PingHandler">
+	                    <ref bean="pingHandler"/>
 	                </entry>
 	            </map>
 	            <map>
