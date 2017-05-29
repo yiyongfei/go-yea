@@ -534,4 +534,15 @@ public class SaveOperationAct extends AbstractTransactionAct {
 ![Alt 权限设置](https://raw.githubusercontent.com/yiyongfei/picture/master/go-yea/权限设置.tiff)
 ### 3、资源标识设置时选择对应的权限（权限管理->资源标识设置）
 ![Alt 权限设置](https://raw.githubusercontent.com/yiyongfei/picture/master/go-yea/资源标识设置-授权.tiff)
-
+# 负载均衡
+```java
+	LoadBalancerBuilder.newBuilder().withRule(new RoundRobinRule()).buildFixedServerListLoadBalancer(nodes);
+```
+## 负载均衡策略
+- 轮询: RoundRobinRule
+- 随机: RandomRule
+- 最少连接: BestAvailableRule
+- 响应时间权重: WeightedResponseTimeRule
+- 哈希: HashRule
+- 带权重哈希: WeightedHashRule
+- 分区: ZoneAvoidanceRule
