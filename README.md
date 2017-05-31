@@ -73,7 +73,7 @@ GO-YEA是YEA的一个应用，它是一个极其容易使用的分布式框架�
 <a href="https://raw.githubusercontent.com/yiyongfei/picture/master/go-yea/outhtml-999.tar.gz" >详细结果</a>
 
 ### 访问GO-YEA(部署在bluemix上)
-- 访问地址：http://169.44.0.65
+- 访问地址：http://169.44.3.50
 - 用户名密码：admin  admin
 
 # 启动
