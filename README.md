@@ -11,7 +11,7 @@ mvn clean install -Dmaven.test.skip=true
 ## YEA是什么
 GO-YEA是YEA的一个应用，它是一个极其容易使用的分布式框架，致力于提供产品的快速启动以及后续的服务伸缩。
 </br>其核心部分包含：
-- RPC服务：基于Netty4NIO框架、FST序列化、心跳检测、断链重连等机制提供稳定的RPC服务，完成服务之间的非阻塞通讯。
+- RPC服务：基于Netty4NIO框架、FST序列化、数据压缩、心跳检测、断链重连等机制提供稳定的RPC服务，完成服务之间的非阻塞通讯。
 - 负载均衡：基于Ribbon提供的负载均衡算法，通过不同的负载均衡策略可以合理分担系统负载、加强网络数据处理能力。
 - 熔断处理：基于Hystrix提供的熔断机制，为分布式系统提供延迟和容错功能，防止级联失败，在面临不可避免的失败时仍能有其弹性。
 - LOOKUP服务：基于Zookeeper提供的注册中心，使地址透明，方便服务生产者、消费者平滑增加或减少机器。
@@ -546,3 +546,11 @@ public class SaveOperationAct extends AbstractTransactionAct {
 - 哈希: HashRule
 - 带权重哈希: WeightedHashRule
 - 分区: ZoneAvoidanceRule
+# 数据压缩
+```java
+	<bean id="nettyMessageEncoder" class="com.yea.remote.netty.codec.NettyMessageEncoder">
+	    <constructor-arg value="DEFLATE"/>
+	</bean>
+```
+- 可选的压缩算法有：GZIP、DEFLATE(ZLIB)、BZIP2、SNAPPY_FRAMED、LZ4_BLOCK、LZ4_FRAMED
+
