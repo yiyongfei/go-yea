@@ -11,7 +11,7 @@ mvn clean install -Dmaven.test.skip=true
 ## YEA是什么
 GO-YEA是YEA的一个应用，它是一个极其容易使用的分布式框架，致力于提供产品的快速启动以及后续的服务伸缩。
 </br>其核心部分包含：
-- RPC服务：基于Netty4NIO框架、FST序列化、数据压缩、心跳检测、断链重连等机制提供稳定的RPC服务，完成服务之间的非阻塞通讯。
+- RPC服务：基于Netty4框架、序列化、数据压缩、心跳检测、断链重连等机制提供稳定的RPC服务，完成服务之间的非阻塞通讯。
 - 负载均衡：基于Ribbon提供的负载均衡算法，通过不同的负载均衡策略可以合理分担系统负载、加强网络数据处理能力。
 - 熔断处理：基于Hystrix提供的熔断机制，为分布式系统提供延迟和容错功能，防止级联失败，在面临不可避免的失败时仍能有其弹性。
 - LOOKUP服务：基于Zookeeper提供的注册中心，使地址透明，方便服务生产者、消费者平滑增加或减少机器。
@@ -47,14 +47,14 @@ GO-YEA是YEA的一个应用，它是一个极其容易使用的分布式框架�
 ```
 ### 其次它是一个快速启动的应用开发平台，集成了项目中常用的基础组件。
 - 认证授权：基于Shiro实现的可配置授权管理系统，通过页面可定义整个系统的权限、角色、授权。
-- 缓存：按照Map接口对Jedis和Ehcache封装，降低使用门槛，同时也减少未来缓存方案的迁移开销(本地缓存向分布式缓存的迁移)。
+- 缓存：按照Map接口对Redis和Ehcache封装，降低使用门槛，同时也减少未来缓存方案的迁移开销(本地缓存向分布式缓存的迁移)。
 - ORM：基于Mybatis完成数据库层面的增、删、改、查操作。
 - 代码生成：基于数据表生成Sql-Mapping文件及相应的Entity、PK、Domain类。
 - 序列化：提高统一的序列化接口，支持三种序列化方式：FST、Hessian2、原生。
 - 等等
 </br>![Alt 技术结构](https://raw.githubusercontent.com/yiyongfei/picture/master/go-yea/技术结构.tiff)
 
-### 最后，附上性能测试数据。
+### 附上性能测试数据。
 测试环境：三台Vultr的云主机，各1 CPU(单核)，1024MB 内存，一台部署go-yea-web(Tomcat)，一台部署Launcher(启三个服务，每个服务占用堆内存128MB)，一台部署Jmeter用于测试。</br>
 测试软件：Jmeter。</br>
 测试说明：调用api:permission/operation/query。执行路径Jmeter--(http)-->Go-yea-web--(netty)-->Launcher--(tcp)-->DB--(tcp)-->Launcher--(netty)-->Go-yea-web--(http)-->Jmeter</br>
@@ -159,14 +159,20 @@ public class CommonDao<T> extends AbstractBaseDAO<T> {
         <bean id="launcherClient" class="com.yea.core.remote.client.DefaultClient" lazy-init="false" init-method="connect" destroy-method="disconnect" ></bean>
 	
 	<!-- Netty编解码的Handler实现 -->
+	<!-- 编码Handle的构造参数，可以设定序列化时将使用压缩算法压缩数据 -->
+	<bean id="nettyMessageEncoder" class="com.yea.remote.netty.codec.NettyMessageEncoder">
+	    <constructor-arg value="DEFLATE"/>
+	</bean>
 	<bean id="nettyMessageDecoder" class="com.yea.remote.netty.codec.NettyMessageDecoder"></bean>
-	<bean id="nettyMessageEncoder" class="com.yea.remote.netty.codec.NettyMessageEncoder"></bean>
 	
 	<!-- Netty心跳检测Handler实现 -->
 	<bean id="heartBeatServerHandler" class="com.yea.remote.netty.server.handle.HeartBeatServerHandler">
 		<constructor-arg index="0" type="int" value="60"/>
 		<constructor-arg index="1" type="int" value="60"/>
 	</bean>
+	
+	<!-- Ping，用于负载均衡Ping类(检测服务连通性) -->
+	<bean id="pingHandler" class="com.yea.remote.netty.handle.PingHandler"></bean>
 	
 	<!-- Netty服务处理Handler实现，所有业务操作均由该Handler处理 -->
 	<bean id="serviceServerHandler" class="com.yea.remote.netty.server.handle.ServiceServerHandler"></bean>
@@ -203,6 +209,11 @@ public class CommonDao<T> extends AbstractBaseDAO<T> {
 	                    <ref bean="heartBeatServerHandler"/>
 	                </entry>
 	            </map>
+		    <map>
+	                <entry key="PingHandler">
+	                    <ref bean="pingHandler"/>
+	                </entry>
+	            </map>
 	            <map>
 	                <entry key="ServiceHandler">
 	                    <ref bean="serviceServerHandler"/>
@@ -218,6 +229,7 @@ public class CommonDao<T> extends AbstractBaseDAO<T> {
 	</bean>
 	<!-- Netty服务端的配置 End -->
 ```
+- 可选的数据压缩算法有：GZIP、DEFLATE、BZIP2、SNAPPY_FRAMED、LZ4_BLOCK、LZ4_FRAMED、ZSTD(Facebook的Zstandard算法)、NONE(不使用压缩算法)
 ### 5、生成Mybatis的映射文件及相应的Domain
 进入开发管理->生成工具
 ![Alt 生成工具](https://raw.githubusercontent.com/yiyongfei/picture/master/go-yea/生成工具.tiff)
@@ -309,8 +321,10 @@ public class SaveOperationAct extends AbstractTransactionAct {
 - 运行在RPC模式下:
 ```xml
     <!-- Netty编解码的Handler实现 -->
+	<bean id="nettyMessageEncoder" class="com.yea.remote.netty.codec.NettyMessageEncoder">
+	    <constructor-arg value="DEFLATE"/>
+	</bean>
 	<bean id="nettyMessageDecoder" class="com.yea.remote.netty.codec.NettyMessageDecoder"></bean>
-	<bean id="nettyMessageEncoder" class="com.yea.remote.netty.codec.NettyMessageEncoder"></bean>
 	
 	<!-- Netty异常处理Handler实现，Netty处理时若抛出异常，由该Handler封装异常并返回调用端 -->
 	<bean id="exceptionHandler" class="com.yea.remote.netty.handle.ExceptionHandler"></bean>
@@ -320,6 +334,8 @@ public class SaveOperationAct extends AbstractTransactionAct {
 		<constructor-arg index="0" type="int" value="60"/>
 		<constructor-arg index="1" type="int" value="60"/>
 	</bean>
+	
+	<bean id="pingHandler" class="com.yea.remote.netty.handle.PingHandler"></bean>
 	
 	<!-- Netty客户端收到服务端响应后的处理Handler实现 -->
 	<bean id="serviceClientHandler" class="com.yea.remote.netty.client.handle.ServiceClientHandler"></bean>
@@ -354,6 +370,11 @@ public class SaveOperationAct extends AbstractTransactionAct {
 	            <map>
 	                <entry key="HeartBeatHandler">
 	                    <ref bean="heartBeatClientHandler"/>
+	                </entry>
+	            </map>
+		    <map>
+	                <entry key="PingHandler">
+	                    <ref bean="pingHandler"/>
 	                </entry>
 	            </map>
 	            <map>
@@ -536,7 +557,7 @@ public class SaveOperationAct extends AbstractTransactionAct {
 ![Alt 权限设置](https://raw.githubusercontent.com/yiyongfei/picture/master/go-yea/资源标识设置-授权.tiff)
 # 负载均衡
 ```java
-	LoadBalancerBuilder.newBuilder().withRule(new RoundRobinRule()).buildFixedServerListLoadBalancer(nodes);
+LoadBalancerBuilder.newBuilder().withRule(new RoundRobinRule()).buildFixedServerListLoadBalancer(nodes);
 ```
 ## 负载均衡策略
 - 轮询: RoundRobinRule
@@ -546,11 +567,4 @@ public class SaveOperationAct extends AbstractTransactionAct {
 - 哈希: HashRule
 - 带权重哈希: WeightedHashRule
 - 分区: ZoneAvoidanceRule
-# 数据压缩
-```java
-	<bean id="nettyMessageEncoder" class="com.yea.remote.netty.codec.NettyMessageEncoder">
-	    <constructor-arg value="DEFLATE"/>
-	</bean>
-```
-- 可选的压缩算法有：GZIP、DEFLATE(ZLIB)、BZIP2、SNAPPY_FRAMED、LZ4_BLOCK、LZ4_FRAMED
 
