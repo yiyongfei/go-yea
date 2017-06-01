@@ -14,7 +14,9 @@
     
     <!-- Netty客户端的配置 Start -->
 	<bean id="nettyMessageDecoder" class="com.yea.remote.netty.codec.NettyMessageDecoder"></bean>
-	<bean id="nettyMessageEncoder" class="com.yea.remote.netty.codec.NettyMessageEncoder"></bean>
+	<bean id="nettyMessageEncoder" class="com.yea.remote.netty.codec.NettyMessageEncoder">
+	    <constructor-arg value="ZSTD"/>
+	</bean>
 	<bean id="exceptionHandler" class="com.yea.remote.netty.handle.ExceptionHandler"></bean>
 	
 	<bean id="heartBeatClientHandler" class="com.yea.remote.netty.client.handle.HeartBeatClientHandler">

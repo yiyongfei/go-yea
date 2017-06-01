@@ -21,8 +21,11 @@
 	
 	<!-- Netty服务端的配置 Start -->
 	<!-- Netty编码与解码的Handler -->
-    <bean id="nettyMessageDecoder" class="com.yea.remote.netty.codec.NettyMessageDecoder"></bean>
-	<bean id="nettyMessageEncoder" class="com.yea.remote.netty.codec.NettyMessageEncoder"></bean>
+	<!-- 构造参数GZIP，表示序列化工具将用gzip压缩算法压缩数据 -->
+    <bean id="nettyMessageEncoder" class="com.yea.remote.netty.codec.NettyMessageEncoder">
+	    <constructor-arg value="ZSTD"/>
+	</bean>
+	<bean id="nettyMessageDecoder" class="com.yea.remote.netty.codec.NettyMessageDecoder"></bean>
 	
 	<!-- Netty心跳Handler -->
 	<bean id="heartBeatServerHandler" class="com.yea.remote.netty.server.handle.HeartBeatServerHandler">
